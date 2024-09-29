@@ -79,3 +79,5 @@
         toastr.warning("{{ session('warning') }}");
     @endif
 </script>
+
+@yield('js')

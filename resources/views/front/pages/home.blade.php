@@ -506,7 +506,7 @@
         </div>
     </section>
 </main>
-
+@stop
 @section('js')
 
 @stop

@@ -1,6 +1,7 @@
 @php
 use App\Models\SiteSetting;
 $favicon = SiteSetting::getSiteSettings('favicon');
+$current_route_name=Route::currentRouteName();
 @endphp
 
 <!DOCTYPE html>
@@ -21,17 +22,17 @@ $favicon = SiteSetting::getSiteSettings('favicon');
         <title>{{ env('APP_NAME', 'Laravel App') }} | @yield('title')</title>
     <!-- favicons Icons -->
     <link rel="apple-touch-icon" sizes="180x180"
-        href="{{ isset($favicon) && isset($favicon->value) && $favicon != null && $favicon->value != '' ? asset($favicon->value) : asset('custom-assets/admin/siteimages/logo/favicon.ico') }}" />
+        href="{{ isset($favicon) && isset($favicon->value) && $favicon != null && $favicon->value != '' ? asset($favicon->value) : asset('custom-assets/default/admin/images/siteimages/logo/favicon.png') }}" />
     <link rel="icon" type="image/png" sizes="32x32"
-        href="{{ isset($favicon) && isset($favicon->value) && $favicon != null && $favicon->value != '' ? asset($favicon->value) : asset('custom-assets/admin/siteimages/logo/favicon.ico') }}" />
+        href="{{ isset($favicon) && isset($favicon->value) && $favicon != null && $favicon->value != '' ? asset($favicon->value) : asset('custom-assets/default/admin/images/siteimages/logo/favicon.png') }}" />
     <link rel="icon" type="image/png" sizes="16x16"
-        href="{{ isset($favicon) && isset($favicon->value) && $favicon != null && $favicon->value != '' ? asset($favicon->value) : asset('custom-assets/admin/siteimages/logo/favicon.ico') }}" />
+        href="{{ isset($favicon) && isset($favicon->value) && $favicon != null && $favicon->value != '' ? asset($favicon->value) : asset('custom-assets/default/admin/images/siteimages/logo/favicon.png') }}" />
     <meta name="description" content="@yield('description')" />
 
     @include('front.layouts.head')
 </head>
 
-<body class="black-bg">
+<body class="{{ Route::currentRouteName() != 'front.contact' ? 'black-bg' : '' }}">
     @include('front.include.header')
 
     @yield('content')

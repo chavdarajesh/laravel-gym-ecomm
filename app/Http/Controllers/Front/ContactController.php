@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
-use App\Models\ContactUsEnquiry as ModelsContactUsEnquiry;
-use App\Models\Front\ContactUsEnquiry;
+use App\Models\ContactUsEnquiry;
 use Illuminate\Http\Request;
 use App\Models\ContactUsSetting;
 use Carbon\Carbon;
@@ -22,12 +21,12 @@ class ContactController extends Controller
         $request->validate([
             'name' => 'required|max:40',
             'email' => 'required|email',
-            'phone' => 'required',
+            // 'phone' => 'required',
             'subject' => 'required',
             'message' => 'required',
         ]);
 
-        $ContactUsEnquiry = new ModelsContactUsEnquiry();
+        $ContactUsEnquiry = new ContactUsEnquiry();
         $ContactUsEnquiry->name = $request['name'];
         $ContactUsEnquiry->email = $request['email'];
         $ContactUsEnquiry->phone = $request['phone'];
@@ -35,15 +34,15 @@ class ContactController extends Controller
         $ContactUsEnquiry->message = $request['message'];
         $ContactUsEnquiry->save();
 
-        $data = [
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'phone' => $request['phone'],
-            'subject' => $request['subject'],
-            'message' => $request['message'],
-            'id' => $ContactUsEnquiry->id,
-            'created_at' => $ContactUsEnquiry->created_at ? Carbon::parse($ContactUsEnquiry->created_at)->setTimezone('Asia/Kolkata')->toDateTimeString() : '',
-        ];
+        // $data = [
+        //     'name' => $request['name'],
+        //     'email' => $request['email'],
+        //     'phone' => $request['phone'],
+        //     'subject' => $request['subject'],
+        //     'message' => $request['message'],
+        //     'id' => $ContactUsEnquiry->id,
+        //     'created_at' => $ContactUsEnquiry->created_at ? Carbon::parse($ContactUsEnquiry->created_at)->setTimezone('Asia/Kolkata')->toDateTimeString() : '',
+        // ];
         if ($ContactUsEnquiry) {
             return redirect()->back()->with('message', 'Thanks for contacting us. We will contact you ASAP!..');
         } else {

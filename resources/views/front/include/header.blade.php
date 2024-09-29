@@ -28,14 +28,14 @@ $loader = SiteSetting::getSiteSettings('loader');
                 <div class="menu-wrapper d-flex align-items-center justify-content-between">
                     <!-- Logo -->
                     <div class="logo">
-                        <a href="index.html"><img src="{{ asset('assets/front/img/logo/logo.png') }}" alt=""></a>
+                        <a href="{{route('front.home')}}"><img src="{{ isset($headerLogo) && isset($headerLogo->value) && $headerLogo != null ? asset($headerLogo->value) : asset('custom-assets/default/admin/images/siteimages/logo/header-logo.png') }}" alt="Logo"></a>
                     </div>
                     <!-- Main-menu -->
                     <div class="main-menu f-right d-none d-lg-block">
                         <nav>
                             <ul id="navigation">
-                                <li><a href="index.html">Home</a></li>
-                                <li><a href="about.html">About</a></li>
+                                <li class="{{ Route::currentRouteName() == 'front.home' ? 'active' : '' }}"><a href="{{route('front.home')}}">Home</a></li>
+                                <li class="{{ Route::currentRouteName() == 'front.about' ? 'active' : '' }}"><a href="{{ route('front.about') }}">About</a></li>
                                 <li><a href="courses.html">Courses</a></li>
                                 <li><a href="pricing.html">Pricing</a></li>
                                 <li><a href="gallery.html">Gallery</a></li>
@@ -46,13 +46,13 @@ $loader = SiteSetting::getSiteSettings('loader');
                                         <li><a href="elements.html">Elements</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="contact.html">Contact</a></li>
+                                <li class="{{ Route::currentRouteName() == 'front.contact' ? 'active' : '' }}"><a href="{{ route('front.contact') }}">Contact</a></li>
                             </ul>
                         </nav>
                     </div>
                     <!-- Header-btn -->
                     <div class="header-btns d-none d-lg-block f-right">
-                        <a href="contact.html" class="btn">Contact me</a>
+                        <a href="{{ route('front.contact') }}" class="btn">Contact me</a>
                     </div>
                     <!-- Mobile Menu -->
                     <div class="col-12">

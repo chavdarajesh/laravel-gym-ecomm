@@ -22,7 +22,7 @@
                          <div class="single-footer-caption mb-50 text-center">
                              <!-- logo -->
                              <div class="footer-logo wow fadeInUp" data-wow-duration="1s" data-wow-delay=".2s">
-                                 <a href="index.html"><img src="{{ asset('assets/front/img/logo/logo2_footer.png') }}" alt=""></a>
+                                 <a href="{{route('front.home')}}"><img src="{{ isset($headerLogo) && isset($headerLogo->value) && $headerLogo != null ? asset($headerLogo->value) : asset('custom-assets/default/admin/images/siteimages/logo/footer-logo.png') }}" alt="Logo"></a>
                              </div>
                              <!-- Menu -->
                              <!-- Header Start -->
@@ -34,12 +34,12 @@
                                          <div class="main-menu main-menu2 text-center">
                                              <nav>
                                                  <ul>
-                                                     <li><a href="index.html">Home</a></li>
-                                                     <li><a href="about.html">About</a></li>
+                                                     <li class="{{ Route::currentRouteName() == 'front.home' ? 'active' : '' }}"><a href="{{route('front.home')}}">Home</a></li>
+                                                     <li class="{{ Route::currentRouteName() == 'front.about' ? 'active' : '' }}"><a href="{{ route('front.about') }}">About</a></li>
                                                      <li><a href="courses.html">Courses</a></li>
                                                      <li><a href="pricing.html">Pricing</a></li>
                                                      <li><a href="gallery.html">Gallery</a></li>
-                                                     <li><a href="contact.html">Contact</a></li>
+                                                     <li class="{{ Route::currentRouteName() == 'front.contact' ? 'active' : '' }}"><a href="{{ route('front.contact') }}">Contact</a></li>
                                                  </ul>
                                              </nav>
                                          </div>
@@ -48,12 +48,40 @@
                              </div>
                              <!-- Header End -->
                              <!-- social -->
+                             @if (
+                         (isset($social_facebook_url) && isset($social_facebook_url->value)) ||
+                             (isset($social_youtube_url) && isset($social_youtube_url->value)) ||
+                             (isset($social_linkedin_url) && isset($social_linkedin_url->value)) ||
+                             (isset($social_twitter_url) && isset($social_twitter_url->value)) ||
+                             (isset($social_instagram_url) && isset($social_instagram_url->value)))
                              <div class="footer-social mt-30 wow fadeInUp" data-wow-duration="3s"
                                  data-wow-delay=".8s">
-                                 <a href="#"><i class="fab fa-twitter"></i></a>
-                                 <a href="https://bit.ly/sai4ull"><i class="fab fa-facebook-f"></i></a>
-                                 <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                                 @if (isset($social_twitter_url) &&
+                                     isset($social_twitter_url->value) &&
+                                     $social_twitter_url != null &&
+                                     $social_twitter_url->value != '')
+                                 <a href="{{ $social_twitter_url->value }}" target="_blank"><i class="fab fa-twitter"></i></a>
+                                 @endif
+                                 @if (isset($social_facebook_url) &&
+                                     isset($social_facebook_url->value) &&
+                                     $social_facebook_url != null &&
+                                     $social_facebook_url->value != '')
+                                 <a href="{{ $social_facebook_url->value }}" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                                 @endif
+                                 @if (isset($social_instagram_url) &&
+                                     isset($social_instagram_url->value) &&
+                                     $social_instagram_url != null &&
+                                     $social_instagram_url->value != '')
+                                 <a href="{{ $social_instagram_url->value }}" target="_blank"><i class="fab fa-instagram"></i></a>
+                                 @endif
+                                 @if (isset($social_youtube_url) &&
+                                     isset($social_youtube_url->value) &&
+                                     $social_youtube_url != null &&
+                                     $social_youtube_url->value != '')
+                                 <a href="{{ $social_youtube_url->value }}" target="_blank"><i class="fab fa-youtube"></i></a>
+                                 @endif
                              </div>
+                             @endif
                          </div>
                      </div>
                  </div>
@@ -65,11 +93,8 @@
                          <div class="footer-copy-right text-center">
                              <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                                  Copyright &copy;
-                                 <script>
-                                     document.write(new Date().getFullYear());
-                                 </script> All rights reserved |
-                                 This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a
-                                     href="https://colorlib.com" target="_blank">Colorlib</a>
+                                 <?php echo date('Y'); ?> All rights reserved |
+                                 <a href="{{ route('front.home') }}"> {{ env('APP_NAME', 'Laravel App') }}</a>
                                  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                              </p>
                          </div>

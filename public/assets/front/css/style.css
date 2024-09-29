@@ -6,8 +6,8 @@
 	  Support:
 	  Description:
 	  Version:
-	  
-------------------------------------------------- 
+
+-------------------------------------------------
 */
 /* CSS Index
 -------------------------------------------------
@@ -3203,9 +3203,9 @@ hr {
 }
 
 /* line 78, C:/Users/HP/Desktop/July-HTML/292 Health coach/assets/scss/_headerMenu.scss */
-.header-area .menu-wrapper .main-menu ul li:hover > a {
-  color: #fff;
-  text-decoration: underline;
+.header-area .menu-wrapper .main-menu ul li:hover > a , .header-area .menu-wrapper .main-menu ul li.active > a{
+  color: #fff !important;
+  text-decoration: underline !important;
 }
 
 /* line 83, C:/Users/HP/Desktop/July-HTML/292 Health coach/assets/scss/_headerMenu.scss */

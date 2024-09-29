@@ -1,122 +1,185 @@
 @extends('front.layouts.main')
+
 @section('title', 'Contact')
+
 @section('css')
-
-@stop
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/css/intlTelInput.css">
-
-<!-- <link rel="stylesheet" href="{{ asset('assets/front/css/intlTelInput.css') }}"> -->
-
 <style>
     .map-responsive iframe {
         width: 100%;
         height: 100%;
     }
-
-    .focus-none:focus {
-        box-shadow: none !important;
-        outline: none !important;
-    }
-
-    .iti.iti--allow-dropdown.iti--show-flags.iti--inline-dropdown {
-        width: 100%;
-        float: left;
-        font-size: 16px;
-        color: #727272;
-        border: 0px;
-        background-color: #ffff;
-        /* padding: 15px; */
-        margin-top: 20px;
-        font-family: 'Roboto', sans-serif;
-    }
 </style>
+@stop
+@php
+ use App\Models\ContactUsSetting;
+ $ContactUsSetting = ContactUsSetting::get_contact_us_details();
+ @endphp
 @section('content')
-
-<!-- contact section start -->
-<div class="contact_section layout_padding margin_top90">
-    <div class="container">
-        <h1 class="contact_taital">Get In Touch</h1>
-        <p class="contact_text">If You Have Any Query, Please Contact Us</p>
-        <div class="contact_section_2 layout_padding">
+<main>
+    <!--? Hero Start -->
+    <div class="slider-area2">
+        <div class="slider-height2 d-flex align-items-center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="hero-cap hero-cap2 pt-70">
+                            <h2>Contact me</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Hero End -->
+    <!--?  Contact Area start  -->
+    <section class="contact-section">
+        <div class="container">
+            @if ($ContactUsSetting && $ContactUsSetting['map_iframe'] != null)
+            <div class="d-none d-sm-block mb-5 pb-4 map-responsive">
+                {!! $ContactUsSetting['map_iframe'] !!}
+            </div>
+            @endif
             <div class="row">
-                <div class="col-md-6">
-                    <form id="form" action="{{ route('front.contact.message.save') }}" method="POST">
+                <div class="col-12">
+                    <h2 class="contact-title">Get in Touch</h2>
+                </div>
+                <div class="col-lg-8">
+                    <form id="form-contact" class="form-contact" action="{{ route('front.contact.message.save') }}" method="POST">
                         @csrf
-                        <input type="text" class="mail_text @error('name') border border-danger @enderror " placeholder="Full Name" id="name" value="{{ old('name') }}" name="name">
-                        <div id="name_error" class="text-danger"> @error('name')
-                            {{ $message }}
-                            @enderror
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <textarea class="form-control w-100 @error('message') border border-danger @enderror" name="message" id="message" cols="30" rows="9" placeholder=" Enter Message">{{ old('message') }}</textarea>
+                                    <div id="message_error" class="text-danger"> @error('message')
+                                        {{ $message }}
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input class="form-control  @error('name') border border-danger @enderror" name="name" id="name" type="text" placeholder="Enter your name" value="{{ old('name') }}">
+                                    <div id="name_error" class="text-danger"> @error('name')
+                                        {{ $message }}
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input class="form-control @error('name') border border-danger @enderror" name="email" id="email" type="email" placeholder="Email" value="{{ old('email') }}">
+                                    <div id="email_error" class="text-danger"> @error('email')
+                                        {{ $message }}
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <input class="form-control @error('name') border border-danger @enderror" name="subject" id="subject" type="text" placeholder="Enter Subject" value="{{ old('subject') }}">
+                                    <div id="subject_error" class="text-danger"> @error('subject')
+                                        {{ $message }}
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <input type="text" class="mail_text @error('company_name') border border-danger @enderror " placeholder="Company Name" id="company_name" value="{{ old('company_name') }}" name="company_name">
-                        <div id="company_name_error" class="text-danger"> @error('company_name')
-                            {{ $message }}
-                            @enderror
+                        <div class="form-group mt-3">
+                            <button type="submit" class="button button-contactForm boxed-btn">Send</button>
                         </div>
-                        <input type="text" class="mail_text @error('phone') border border-danger @enderror " placeholder="Phone" id="phone" value="{{ old('phone') }}" name="phone">
-                        <div id="c_code_error" class="text-danger"> @error('email')
-                            {{ $message }}
-                            @enderror
-                        </div>
-                        <div id="phone_error" class="text-danger"> @error('phone')
-                            {{ $message }}
-                            @enderror
-                        </div>
-                        <input type="text" class="mail_text @error('email') border border-danger @enderror" placeholder="Email" id="email" name="email" value="{{ old('email') }}">
-                        <div id="email_error" class="text-danger"> @error('email')
-                            {{ $message }}
-                            @enderror
-                        </div>
-
-                        <input type="text" class="mail_text @error('address') border border-danger @enderror " placeholder="Address" id="address" value="{{ old('address') }}" name="address">
-                        <div id="address_error" class="text-danger"> @error('address')
-                            {{ $message }}
-                            @enderror
-                        </div>
-                        <textarea class="massage-bt @error('message') border border-danger @enderror " placeholder="Massage" rows="5" id="message" name="message">{{ old('message') }}</textarea>
-                        <div id="message_error" class="text-danger"> @error('message')
-                            {{ $message }}
-                            @enderror
-                        </div>
-                        <div class="send_bt"><button type="submit">SEND</button></div>
                     </form>
                 </div>
-                @if ($ContactUsSetting)
-                <div class="col-md-6">
-                    <div class="map_main w-100 h-100">
-                        <div class="map-responsive w-100 h-100">
-                            {!! $ContactUsSetting['map_iframe'] !!}
+                @if ($ContactUsSetting )
+                <div class="col-lg-3 offset-lg-1">
+                    @if($ContactUsSetting['address_1'] != null)
+                    <div class="media contact-info">
+                        <span class="contact-info__icon"><i class="ti-home"></i></span>
+                        <div class="media-body">
+                            <h3>{{$ContactUsSetting['address_1']}}</h3>
+                            <p>{{$ContactUsSetting['address_2']}}</p>
+                        </div>
+                    </div>
+                    @endif
+                    @if($ContactUsSetting['phone'] != null)
+                    <div class="media contact-info">
+                        <span class="contact-info__icon"><i class="ti-tablet"></i></span>
+                        <div class="media-body">
+                            <h3>{{$ContactUsSetting['phone']}}</h3>
+                            <p>{{$ContactUsSetting['timing']}}</p>
+                        </div>
+                    </div>
+                    @endif
+                    @if($ContactUsSetting['email'] != null)
+                    <div class="media contact-info">
+                        <span class="contact-info__icon"><i class="ti-email"></i></span>
+                        <div class="media-body">
+                            <h3>{{$ContactUsSetting['email']}}</h3>
+                            <p>Send us your query anytime!</p>
+                        </div>
+                    </div>
+                    @endif
+                </div>
+                @endif
+            </div>
+        </div>
+    </section>
+    <!-- Contact Area End -->
+    <!-- ? services-area -->
+    @if ($ContactUsSetting)
+    <section class="services-area">
+        <div class="container">
+            <div class="row justify-content-between">
+            @if($ContactUsSetting ['address_1'])
+                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-8">
+                    <div class="single-services mb-40">
+                        <div class="features-icon">
+                            <img src="{{ asset('assets/front/img/icon/icon1.svg') }}" alt="">
+                        </div>
+                        <div class="features-caption">
+                            <h3>Location</h3>
+                            <p>{{$ContactUsSetting ['address_1']}} , {{$ContactUsSetting ['address_2']}} </p>
+                        </div>
+                    </div>
+                </div>
+                @endif
+                @if($ContactUsSetting ['phone'])
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-8">
+                    <div class="single-services mb-40">
+                        <div class="features-icon">
+                            <img src="{{ asset('assets/front/img/icon/icon2.svg') }}" alt="">
+                        </div>
+                        <div class="features-caption">
+                            <h3>Phone</h3>
+                            <p>{{$ContactUsSetting ['phone']}}</p>
+                        </div>
+                    </div>
+                </div>
+                @endif
+                @if($ContactUsSetting ['email'])
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-8">
+                    <div class="single-services mb-40">
+                        <div class="features-icon">
+                            <img src="{{ asset('assets/front/img/icon/icon3.svg') }}" alt="">
+                        </div>
+                        <div class="features-caption">
+                            <h3>Email</h3>
+                            <p>{{$ContactUsSetting ['email']}}</p>
                         </div>
                     </div>
                 </div>
                 @endif
             </div>
         </div>
-    </div>
-</div>
-<!-- contact section end -->
+    </section>
+    @endif
+</main>
+
 @stop
+
 @section('js')
-<script src="{{ asset('assets/front/js/intlTelInput.min.js') }}"></script>
-<script>
-    const input = document.querySelector("#phone");
-    var iti = window.intlTelInput(input, {
-        utilsScript: "{{ asset('assets/front/js/utils.js') }}",
-        hiddenInput: function(telInputName) {
-            return {
-                phone: "phone_full",
-                country: "c_code"
-            };
-        }
-    });
-    input.addEventListener("countrychange", function() {
-        if (iti.getSelectedCountryData() && iti.isValidNumber()) {
-            $('#c_code_error').html('');
-        }
-    });
-</script>
 <script>
     $(document).ready(function() {
-        $('#form').validate({
+        $('#form-contact').validate({
             rules: {
                 name: {
                     required: true,
@@ -125,45 +188,39 @@
                     required: true,
                     email: true
                 },
-                c_code: {
+                subject: {
                     required: true,
                 },
                 phone: {
                     required: true,
                     number: true
                 },
-                address: {
-                    required: true,
-                },
-                company_name: {
-                    required: true,
-                },
                 message: {
                     required: true,
                 }
             },
-            messages: {
-                name: {
-                    required: 'This field is required',
-                },
-                email: {
-                    required: 'This field is required',
-                    email: 'Enter a valid email',
-                },
-                phone: {
-                    required: 'This field is required',
-                    number: 'Please enter a valid phone number.',
-                },
-                address: {
-                    required: 'This field is required',
-                },
-                message: {
-                    required: 'This field is required',
-                },
-                company_name: {
-                    required: 'This field is required',
-                }
-            },
+            // messages: {
+            //     name: {
+            //         required: 'This field is required',
+            //     },
+            //     email: {
+            //         required: 'This field is required',
+            //         email: 'Enter a valid email',
+            //     },
+            //     phone: {
+            //         required: 'This field is required',
+            //         number: 'Please enter a valid phone number.',
+            //     },
+            //     address: {
+            //         required: 'This field is required',
+            //     },
+            //     message: {
+            //         required: 'This field is required',
+            //     },
+            //     company_name: {
+            //         required: 'This field is required',
+            //     }
+            // },
             errorPlacement: function(error, element) {
                 error.addClass('invalid-feedback');
                 $('#' + element.attr('name') + '_error').html(error)
@@ -175,11 +232,7 @@
                 $(element).removeClass('border border-danger');
             },
             submitHandler: function(form) {
-                if (iti.isValidNumber()) {
-                    form.submit();
-                } else {
-                    $('#c_code_error').html('Please select a contry code or enter a valid phone number.');
-                }
+                form.submit();
             }
         });
     });

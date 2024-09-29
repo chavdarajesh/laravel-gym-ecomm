@@ -48,7 +48,7 @@ Route::post('/admin/password/reset/save', [AdminAuthController::class, 'password
 // Admin Auth Route end
 
 // Admin route start
-Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['is_auth','is_user_active', 'is_user_verified','is_admin']], function () {
+Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['is_auth', 'is_user_active', 'is_user_verified', 'is_admin']], function () {
 
     // dashboard route start
     Route::get('/', function () {
@@ -135,3 +135,6 @@ Route::group(['namespace' => 'User', 'prefix' => 'user', 'middleware' => ['is_au
 Route::get('/', [FrontPagesController::class, 'home'])->name('front.home');
 Route::get('/about', [FrontPagesController::class, 'about'])->name('front.about');
 Route::get('/services', [FrontPagesController::class, 'services'])->name('front.services');
+
+Route::get('/contact', [FrontContactController::class, 'contact'])->name('front.contact');
+Route::post('/contact/message/save', [FrontContactController::class, 'contactMessageSave'])->name('front.contact.message.save');

@@ -31,11 +31,6 @@ class ContactController extends Controller
                 ->addColumn('message', function ($row) {
                     return strlen($row->message) > 25 ? substr($row->message, 0, 25) . '..' : $row->message;
                 })
-                ->addColumn('status', function ($row) {
-                    $data['id'] = $row->id;
-                    $data['status'] = $row->status;
-                    return View::make('admin.contact.messages.status', ['data'=>$data])->render();
-                })
                 ->addColumn('actions', function ($row) {
                     $data['id'] = $row->id;
                     return View::make('admin.contact.messages.actions', ['data' => $data])->render();
