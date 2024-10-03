@@ -20,12 +20,6 @@
                                 <input class="form-control" type="text" id="name" name="name"
                                     value="{{ $ContactUsEnquiry->name }}" disabled />
                             </div>
-
-                            <div class="mb-3 col-md-12">
-                                <label for="email" class="form-label">E-mail</label>
-                                <input class="form-control" type="text" id="email" name="email"
-                                    value="{{ $ContactUsEnquiry->email }}" disabled />
-                            </div>
                             <div class="mb-3 col-md-12">
                                 <label for="phone" class="form-label">Phone</label>
                                 <input class="form-control" type="text" id="phone" name="phone"
@@ -33,17 +27,14 @@
                             </div>
 
                             <div class="mb-3 col-md-12">
-                                <label class="form-label" for="subject">Subject</label>
-                                <div class="input-group input-group-merge">
-                                    <input type="text" id="subject" name="subject" class="form-control"
-                                        value="{{ $ContactUsEnquiry->subject }}" disabled />
-                                </div>
+                                <label for="email" class="form-label">E-mail</label>
+                                <input class="form-control" type="text" id="email" name="email"
+                                    value="{{ $ContactUsEnquiry->email }}" disabled />
                             </div>
 
-
                             <div class="mb-3 col-md-12">
-                                <label for="message" class="form-label">Message</label>
-                                <textarea name="message" id="message" rows="3" class="form-control" disabled> {{ $ContactUsEnquiry->message }}</textarea>
+                                <label for="goal" class="form-label">Goal</label>
+                                <textarea name="goal" id="goal" rows="3" class="form-control" disabled> {{ $ContactUsEnquiry->goal }}</textarea>
                             </div>
 
                         </div>

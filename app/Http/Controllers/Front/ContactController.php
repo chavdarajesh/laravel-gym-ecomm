@@ -21,17 +21,15 @@ class ContactController extends Controller
         $request->validate([
             'name' => 'required|max:40',
             'email' => 'required|email',
-            // 'phone' => 'required',
-            'subject' => 'required',
-            'message' => 'required',
+            'phone' => 'required',
+            'goal' => 'required',
         ]);
 
         $ContactUsEnquiry = new ContactUsEnquiry();
         $ContactUsEnquiry->name = $request['name'];
         $ContactUsEnquiry->email = $request['email'];
         $ContactUsEnquiry->phone = $request['phone'];
-        $ContactUsEnquiry->subject = $request['subject'];
-        $ContactUsEnquiry->message = $request['message'];
+        $ContactUsEnquiry->goal = $request['goal'];
         $ContactUsEnquiry->save();
 
         // $data = [

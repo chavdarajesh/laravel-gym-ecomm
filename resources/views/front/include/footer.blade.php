@@ -11,6 +11,54 @@
  $social_twitter_url = SiteSetting::getSiteSettings('social_twitter_url');
  $footerLogo = SiteSetting::getSiteSettings('footer_logo');
  @endphp
+
+ @if ($ContactUsSetting)
+ <section class="services-area">
+     <div class="container">
+         <div class="row justify-content-between">
+             @if($ContactUsSetting ['address_1'])
+             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-8">
+                 <div class="single-services mb-40">
+                     <div class="features-icon">
+                         <img src="{{ asset('assets/front/img/icon/icon1.svg') }}" alt="">
+                     </div>
+                     <div class="features-caption">
+                         <h3>Location</h3>
+                         <p>{{$ContactUsSetting ['address_1']}} , {{$ContactUsSetting ['address_2']}} </p>
+                     </div>
+                 </div>
+             </div>
+             @endif
+             @if($ContactUsSetting ['phone'])
+             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-8">
+                 <div class="single-services mb-40">
+                     <div class="features-icon">
+                         <img src="{{ asset('assets/front/img/icon/icon2.svg') }}" alt="">
+                     </div>
+                     <div class="features-caption">
+                         <h3>Phone</h3>
+                         <p>{{$ContactUsSetting ['phone']}}</p>
+                     </div>
+                 </div>
+             </div>
+             @endif
+             @if($ContactUsSetting ['email'])
+             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-8">
+                 <div class="single-services mb-40">
+                     <div class="features-icon">
+                         <img src="{{ asset('assets/front/img/icon/icon3.svg') }}" alt="">
+                     </div>
+                     <div class="features-caption">
+                         <h3>Email</h3>
+                         <p>{{$ContactUsSetting ['email']}}</p>
+                     </div>
+                 </div>
+             </div>
+             @endif
+         </div>
+     </div>
+ </section>
+ @endif
  <footer>
      <!--? Footer Start-->
      <div class="footer-area black-bg">
@@ -36,9 +84,9 @@
                                                  <ul>
                                                      <li class="{{ Route::currentRouteName() == 'front.home' ? 'active' : '' }}"><a href="{{route('front.home')}}">Home</a></li>
                                                      <li class="{{ Route::currentRouteName() == 'front.about' ? 'active' : '' }}"><a href="{{ route('front.about') }}">About</a></li>
-                                                     <li><a href="courses.html">Courses</a></li>
-                                                     <li><a href="pricing.html">Pricing</a></li>
-                                                     <li><a href="gallery.html">Gallery</a></li>
+                                                     <li class="{{ Route::currentRouteName() == 'front.services' ? 'active' : '' }}"><a href="{{ route('front.services') }}">Services</a></li>
+                                                     <li><a href="{{ route('front.contact') }}">Suppliments</a></li>
+                                                     <li class="{{ Route::currentRouteName() == 'front.blog' ? 'active' : '' }}"><a href="{{ route('front.blog') }}">Blog</a></li>
                                                      <li class="{{ Route::currentRouteName() == 'front.contact' ? 'active' : '' }}"><a href="{{ route('front.contact') }}">Contact</a></li>
                                                  </ul>
                                              </nav>
@@ -49,7 +97,7 @@
                              <!-- Header End -->
                              <!-- social -->
                              @if (
-                         (isset($social_facebook_url) && isset($social_facebook_url->value)) ||
+                             (isset($social_facebook_url) && isset($social_facebook_url->value)) ||
                              (isset($social_youtube_url) && isset($social_youtube_url->value)) ||
                              (isset($social_linkedin_url) && isset($social_linkedin_url->value)) ||
                              (isset($social_twitter_url) && isset($social_twitter_url->value)) ||
@@ -57,27 +105,27 @@
                              <div class="footer-social mt-30 wow fadeInUp" data-wow-duration="3s"
                                  data-wow-delay=".8s">
                                  @if (isset($social_twitter_url) &&
-                                     isset($social_twitter_url->value) &&
-                                     $social_twitter_url != null &&
-                                     $social_twitter_url->value != '')
+                                 isset($social_twitter_url->value) &&
+                                 $social_twitter_url != null &&
+                                 $social_twitter_url->value != '')
                                  <a href="{{ $social_twitter_url->value }}" target="_blank"><i class="fab fa-twitter"></i></a>
                                  @endif
                                  @if (isset($social_facebook_url) &&
-                                     isset($social_facebook_url->value) &&
-                                     $social_facebook_url != null &&
-                                     $social_facebook_url->value != '')
+                                 isset($social_facebook_url->value) &&
+                                 $social_facebook_url != null &&
+                                 $social_facebook_url->value != '')
                                  <a href="{{ $social_facebook_url->value }}" target="_blank"><i class="fab fa-facebook-f"></i></a>
                                  @endif
                                  @if (isset($social_instagram_url) &&
-                                     isset($social_instagram_url->value) &&
-                                     $social_instagram_url != null &&
-                                     $social_instagram_url->value != '')
+                                 isset($social_instagram_url->value) &&
+                                 $social_instagram_url != null &&
+                                 $social_instagram_url->value != '')
                                  <a href="{{ $social_instagram_url->value }}" target="_blank"><i class="fab fa-instagram"></i></a>
                                  @endif
                                  @if (isset($social_youtube_url) &&
-                                     isset($social_youtube_url->value) &&
-                                     $social_youtube_url != null &&
-                                     $social_youtube_url->value != '')
+                                 isset($social_youtube_url->value) &&
+                                 $social_youtube_url != null &&
+                                 $social_youtube_url->value != '')
                                  <a href="{{ $social_youtube_url->value }}" target="_blank"><i class="fab fa-youtube"></i></a>
                                  @endif
                              </div>

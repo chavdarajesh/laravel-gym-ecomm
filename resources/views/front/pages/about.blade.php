@@ -4,7 +4,6 @@
 
 @stop
 @section('content')
-<main>
     <!--? Hero Start -->
     <div class="slider-area2">
         <div class="slider-height2 d-flex align-items-center">
@@ -139,48 +138,4 @@
             </div>
         </div>
     </div>
-    <!-- video_end -->
-    <!-- ? services-area -->
-    <section class="services-area">
-        <div class="container">
-            <div class="row justify-content-between">
-                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-8">
-                    <div class="single-services mb-40 wow fadeInUp" data-wow-duration="1s" data-wow-delay=".1s">
-                        <div class="features-icon">
-                            <img src="{{ asset('assets/front/img/icon/icon1.svg') }}" alt="">
-                        </div>
-                        <div class="features-caption">
-                            <h3>Location</h3>
-                            <p>You’ll look at graphs and charts in Task One, how to approach </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-8">
-                    <div class="single-services mb-40 wow fadeInUp" data-wow-duration="1s" data-wow-delay=".2s">
-                        <div class="features-icon">
-                            <img src="{{ asset('assets/front/img/icon/icon2.svg') }}" alt="">
-                        </div>
-                        <div class="features-caption">
-                            <h3>Phone</h3>
-                            <p>(90) 277 278 2566</p>
-                            <p> (78) 267 256 2578</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-8">
-                    <div class="single-services mb-40 wow fadeInUp" data-wow-duration="2s" data-wow-delay=".4s">
-                        <div class="features-icon">
-                            <img src="{{ asset('assets/front/img/icon/icon3.svg') }}" alt="">
-                        </div>
-                        <div class="features-caption">
-                            <h3>Email</h3>
-                            <p>jacson767@gmail.com</p>
-                            <p>contact56@zacsion.com</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</main>
 @stop

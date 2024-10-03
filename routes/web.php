@@ -135,6 +135,7 @@ Route::group(['namespace' => 'User', 'prefix' => 'user', 'middleware' => ['is_au
 Route::get('/', [FrontPagesController::class, 'home'])->name('front.home');
 Route::get('/about', [FrontPagesController::class, 'about'])->name('front.about');
 Route::get('/services', [FrontPagesController::class, 'services'])->name('front.services');
+Route::get('/blog', [FrontPagesController::class, 'blog'])->name('front.blog');
 
 Route::get('/contact', [FrontContactController::class, 'contact'])->name('front.contact');
 Route::post('/contact/message/save', [FrontContactController::class, 'contactMessageSave'])->name('front.contact.message.save');

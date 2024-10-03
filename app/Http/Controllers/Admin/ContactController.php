@@ -25,11 +25,8 @@ class ContactController extends Controller
                 ->addColumn('id', function ($row) {
                     return '<strong>' . $row->id . '</strong>';
                 })
-                ->addColumn('subject', function ($row) {
-                    return strlen($row->subject) > 25 ? substr($row->subject, 0, 25) . '..' : $row->subject;
-                })
-                ->addColumn('message', function ($row) {
-                    return strlen($row->message) > 25 ? substr($row->message, 0, 25) . '..' : $row->message;
+                ->addColumn('goal', function ($row) {
+                    return strlen($row->goal) > 25 ? substr($row->goal, 0, 25) . '..' : $row->goal;
                 })
                 ->addColumn('actions', function ($row) {
                     $data['id'] = $row->id;
@@ -77,7 +74,6 @@ class ContactController extends Controller
         $request->validate([
             'email' => 'email',
             // 'phone' => 'min:10'
-            // 'whatsapp_number' => 'min:10'
         ]);
 
         $ContactUsSetting = ContactUsSetting::find($request->id);

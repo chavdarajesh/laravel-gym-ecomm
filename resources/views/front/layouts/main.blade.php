@@ -34,8 +34,9 @@ $current_route_name=Route::currentRouteName();
 
 <body class="{{ Route::currentRouteName() != 'front.contact' ? 'black-bg' : '' }}">
     @include('front.include.header')
-
+    <main>
     @yield('content')
+    </main>
 
     @include('front.include.footer')
 

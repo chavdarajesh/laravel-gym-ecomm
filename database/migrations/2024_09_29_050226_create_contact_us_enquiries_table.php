@@ -18,8 +18,7 @@ class CreateContactUsEnquiriesTable extends Migration
             $table->string('name')->nullable();
         	$table->string('email')->nullable();
         	$table->string('phone')->nullable();
-	        $table->string('subject')->nullable();
-	        $table->text('message')->nullable();
+	        $table->text('goal')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

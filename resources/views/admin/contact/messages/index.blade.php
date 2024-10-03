@@ -17,10 +17,9 @@
                                 <tr>
                                     <th class="text-center">ID</th>
                                     <th class="text-center">Name</th>
-                                    <th class="text-center">Email </th>
                                     <th class="text-center">Phone </th>
-                                    <th class="text-center">Subject</th>
-                                    <th class="text-center">Message</th>
+                                    <th class="text-center">Email </th>
+                                    <th class="text-center">Goal</th>
                                     <th class="text-center">Actions</th>
                                 </tr>
                             </thead>
@@ -57,18 +56,14 @@
                         data: 'name'
                     },
                     {
-                        data: 'email'
-                    },
-                    {
                         data: 'phone'
                     },
                     {
-                        data: 'subject',
+                        data: 'email'
                     },
                     {
-                        data: 'message',
+                        data: 'goal',
                     },
-
                     {
                         data: 'actions',
                         className: "text-center",

@@ -35,7 +35,8 @@ class SiteSettingSeeder extends Seeder
                 'status' => 1,
                 'order' => 2,
                 'created_at' => Carbon::now('Asia/Kolkata'),
-            ], [
+            ],
+            [
                 'key' => 'favicon',
                 'value' => null,
                 'title' => 'Favicon',
@@ -52,6 +53,33 @@ class SiteSettingSeeder extends Seeder
                 'status' => 1,
                 'order' => 4,
                 'created_at' => Carbon::now('Asia/Kolkata'),
+            ],
+            [
+                'key' => 'services_membership_plans_price',
+                'value' => '$100/M',
+                'title' => 'Membership Plans Price',
+                'description' => null,
+                'status' => 1,
+                'order' => 5,
+                'created_at' => Carbon::now('Asia/Kolkata')
+            ],
+            [
+                'key' => 'services_personal_training_price',
+                'value' => '$15/M',
+                'title' => 'Personal Training Price',
+                'description' => null,
+                'status' => 1,
+                'order' => 6,
+                'created_at' => Carbon::now('Asia/Kolkata')
+            ],
+            [
+                'key' => 'services_zumba_classes_price',
+                'value' => '$10/M',
+                'title' => 'Zumba Classes Price',
+                'description' => null,
+                'status' => 1,
+                'order' => 7,
+                'created_at' => Carbon::now('Asia/Kolkata')
             ],
             [
                 'key' => 'social_facebook_url',
@@ -88,7 +116,7 @@ class SiteSettingSeeder extends Seeder
                 'status' => 1,
                 'order' => 13,
                 'created_at' => Carbon::now('Asia/Kolkata')
-            ],
+            ]
 
         ];
         SiteSetting::insert($data);

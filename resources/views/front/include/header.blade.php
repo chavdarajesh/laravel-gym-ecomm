@@ -36,16 +36,9 @@ $loader = SiteSetting::getSiteSettings('loader');
                             <ul id="navigation">
                                 <li class="{{ Route::currentRouteName() == 'front.home' ? 'active' : '' }}"><a href="{{route('front.home')}}">Home</a></li>
                                 <li class="{{ Route::currentRouteName() == 'front.about' ? 'active' : '' }}"><a href="{{ route('front.about') }}">About</a></li>
-                                <li><a href="courses.html">Courses</a></li>
-                                <li><a href="pricing.html">Pricing</a></li>
-                                <li><a href="gallery.html">Gallery</a></li>
-                                <li><a href="blog.html">Blog</a>
-                                    <ul class="submenu">
-                                        <li><a href="blog.html">Blog</a></li>
-                                        <li><a href="blog_details.html">Blog Details</a></li>
-                                        <li><a href="elements.html">Elements</a></li>
-                                    </ul>
-                                </li>
+                                <li class="{{ Route::currentRouteName() == 'front.services' ? 'active' : '' }}"><a href="{{ route('front.services') }}">Services</a></li>
+                                <li><a href="{{ route('front.contact') }}">Suppliments</a></li>
+                                <li class="{{ Route::currentRouteName() == 'front.blog' ? 'active' : '' }}"><a href="{{ route('front.blog') }}">Blog</a></li>
                                 <li class="{{ Route::currentRouteName() == 'front.contact' ? 'active' : '' }}"><a href="{{ route('front.contact') }}">Contact</a></li>
                             </ul>
                         </nav>
