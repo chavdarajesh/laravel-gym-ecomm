@@ -87,9 +87,8 @@
                                                  <ul>
                                                      <li class="{{ Route::currentRouteName() == 'front.home' ? 'active' : '' }}"><a href="{{route('front.home')}}">Home</a></li>
                                                      <li class="{{ Route::currentRouteName() == 'front.about' ? 'active' : '' }}"><a href="{{ route('front.about') }}">About</a></li>
-                                                     <li class="{{ Route::currentRouteName() == 'front.services' ? 'active' : '' }}"><a href="{{ route('front.services') }}">Services</a></li>
-                                                     <li><a href="{{ route('front.contact') }}">Suppliments</a></li>
-                                                     <li class="{{ Route::currentRouteName() == 'front.blogs' ? 'active' : '' }}"><a href="{{ route('front.blogs') }}">Blog</a></li>
+                                                     <li class="{{ Route::currentRouteName() == 'front.privacy_policy' ? 'active' : '' }}"><a href="{{ route('front.privacy_policy') }}">Privacy Policy</a></li>
+                                                     <li class="{{ Route::currentRouteName() == 'front.term_and_condition' ? 'active' : '' }}"><a href="{{ route('front.term_and_condition') }}">Terms and Conditions</a></li>
                                                      <li class="{{ Route::currentRouteName() == 'front.contact' ? 'active' : '' }}"><a href="{{ route('front.contact') }}">Contact</a></li>
                                                  </ul>
                                              </nav>

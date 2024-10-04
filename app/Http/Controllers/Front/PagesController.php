@@ -132,4 +132,13 @@ class PagesController extends Controller
         }
         return redirect()->back()->with('error', 'Already UnSubscribed..');
     }
+
+    public function term_and_condition()
+    {
+        return view('front.pages.term_and_condition');
+    }
+    public function privacy_policy()
+    {
+        return view('front.pages.privacy_policy');
+    }
 }
