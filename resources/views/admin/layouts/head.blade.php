@@ -1,4 +1,3 @@
-
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -29,10 +28,13 @@
 <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
 <script src="{{ asset('assets/admin/js/config.js') }}"></script>
 <link rel="stylesheet" type="text/css" href="{{ asset('custom-assets/default/admin/css/toastr.min.css') }}">
-<link rel="stylesheet" href="{{asset('custom-assets/default/admin/css/select2.min.css')}}">
 
 @yield('css')
 <style>
+    div#cke_notifications_area_description,div#cke_notifications_area_content {
+        display: none !important;
+    }
+
     /* 20. preloader */
     /* line 577, C:/Users/HP/Desktop/July-HTML/292 Health coach/assets/scss/_common.scss */
     .preloader {

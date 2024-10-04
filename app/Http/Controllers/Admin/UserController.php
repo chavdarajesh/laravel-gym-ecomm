@@ -163,9 +163,6 @@ class UserController extends Controller
             $User->phone = $request['phone'];
             $User->address = $request['address'];
             $User->dateofbirth = $request['dateofbirth'];
-            $User->updated_by = Auth::user()->id;
-
-
             if ($request->image) {
                 $folderPath = public_path('custom-assets/upload/admin/images/users/image/');
                 if (!file_exists($folderPath)) {

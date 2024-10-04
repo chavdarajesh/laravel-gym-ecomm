@@ -7,6 +7,9 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Admin\SiteSettingController as AdminSiteSettingController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\BlogController as AdminBlogController;
+use App\Http\Controllers\Admin\NewsletterController as AdminNewsletterController;
+use App\Http\Controllers\Admin\NewsletterMailController as AdminNewsletterMailController;
 
 use App\Http\Controllers\User\AuthController as UserAuthController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
@@ -94,6 +97,35 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['is_
     Route::post('/users/delete/{id}', [AdminUserController::class, 'delete'])->name('admin.users.delete');
     Route::get('/users/referrals/{id}', [AdminUserController::class, 'userReferrals'])->name('admin.users.referrals');
     // User Modlue end
+
+    // Blogs Modlue start
+    Route::any('/blogs', [AdminBlogController::class, 'index'])->name('admin.blogs.index');
+    Route::get('/blogs/create', [AdminBlogController::class, 'create'])->name('admin.blogs.create');
+    Route::post('/blogs/save', [AdminBlogController::class, 'save'])->name('admin.blogs.save');
+    Route::get('/blogs/view/{id}', [AdminBlogController::class, 'view'])->name('admin.blogs.view');
+    Route::get('/blogs/edit/{id}', [AdminBlogController::class, 'edit'])->name('admin.blogs.edit');
+    Route::put('/blogs/update', [AdminBlogController::class, 'update'])->name('admin.blogs.update');
+    Route::post('/blogs/status/toggle', [AdminBlogController::class, 'statusToggle'])->name('admin.blogs.status.toggle');
+    Route::post('/blogs/delete/{id}', [AdminBlogController::class, 'delete'])->name('admin.blogs.delete');
+    Route::post('/blogs/delete-tag', [AdminBlogController::class, 'deleteTag'])->name('admin.blogs.delete.tag');
+
+
+    // contact us msg Modlue start
+    Route::get('/newsletters', [AdminNewsletterController::class, 'index'])->name('admin.newsletters.index');
+    Route::post('/newsletters/delete/{id}', [AdminNewsletterController::class, 'delete'])->name('admin.newsletters.delete');
+    Route::post('/newsletters/status/toggle', [AdminNewsletterController::class, 'statusToggle'])->name('admin.newsletters.status.toggle');
+    // contact us msg Modlue end
+
+    // newslettermails Modlue start
+    Route::any('/newslettermails', [AdminNewsletterMailController::class, 'index'])->name('admin.newslettermails.index');
+    Route::get('/newslettermails/create', [AdminNewsletterMailController::class, 'create'])->name('admin.newslettermails.create');
+    Route::post('/newslettermails/save', [AdminNewsletterMailController::class, 'save'])->name('admin.newslettermails.save');
+    Route::get('/newslettermails/view/{id}', [AdminNewsletterMailController::class, 'view'])->name('admin.newslettermails.view');
+    Route::get('/newslettermails/edit/{id}', [AdminNewsletterMailController::class, 'edit'])->name('admin.newslettermails.edit');
+    Route::put('/newslettermails/update', [AdminNewsletterMailController::class, 'update'])->name('admin.newslettermails.update');
+    Route::post('/newslettermails/delete/{id}', [AdminNewsletterMailController::class, 'delete'])->name('admin.newslettermails.delete');
+    Route::get('/newslettermails/sendmail/{id}', [AdminNewsletterMailController::class, 'sendmail'])->name('admin.newslettermails.sendmail');
+    // Blogs Modlue end
 });
 // Admin route end
 
@@ -135,7 +167,15 @@ Route::group(['namespace' => 'User', 'prefix' => 'user', 'middleware' => ['is_au
 Route::get('/', [FrontPagesController::class, 'home'])->name('front.home');
 Route::get('/about', [FrontPagesController::class, 'about'])->name('front.about');
 Route::get('/services', [FrontPagesController::class, 'services'])->name('front.services');
-Route::get('/blog', [FrontPagesController::class, 'blog'])->name('front.blog');
+
+Route::get('/blogs', [FrontPagesController::class, 'blogs'])->name('front.blogs');
+Route::get('/blog/details/{id}', [FrontPagesController::class, 'details'])->name('front.blog.details');
+Route::get('/blog/tags/{id}', [FrontPagesController::class, 'tagsList'])->name('front.blog.tags.list');
+Route::get('/blog/author/{id}', [FrontPagesController::class, 'authorList'])->name('front.blog.autor.list');
+Route::get('/blog/search', [FrontPagesController::class, 'search'])->name('front.blog.search');
 
 Route::get('/contact', [FrontContactController::class, 'contact'])->name('front.contact');
 Route::post('/contact/message/save', [FrontContactController::class, 'contactMessageSave'])->name('front.contact.message.save');
+
+Route::post('/newsletter/save', [FrontPagesController::class, 'newsletterSave'])->name('front.newsletter.save');
+Route::get('/newsletter/unsubscribe/{email}', [FrontPagesController::class, 'newsletterUnSubscribe'])->name('front.newsletter.unsubscribe');

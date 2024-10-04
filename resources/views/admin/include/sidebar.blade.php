@@ -32,8 +32,7 @@ $headerLogo = SiteSetting::getSiteSettings('header_logo');
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Module</span>
         </li>
-        <li class="menu-item {{ $current_route_name == 'admin.users.index' ||$current_route_name == 'admin.users.create' ||$current_route_name == 'admin.users.edit' ||$current_route_name == 'admin.users.view' ||$current_route_name == 'admin.admins.index' ||$current_route_name == 'admin.admins.create' ||$current_route_name == 'admin.admins.edit' ||$current_route_name == 'admin.admins.view' ||$current_route_name == 'admin.admins.referrals' ||$current_route_name == 'admin.employees.index' ||$current_route_name == 'admin.employees.create' ||$current_route_name == 'admin.employees.edit' ||$current_route_name == 'admin.employees.view' ||$current_route_name == 'admin.employees.referrals' ||$current_route_name == 'admin.managers.index' ||$current_route_name == 'admin.managers.create' ||$current_route_name == 'admin.managers.edit' ||$current_route_name == 'admin.managers.view' ||$current_route_name == 'admin.managers.referrals' ||$current_route_name == 'admin.organizations.index' ||$current_route_name == 'admin.organizations.create' ||$current_route_name == 'admin.organizations.edit' ||$current_route_name == 'admin.organizations.view'? 'open active': '' }}"
-            >
+        <li class="menu-item {{ $current_route_name == 'admin.users.index' ||$current_route_name == 'admin.users.create' ||$current_route_name == 'admin.users.edit' ||$current_route_name == 'admin.users.view' ? 'open active': '' }}">
             <a href="{{ route('admin.users.index') }}" class="menu-link menu-toggle">
                 <i class='menu-icon tf-icons bx bxs-user-detail'></i>
                 <div data-i18n="Layouts">Users Management</div>
@@ -47,8 +46,13 @@ $headerLogo = SiteSetting::getSiteSettings('header_logo');
                 </li>
             </ul>
         </li>
-        <li class="menu-item {{ $current_route_name == 'admin.contact.messages.index' || $current_route_name == 'admin.contact.settings.index' || $current_route_name == 'admin.contact.messages.view' ? 'open active' : '' }}"
-            >
+        <li class="menu-item  {{ $current_route_name == 'admin.blogs.index' ||$current_route_name == 'admin.blogs.create' ||$current_route_name == 'admin.blogs.edit' ||$current_route_name == 'admin.blogs.view'  ? 'active' : '' }}">
+            <a href="{{ route('admin.blogs.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-list-ul"></i>
+                <div>Blogs</div>
+            </a>
+        </li>
+        <li class="menu-item {{ $current_route_name == 'admin.contact.messages.index' || $current_route_name == 'admin.contact.settings.index' || $current_route_name == 'admin.contact.messages.view' ? 'open active' : '' }}">
             <a href="{{ route('admin.contact.messages.index') }}" class="menu-link menu-toggle">
                 <i class='menu-icon tf-icons bx bxs-contact'></i>
                 <div data-i18n="Layouts">Contacts Us Settings</div>
@@ -67,12 +71,33 @@ $headerLogo = SiteSetting::getSiteSettings('header_logo');
                 </li>
             </ul>
         </li>
+        <li class="menu-item {{ $current_route_name == 'admin.newsletters.index' || $current_route_name == 'admin.newsletters.create' || $current_route_name == 'admin.newsletters.edit' || $current_route_name == 'admin.newsletters.view' || $current_route_name == 'admin.newslettermails.index' || $current_route_name == 'admin.newslettermails.create' || $current_route_name == 'admin.newslettermails.edit' || $current_route_name == 'admin.newslettermails.view' ? 'open active' : '' }}"
+            style="">
+            <a href="{{ route('admin.newsletters.index') }}" class="menu-link menu-toggle">
+                <i class='menu-icon tf-icons bx bxs-envelope'></i>
+                <div data-i18n="Layouts">Newsletter Settings</div>
+            </a>
+
+            <ul class="menu-sub">
+                <li
+                    class="menu-item  {{ $current_route_name == 'admin.newsletters.index' || $current_route_name == 'admin.newsletters.create' || $current_route_name == 'admin.newsletters.edit' || $current_route_name == 'admin.newsletters.view' ? 'active' : '' }}">
+                    <a href="{{ route('admin.newsletters.index') }}" class="menu-link">
+                        <div>Newsletter</div>
+                    </a>
+                </li>
+                <li
+                    class="menu-item  {{ $current_route_name == 'admin.newslettermails.index' || $current_route_name == 'admin.newslettermails.create' || $current_route_name == 'admin.newslettermails.edit' || $current_route_name == 'admin.newslettermails.view' ? 'active' : '' }}">
+                    <a href="{{ route('admin.newslettermails.index') }}" class="menu-link">
+                        <div>Newsletter Mails</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Settings</span>
         </li>
 
-        <li class="menu-item {{ $current_route_name == 'admin.profile.settings.password.index' || $current_route_name == 'admin.profile.setting.index' ? 'open active' : '' }}"
-            >
+        <li class="menu-item {{ $current_route_name == 'admin.profile.settings.password.index' || $current_route_name == 'admin.profile.setting.index' ? 'open active' : '' }}">
             <a href="{{ route('admin.profile.settings.password.index') }}" class="menu-link menu-toggle">
                 <i class='menu-icon tf-icons bx bxs-user-account'></i>
                 <div data-i18n="Layouts">Account Settings</div>

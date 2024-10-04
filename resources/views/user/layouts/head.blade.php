@@ -30,7 +30,6 @@
 <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
 <script src="{{ asset('assets/user/js/config.js') }}"></script>
 <link rel="stylesheet" type="text/css" href="{{ asset('custom-assets/default/user/css/toastr.min.css') }}">
-<link rel="stylesheet" href="{{asset('custom-assets/default/user/css/select2.min.css')}}">
 
 @yield('css')
 

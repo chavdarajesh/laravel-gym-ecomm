@@ -20,7 +20,6 @@
 <!-- Place this tag in your head or just before your close body tag. -->
 
 <script src="{{ asset('custom-assets/default/user/js/toastr.min.js') }}"></script>
-<script src="{{ asset('custom-assets/default/user/js/select2.min.js') }}"></script>
 
 <script>
     @if (Session::has('message'))
@@ -58,12 +57,6 @@
         }
         toastr.warning("{{ session('warning') }}");
     @endif
-</script>
-
-<script>
-    $(document).ready(function() {
-        $('.select2').select2();
-    });
 </script>
 <script>
     $(window).on('load', function () {

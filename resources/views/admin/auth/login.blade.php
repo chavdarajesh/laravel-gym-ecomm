@@ -10,7 +10,11 @@
     <title>{{ env('APP_NAME', 'Laravel App') }} | Admin Login</title>
 
     <meta name="description" content="" />
-
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ isset($favicon) && isset($favicon->value) && $favicon != null && $favicon->value != '' ? asset($favicon->value) : asset('custom-assets/default/admin/images/siteimages/logo/favicon.png') }}" />
+    <link rel="icon" type="image/png" sizes="32x32"
+        href="{{ isset($favicon) && isset($favicon->value) && $favicon != null && $favicon->value != '' ? asset($favicon->value) : asset('custom-assets/default/admin/images/siteimages/logo/favicon.png') }}" />
+    <link rel="icon" type="image/png" sizes="16x16"
+        href="{{ isset($favicon) && isset($favicon->value) && $favicon != null && $favicon->value != '' ? asset($favicon->value) : asset('custom-assets/default/admin/images/siteimages/logo/favicon.png') }}" />
     <!-- Favicon -->
     @include('admin.layouts.head')
     <link rel="stylesheet" href="{{ asset('assets/admin/vendor/css/pages/page-auth.css') }}" />

@@ -19,8 +19,9 @@
              @if($ContactUsSetting ['address_1'])
              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-8">
                  <div class="single-services mb-40">
-                     <div class="features-icon">
-                         <img src="{{ asset('assets/front/img/icon/icon1.svg') }}" alt="">
+                     <div class="features-icon text-white  d-flex justify-content-center  fa-4x">
+                     <i class="fa fa-map"></i>
+                         <!-- <img src="{{ asset('assets/front/img/icon/icon1.svg') }}" alt=""> -->
                      </div>
                      <div class="features-caption">
                          <h3>Location</h3>
@@ -32,8 +33,9 @@
              @if($ContactUsSetting ['phone'])
              <div class="col-xl-3 col-lg-4 col-md-6 col-sm-8">
                  <div class="single-services mb-40">
-                     <div class="features-icon">
-                         <img src="{{ asset('assets/front/img/icon/icon2.svg') }}" alt="">
+                 <div class="features-icon text-white  d-flex justify-content-center  fa-4x">
+                     <i class="fa fa-phone"></i>
+                         <!-- <img src="{{ asset('assets/front/img/icon/icon1.svg') }}" alt=""> -->
                      </div>
                      <div class="features-caption">
                          <h3>Phone</h3>
@@ -45,8 +47,9 @@
              @if($ContactUsSetting ['email'])
              <div class="col-xl-3 col-lg-4 col-md-6 col-sm-8">
                  <div class="single-services mb-40">
-                     <div class="features-icon">
-                         <img src="{{ asset('assets/front/img/icon/icon3.svg') }}" alt="">
+                 <div class="features-icon text-white  d-flex justify-content-center  fa-4x">
+                 <i class="fas fa-envelope"></i>
+                         <!-- <img src="{{ asset('assets/front/img/icon/icon1.svg') }}" alt=""> -->
                      </div>
                      <div class="features-caption">
                          <h3>Email</h3>
@@ -86,7 +89,7 @@
                                                      <li class="{{ Route::currentRouteName() == 'front.about' ? 'active' : '' }}"><a href="{{ route('front.about') }}">About</a></li>
                                                      <li class="{{ Route::currentRouteName() == 'front.services' ? 'active' : '' }}"><a href="{{ route('front.services') }}">Services</a></li>
                                                      <li><a href="{{ route('front.contact') }}">Suppliments</a></li>
-                                                     <li class="{{ Route::currentRouteName() == 'front.blog' ? 'active' : '' }}"><a href="{{ route('front.blog') }}">Blog</a></li>
+                                                     <li class="{{ Route::currentRouteName() == 'front.blogs' ? 'active' : '' }}"><a href="{{ route('front.blogs') }}">Blog</a></li>
                                                      <li class="{{ Route::currentRouteName() == 'front.contact' ? 'active' : '' }}"><a href="{{ route('front.contact') }}">Contact</a></li>
                                                  </ul>
                                              </nav>
