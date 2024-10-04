@@ -89,6 +89,7 @@
                                                      <li class="{{ Route::currentRouteName() == 'front.about' ? 'active' : '' }}"><a href="{{ route('front.about') }}">About</a></li>
                                                      <li class="{{ Route::currentRouteName() == 'front.privacy_policy' ? 'active' : '' }}"><a href="{{ route('front.privacy_policy') }}">Privacy Policy</a></li>
                                                      <li class="{{ Route::currentRouteName() == 'front.term_and_condition' ? 'active' : '' }}"><a href="{{ route('front.term_and_condition') }}">Terms and Conditions</a></li>
+                                                     <li class="{{ Route::currentRouteName() == 'front.return_and_refund' ? 'active' : '' }}"><a href="{{ route('front.return_and_refund') }}">Return and Refund</a></li>
                                                      <li class="{{ Route::currentRouteName() == 'front.contact' ? 'active' : '' }}"><a href="{{ route('front.contact') }}">Contact</a></li>
                                                  </ul>
                                              </nav>

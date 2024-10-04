@@ -141,4 +141,8 @@ class PagesController extends Controller
     {
         return view('front.pages.privacy_policy');
     }
+    public function return_and_refund()
+    {
+        return view('front.pages.return_and_refund');
+    }
 }

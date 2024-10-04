@@ -182,3 +182,4 @@ Route::get('/newsletter/unsubscribe/{email}', [FrontPagesController::class, 'new
 
 Route::get('/privacy_policy', [FrontPagesController::class, 'privacy_policy'])->name('front.privacy_policy');
 Route::get('/term_and_condition', [FrontPagesController::class, 'term_and_condition'])->name('front.term_and_condition');
+Route::get('/return_and_refund', [FrontPagesController::class, 'return_and_refund'])->name('front.return_and_refund');
