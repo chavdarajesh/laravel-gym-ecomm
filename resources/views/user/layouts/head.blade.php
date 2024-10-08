@@ -59,7 +59,7 @@
         position: relative;
         border-style: solid;
         border-width: 1px;
-        border-top-color: #FF0000;
+        border-top-color: #ffcc29;
         border-bottom-color: transparent;
         border-left-color: transparent;
         border-right-color: transparent;

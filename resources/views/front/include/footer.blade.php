@@ -73,7 +73,7 @@
                          <div class="single-footer-caption mb-50 text-center">
                              <!-- logo -->
                              <div class="footer-logo wow fadeInUp" data-wow-duration="1s" data-wow-delay=".2s">
-                                 <a href="{{route('front.home')}}"><img src="{{ isset($headerLogo) && isset($headerLogo->value) && $headerLogo != null ? asset($headerLogo->value) : asset('custom-assets/default/admin/images/siteimages/logo/footer-logo.png') }}" alt="Logo"></a>
+                                 <a href="{{route('front.home')}}"><img width="80px" src="{{ isset($headerLogo) && isset($headerLogo->value) && $headerLogo != null ? asset($headerLogo->value) : asset('custom-assets/default/admin/images/siteimages/logo/footer-logo.png') }}" alt="Logo"></a>
                              </div>
                              <!-- Menu -->
                              <!-- Header Start -->

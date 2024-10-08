@@ -66,7 +66,7 @@
                 }
                 // Hover
                 &:hover{
-                    background: #ff1313;
+                    background: #ffcc29;
                     .caption {
                         & > span{
                             background: #fff;
@@ -85,7 +85,7 @@
                 }
                 // Active
                 &.active{
-                    background: #ff1313;
+                    background: #ffcc29;
                     .caption {
                         & > span{
                             background: #fff;
@@ -148,7 +148,7 @@
         }
         .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
             color: #fff;
-            background: #ff1313;
+            background: #ffcc29;
         }
     }
 

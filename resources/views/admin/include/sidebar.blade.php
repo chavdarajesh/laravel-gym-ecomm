@@ -4,10 +4,10 @@ use App\Models\SiteSetting;
 $headerLogo = SiteSetting::getSiteSettings('header_logo');
 @endphp
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-    <div class="app-brand demo d-flex justify-content-center align-items-center bg-primary">
+    <div class="app-brand demo d-flex justify-content-center align-items-center">
         <a href="{{ route('admin.dashboard') }}" class="app-brand-link">
 
-            <span class="app-brand-text demo menu-text fw-bolder"><img width="100"
+            <span class="app-brand-text demo menu-text fw-bolder"><img width="60"
                     src="{{ isset($headerLogo) && isset($headerLogo->value) && $headerLogo != null ? asset($headerLogo->value) : asset('custom-assets/default/admin/images/siteimages/logo/header-logo.png') }}"
                     alt="Header Logo"></span>
         </a>

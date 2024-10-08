@@ -28,7 +28,7 @@ $loader = SiteSetting::getSiteSettings('loader');
                 <div class="menu-wrapper d-flex align-items-center justify-content-between">
                     <!-- Logo -->
                     <div class="logo">
-                        <a href="{{route('front.home')}}"><img src="{{ isset($headerLogo) && isset($headerLogo->value) && $headerLogo != null ? asset($headerLogo->value) : asset('custom-assets/default/admin/images/siteimages/logo/header-logo.png') }}" alt="Logo"></a>
+                        <a href="{{route('front.home')}}"><img width="80px" src="{{ isset($headerLogo) && isset($headerLogo->value) && $headerLogo != null ? asset($headerLogo->value) : asset('custom-assets/default/admin/images/siteimages/logo/header-logo.png') }}" alt="Logo"></a>
                     </div>
                     <!-- Main-menu -->
                     <div class="main-menu f-right d-none d-lg-block">

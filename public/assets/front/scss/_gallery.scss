@@ -1,7 +1,7 @@
 
 .gallery-area{
     padding-top: 100px;
-    padding-bottom: 70px;	
+    padding-bottom: 70px;
     padding-left: 45px;
     padding-right: 45px;
     @media #{$sm}{
@@ -75,7 +75,7 @@
                     font-size: 20px;
                     width: 0;
                     height: 0;
-                    border-bottom: 100px solid red;
+                    border-bottom: 100px solid #ffcc29;
                     border-left: 100px solid transparent;
                     text-align: center;
                     display: inline-block;
@@ -117,4 +117,3 @@
     top: 0;
     left: 0;
   }
-  
