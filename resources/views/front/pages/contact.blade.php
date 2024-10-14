@@ -130,7 +130,7 @@ $ContactUsSetting = ContactUsSetting::get_contact_us_details();
 @section('js')
 <script>
     $(document).ready(function() {
-        $('#form-contact1').validate({
+        $('#form-contact').validate({
             rules: {
                 name: {
                     required: true,
