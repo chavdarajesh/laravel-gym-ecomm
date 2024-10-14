@@ -15,11 +15,13 @@ class PagesController extends Controller
 
     public function home()
     {
-        return view('front.pages.home');
+        $Blogs = Blog::where('status', 1)->orderBy('id', 'DESC')->limit(2)->get();
+        return view('front.pages.home', ['Blogs' => $Blogs]);
     }
     public function about()
     {
-        return view('front.pages.about');
+        $Blogs = Blog::where('status', 1)->orderBy('id', 'DESC')->limit(2)->get();
+        return view('front.pages.about', ['Blogs' => $Blogs]);
     }
     public function services()
     {

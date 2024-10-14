@@ -22,7 +22,7 @@ $ContactUsSetting = ContactUsSetting::get_contact_us_details();
             <div class="row">
                 <div class="col-xl-12">
                     <div class="hero-cap hero-cap2 pt-70">
-                        <h2>Contact me</h2>
+                        <h2>Contact us</h2>
                     </div>
                 </div>
             </div>
