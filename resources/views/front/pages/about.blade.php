@@ -74,12 +74,9 @@
                 <div class="section-tittle2 mb-20 wow fadeInUp" data-wow-duration="1s" data-wow-delay=".3s">
                     <div class="front-text">
                         <h2 class="">About Me</h2>
-                        <p>You’ll look at graphs and charts in Task One, how to approach the task and the language needed
-                            for a successful answer. You’ll examine Task Two questions and learn how to plan, write and
-                            check academic essays.</p>
-                        <p class="mb-40">Task One, how to approach the task and the language needed for a successful answer. You’ll
-                            examine Task Two questions and learn how to plan, write and check academic essays.</p>
-                        <a href="courses.html" class="border-btn">My Courses</a>
+                        <p>At CORE GYM, we are dedicated to offering a 24/7 fitness experience that fits into your busy lifestyle. Our goal is to help you achieve your personal fitness goals with the best equipment, expert trainers, and an environment that keeps you motivated, no matter your level.</p>
+                        <p class="mb-40">In addition to our gym services, we offer a premium range of supplements designed to fuel your workouts and enhance recovery. From muscle gain to weight loss, our scientifically-backed products support your fitness journey, helping you unlock your full potential.</p>
+                        <a href="{{route('front.contact')}}" class="border-btn">My Courses</a>
                     </div>
                 </div>
             </div>
