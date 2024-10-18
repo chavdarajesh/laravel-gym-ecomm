@@ -116,6 +116,15 @@ class SiteSettingSeeder extends Seeder
                 'status' => 1,
                 'order' => 13,
                 'created_at' => Carbon::now('Asia/Kolkata')
+            ],
+            [
+                'key' => 'video_section_youtube_video_id',
+                'value' => 'YZ84iQrbYjw',
+                'title' => 'Youtube Video ID',
+                'description' => null,
+                'status' => 1,
+                'order' => 8,
+                'created_at' => Carbon::now('Asia/Kolkata')
             ]
 
         ];

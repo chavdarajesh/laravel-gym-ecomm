@@ -10,6 +10,7 @@ use App\Models\SiteSetting;
 $services_membership_plans_price = SiteSetting::getSiteSettings('services_membership_plans_price');
 $services_personal_training_price = SiteSetting::getSiteSettings('services_personal_training_price');
 $services_zumba_classes_price = SiteSetting::getSiteSettings('services_zumba_classes_price');
+$video_section_youtube_video_id = SiteSetting::getSiteSettings('video_section_youtube_video_id');
 @endphp
 @section('content')
 
@@ -341,16 +342,18 @@ $services_zumba_classes_price = SiteSetting::getSiteSettings('services_zumba_cla
 @endif
 <!-- Blog Area End -->
 <!--? video_start -->
+@if (isset($video_section_youtube_video_id) && isset($video_section_youtube_video_id->value))
 <div class="video-area section-bg2 d-flex align-items-center" data-background="{{ asset('assets/front/img/gallery/video-bg.png') }}">
     <div class="container">
         <div class="video-wrap position-relative">
             <div class="video-icon">
-                <a class="popup-video btn-icon" href="https://www.youtube.com/watch?v=up68UAfH0d0"><i
+                <a class="popup-video btn-icon" href="https://www.youtube.com/watch?v={{$video_section_youtube_video_id->value}}"><i
                         class="fas fa-play"></i></a>
             </div>
         </div>
     </div>
 </div>
+@endif
 <!-- video_end -->
 @stop
 @section('js')
