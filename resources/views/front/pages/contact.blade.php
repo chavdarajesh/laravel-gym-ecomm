@@ -6,7 +6,7 @@
 <style>
     .map-responsive iframe {
         width: 100%;
-        height: 100%;
+        height: 350px;
     }
 </style>
 @stop
@@ -34,7 +34,7 @@ $ContactUsSetting = ContactUsSetting::get_contact_us_details();
 <section class="contact-section">
     <div class="container">
         @if ($ContactUsSetting && $ContactUsSetting['map_iframe'] != null)
-        <div class="d-none d-sm-block mb-5 pb-4 map-responsive">
+        <div class="d-block mb-5 pb-4 map-responsive">
             {!! $ContactUsSetting['map_iframe'] !!}
         </div>
         @endif

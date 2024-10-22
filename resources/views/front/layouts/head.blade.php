@@ -1,7 +1,7 @@
  <!-- CSS here -->
  <link rel="stylesheet" href="{{ asset('assets/front/css/bootstrap.min.css') }}">
  <link rel="stylesheet" href="{{ asset('assets/front/css/owl.carousel.min.css') }}">
- <link rel="stylesheet" href="{{ asset('assets/front/css/slicknav.css') }}">
+ <link rel="stylesheet" href="{{ asset('assets/front/css/slicknav.css?fvdfv') }}">
  <link rel="stylesheet" href="{{ asset('assets/front/css/flaticon.css') }}">
  <link rel="stylesheet" href="{{ asset('assets/front/css/gijgo.css') }}">
  <link rel="stylesheet" href="{{ asset('assets/front/css/animate.min.css') }}">

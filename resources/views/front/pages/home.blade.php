@@ -25,7 +25,7 @@ $video_section_youtube_video_id = SiteSetting::getSiteSettings('video_section_yo
                         <div class="hero__caption">
                             <span data-animation="fadeInLeft" data-delay="0.1s">Push Your Limits Anytime</span>
                             <h2 class="text-white fa-5x" data-animation="fadeInLeft" data-delay="0.4s"> CORE GYM, Where Fitness Is Limitless.</h2>
-                            <a href="{{route('front.contact')}}" class="border-btn hero-btn" data-animation="fadeInLeft"
+                            <a target="_blank" href="https://oc.debitsuccess.com/DirectEntry/DirectDebitRequest/Form?brandtemplateid=57205586-c7b6-43e7-8f0f-ba3e74d3b1bd#collapse%5Bobject%2520Object%5D" class="border-btn hero-btn" data-animation="fadeInLeft"
                                 data-delay="0.8s">Join Us</a>
                         </div>
                     </div>
@@ -235,8 +235,8 @@ $video_section_youtube_video_id = SiteSetting::getSiteSettings('video_section_yo
                         </div>
                         <div class="properties__caption">
                             <span class="month">Membership Plans</span>
-                            <p class="mb-25">{{ $services_membership_plans_price->value }} <span>(Yearly and Weekly)</span></p>
-                            <a href="{{ route('front.contact') }}" class="border-btn border-btn2">Join Now</a>
+                            <p class="mb-25">{{ $services_membership_plans_price->value }} <br><span>(Yearly and Weekly)</span></p>
+                            <a target="_blank" href="https://oc.debitsuccess.com/DirectEntry/DirectDebitRequest/Form?brandtemplateid=57205586-c7b6-43e7-8f0f-ba3e74d3b1bd#collapse%5Bobject%2520Object%5D" class="border-btn border-btn2">Join Now</a>
                         </div>
                     </div>
                 </div>
@@ -254,8 +254,8 @@ $video_section_youtube_video_id = SiteSetting::getSiteSettings('video_section_yo
                         </div>
                         <div class="properties__caption">
                             <span class="month">Personal Training</span>
-                            <p class="mb-25">{{ $services_personal_training_price->value }} <span>(Per Day Plan)</span></p>
-                            <a href="{{ route('front.contact') }}" class="border-btn border-btn2">Join Now</a>
+                            <p class="mb-25">{{ $services_personal_training_price->value }} <br> <span>(Per Session)</span></p>
+                            <a target="_blank" href="https://oc.debitsuccess.com/DirectEntry/DirectDebitRequest/Form?brandtemplateid=57205586-c7b6-43e7-8f0f-ba3e74d3b1bd#collapse%5Bobject%2520Object%5D" class="border-btn border-btn2">Join Now</a>
                         </div>
                     </div>
                 </div>
@@ -273,8 +273,8 @@ $video_section_youtube_video_id = SiteSetting::getSiteSettings('video_section_yo
                         </div>
                         <div class="properties__caption">
                             <span class="month">Zumba Classes</span>
-                            <p class="mb-25">{{ $services_zumba_classes_price->value }} <span>(Per Class)</span></p>
-                            <a href="{{ route('front.contact') }}" class="border-btn border-btn2">Join Now</a>
+                            <p class="mb-25">{{ $services_zumba_classes_price->value }}<br> <span>(Per Class)</span></p>
+                            <a target="_blank" href="https://oc.debitsuccess.com/DirectEntry/DirectDebitRequest/Form?brandtemplateid=57205586-c7b6-43e7-8f0f-ba3e74d3b1bd#collapse%5Bobject%2520Object%5D" class="border-btn border-btn2">Join Now</a>
                         </div>
                     </div>
                 </div>
@@ -300,7 +300,7 @@ $video_section_youtube_video_id = SiteSetting::getSiteSettings('video_section_yo
                     <h2 class="">About Me</h2>
                     <p>At CORE GYM, we are dedicated to offering a 24/7 fitness experience that fits into your busy lifestyle. Our goal is to help you achieve your personal fitness goals with the best equipment, expert trainers, and an environment that keeps you motivated, no matter your level.</p>
                         <p class="mb-40">In addition to our gym services, we offer a premium range of supplements designed to fuel your workouts and enhance recovery. From muscle gain to weight loss, our scientifically-backed products support your fitness journey, helping you unlock your full potential.</p>
-                        <a href="{{route('front.contact')}}" class="border-btn">Join Us</a>
+                        <a target="_blank" href="https://oc.debitsuccess.com/DirectEntry/DirectDebitRequest/Form?brandtemplateid=57205586-c7b6-43e7-8f0f-ba3e74d3b1bd#collapse%5Bobject%2520Object%5D" class="border-btn">Join Us</a>
                 </div>
             </div>
         </div>

@@ -84,7 +84,7 @@ $video_section_youtube_video_id = SiteSetting::getSiteSettings('video_section_yo
                     <h2 class="">About Me</h2>
                     <p>At CORE GYM, we are dedicated to offering a 24/7 fitness experience that fits into your busy lifestyle. Our goal is to help you achieve your personal fitness goals with the best equipment, expert trainers, and an environment that keeps you motivated, no matter your level.</p>
                     <p class="mb-40">In addition to our gym services, we offer a premium range of supplements designed to fuel your workouts and enhance recovery. From muscle gain to weight loss, our scientifically-backed products support your fitness journey, helping you unlock your full potential.</p>
-                    <a href="{{route('front.contact')}}" class="border-btn">Join Us</a>
+                    <a target="_blank" href="https://oc.debitsuccess.com/DirectEntry/DirectDebitRequest/Form?brandtemplateid=57205586-c7b6-43e7-8f0f-ba3e74d3b1bd#collapse%5Bobject%2520Object%5D" class="border-btn">Join Us</a>
                 </div>
             </div>
         </div>

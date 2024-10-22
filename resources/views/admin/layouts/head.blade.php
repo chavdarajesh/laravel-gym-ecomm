@@ -94,7 +94,6 @@
         -webkit-transform: translateY(-50%);
         -ms-transform: translateY(-50%);
         transform: translateY(-50%);
-        padding-top: 6px;
         -webkit-transition: .6s;
         -o-transition: .6s;
         transition: .6s;

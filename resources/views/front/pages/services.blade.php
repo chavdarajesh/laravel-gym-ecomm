@@ -55,8 +55,8 @@ $services_zumba_classes_price = SiteSetting::getSiteSettings('services_zumba_cla
                         </div>
                         <div class="properties__caption">
                             <span class="month">Membership Plans</span>
-                            <p class="mb-25">{{ $services_membership_plans_price->value }} <span>(Yearly and Weekly)</span></p>
-                            <a href="{{ route('front.contact') }}" class="border-btn border-btn2">Join Now</a>
+                            <p class="mb-25">{{ $services_membership_plans_price->value }} <br> <span>(Yearly and Weekly)</span></p>
+                            <a target="_blank" href="https://oc.debitsuccess.com/DirectEntry/DirectDebitRequest/Form?brandtemplateid=57205586-c7b6-43e7-8f0f-ba3e74d3b1bd#collapse%5Bobject%2520Object%5D" class="border-btn border-btn2">Join Now</a>
                         </div>
                     </div>
                 </div>
@@ -74,8 +74,8 @@ $services_zumba_classes_price = SiteSetting::getSiteSettings('services_zumba_cla
                         </div>
                         <div class="properties__caption">
                             <span class="month">Personal Training</span>
-                            <p class="mb-25">{{ $services_personal_training_price->value }} <span>(Per Day Plan)</span></p>
-                            <a href="{{ route('front.contact') }}" class="border-btn border-btn2">Join Now</a>
+                            <p class="mb-25">{{ $services_personal_training_price->value }}<br> <span>(Per Session)</span></p>
+                            <a target="_blank" href="https://oc.debitsuccess.com/DirectEntry/DirectDebitRequest/Form?brandtemplateid=57205586-c7b6-43e7-8f0f-ba3e74d3b1bd#collapse%5Bobject%2520Object%5D" class="border-btn border-btn2">Join Now</a>
                         </div>
                     </div>
                 </div>
@@ -93,8 +93,8 @@ $services_zumba_classes_price = SiteSetting::getSiteSettings('services_zumba_cla
                         </div>
                         <div class="properties__caption">
                             <span class="month">Zumba Classes</span>
-                            <p class="mb-25">{{ $services_zumba_classes_price->value }} <span>(Per Class)</span></p>
-                            <a href="{{ route('front.contact') }}" class="border-btn border-btn2">Join Now</a>
+                            <p class="mb-25">{{ $services_zumba_classes_price->value }}<br> <span>(Per Class)</span></p>
+                            <a target="_blank" href="https://oc.debitsuccess.com/DirectEntry/DirectDebitRequest/Form?brandtemplateid=57205586-c7b6-43e7-8f0f-ba3e74d3b1bd#collapse%5Bobject%2520Object%5D" class="border-btn border-btn2">Join Now</a>
                         </div>
                     </div>
                 </div>
