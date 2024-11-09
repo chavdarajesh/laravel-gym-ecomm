@@ -26,7 +26,7 @@
         toastr.options = {
             "closeButton": true,
             "progressBar": true,
-            "preventDuplicates": true
+            "preventDuplicates": false
         }
         toastr.success("{{ session('message') }}");
     @endif
@@ -35,7 +35,7 @@
         toastr.options = {
             "closeButton": true,
             "progressBar": true,
-            "preventDuplicates": true
+            "preventDuplicates": false
         }
         toastr.error("{{ session('error') }}");
     @endif
@@ -44,7 +44,7 @@
         toastr.options = {
             "closeButton": true,
             "progressBar": true,
-            "preventDuplicates": true
+            "preventDuplicates": false
         }
         toastr.info("{{ session('info') }}");
     @endif
@@ -53,7 +53,7 @@
         toastr.options = {
             "closeButton": true,
             "progressBar": true,
-            "preventDuplicates": true
+            "preventDuplicates": false
         }
         toastr.warning("{{ session('warning') }}");
     @endif

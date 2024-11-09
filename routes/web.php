@@ -10,6 +10,12 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 use App\Http\Controllers\Admin\NewsletterController as AdminNewsletterController;
 use App\Http\Controllers\Admin\NewsletterMailController as AdminNewsletterMailController;
+use App\Http\Controllers\Admin\SubCategoryController as AdminSubCategoryController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\BrandController as AdminBrandController;
+use App\Http\Controllers\Admin\SizeController as AdminSizeController;
+use App\Http\Controllers\Admin\FlavorController as AdminFlavorController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
 
 use App\Http\Controllers\User\AuthController as UserAuthController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
@@ -125,7 +131,73 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['is_
     Route::put('/newslettermails/update', [AdminNewsletterMailController::class, 'update'])->name('admin.newslettermails.update');
     Route::post('/newslettermails/delete/{id}', [AdminNewsletterMailController::class, 'delete'])->name('admin.newslettermails.delete');
     Route::get('/newslettermails/sendmail/{id}', [AdminNewsletterMailController::class, 'sendmail'])->name('admin.newslettermails.sendmail');
-    // Blogs Modlue end
+    // newslettermails Modlue end
+
+    // subcategorys Modlue start
+    Route::any('/subcategorys', [AdminSubCategoryController::class, 'index'])->name('admin.subcategorys.index');
+    Route::get('/subcategorys/create', [AdminSubCategoryController::class, 'create'])->name('admin.subcategorys.create');
+    Route::post('/subcategorys/save', [AdminSubCategoryController::class, 'save'])->name('admin.subcategorys.save');
+    Route::get('/subcategorys/view/{id}', [AdminSubCategoryController::class, 'view'])->name('admin.subcategorys.view');
+    Route::get('/subcategorys/edit/{id}', [AdminSubCategoryController::class, 'edit'])->name('admin.subcategorys.edit');
+    Route::put('/subcategorys/update', [AdminSubCategoryController::class, 'update'])->name('admin.subcategorys.update');
+    Route::post('/subcategorys/status/toggle', [AdminSubCategoryController::class, 'statusToggle'])->name('admin.subcategorys.status.toggle');
+    Route::post('/subcategorys/delete/{id}', [AdminSubCategoryController::class, 'delete'])->name('admin.subcategorys.delete');
+
+    // categorys Modlue start
+    Route::any('/categorys', [AdminCategoryController::class, 'index'])->name('admin.categorys.index');
+    Route::get('/categorys/create', [AdminCategoryController::class, 'create'])->name('admin.categorys.create');
+    Route::post('/categorys/save', [AdminCategoryController::class, 'save'])->name('admin.categorys.save');
+    Route::get('/categorys/view/{id}', [AdminCategoryController::class, 'view'])->name('admin.categorys.view');
+    Route::get('/categorys/edit/{id}', [AdminCategoryController::class, 'edit'])->name('admin.categorys.edit');
+    Route::put('/categorys/update', [AdminCategoryController::class, 'update'])->name('admin.categorys.update');
+    Route::post('/categorys/status/toggle', [AdminCategoryController::class, 'statusToggle'])->name('admin.categorys.status.toggle');
+    Route::post('/categorys/delete/{id}', [AdminCategoryController::class, 'delete'])->name('admin.categorys.delete');
+
+    // brands Modlue start
+    Route::any('/brands', [AdminBrandController::class, 'index'])->name('admin.brands.index');
+    Route::get('/brands/create', [AdminBrandController::class, 'create'])->name('admin.brands.create');
+    Route::post('/brands/save', [AdminBrandController::class, 'save'])->name('admin.brands.save');
+    Route::get('/brands/view/{id}', [AdminBrandController::class, 'view'])->name('admin.brands.view');
+    Route::get('/brands/edit/{id}', [AdminBrandController::class, 'edit'])->name('admin.brands.edit');
+    Route::put('/brands/update', [AdminBrandController::class, 'update'])->name('admin.brands.update');
+    Route::post('/brands/status/toggle', [AdminBrandController::class, 'statusToggle'])->name('admin.brands.status.toggle');
+    Route::post('/brands/delete/{id}', [AdminBrandController::class, 'delete'])->name('admin.brands.delete');
+    Route::post('/brands/subcategories', [AdminBrandController::class, 'subcategories'])->name('admin.brands.subcategories');
+
+    // sizes Modlue start
+    Route::any('/sizes', [AdminSizeController::class, 'index'])->name('admin.sizes.index');
+    Route::get('/sizes/create', [AdminSizeController::class, 'create'])->name('admin.sizes.create');
+    Route::post('/sizes/save', [AdminSizeController::class, 'save'])->name('admin.sizes.save');
+    Route::get('/sizes/view/{id}', [AdminSizeController::class, 'view'])->name('admin.sizes.view');
+    Route::get('/sizes/edit/{id}', [AdminSizeController::class, 'edit'])->name('admin.sizes.edit');
+    Route::put('/sizes/update', [AdminSizeController::class, 'update'])->name('admin.sizes.update');
+    Route::post('/sizes/status/toggle', [AdminSizeController::class, 'statusToggle'])->name('admin.sizes.status.toggle');
+    Route::post('/sizes/delete/{id}', [AdminSizeController::class, 'delete'])->name('admin.sizes.delete');
+    Route::post('/sizes/subcategories', [AdminSizeController::class, 'subcategories'])->name('admin.sizes.subcategories');
+
+     // flavors Modlue start
+     Route::any('/flavors', [AdminFlavorController::class, 'index'])->name('admin.flavors.index');
+     Route::get('/flavors/create', [AdminFlavorController::class, 'create'])->name('admin.flavors.create');
+     Route::post('/flavors/save', [AdminFlavorController::class, 'save'])->name('admin.flavors.save');
+     Route::get('/flavors/view/{id}', [AdminFlavorController::class, 'view'])->name('admin.flavors.view');
+     Route::get('/flavors/edit/{id}', [AdminFlavorController::class, 'edit'])->name('admin.flavors.edit');
+     Route::put('/flavors/update', [AdminFlavorController::class, 'update'])->name('admin.flavors.update');
+     Route::post('/flavors/status/toggle', [AdminFlavorController::class, 'statusToggle'])->name('admin.flavors.status.toggle');
+     Route::post('/flavors/delete/{id}', [AdminFlavorController::class, 'delete'])->name('admin.flavors.delete');
+     Route::post('/flavors/subcategories', [AdminFlavorController::class, 'subcategories'])->name('admin.flavors.subcategories');
+
+     // products Modlue start
+    Route::any('/products', [AdminProductController::class, 'index'])->name('admin.products.index');
+    Route::get('/products/create', [AdminProductController::class, 'create'])->name('admin.products.create');
+    Route::post('/products/save', [AdminProductController::class, 'save'])->name('admin.products.save');
+    Route::get('/products/view/{id}', [AdminProductController::class, 'view'])->name('admin.products.view');
+    Route::get('/products/edit/{id}', [AdminProductController::class, 'edit'])->name('admin.products.edit');
+    Route::put('/products/update', [AdminProductController::class, 'update'])->name('admin.products.update');
+    Route::post('/products/status/toggle', [AdminProductController::class, 'statusToggle'])->name('admin.products.status.toggle');
+    Route::post('/products/delete/{id}', [AdminProductController::class, 'delete'])->name('admin.products.delete');
+    Route::post('/products/categories', [AdminProductController::class, 'categories'])->name('admin.products.categories');
+    Route::post('/products/subcategories', [AdminProductController::class, 'subcategories'])->name('admin.products.subcategories');
+
 });
 // Admin route end
 
@@ -183,3 +255,5 @@ Route::get('/newsletter/unsubscribe/{email}', [FrontPagesController::class, 'new
 Route::get('/privacy_policy', [FrontPagesController::class, 'privacy_policy'])->name('front.privacy_policy');
 Route::get('/term_and_condition', [FrontPagesController::class, 'term_and_condition'])->name('front.term_and_condition');
 Route::get('/return_and_refund', [FrontPagesController::class, 'return_and_refund'])->name('front.return_and_refund');
+
+Route::get('/products', [FrontPagesController::class, 'products'])->name('front.products');

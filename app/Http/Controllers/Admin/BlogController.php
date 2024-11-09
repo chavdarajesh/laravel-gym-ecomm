@@ -56,7 +56,7 @@ class BlogController extends Controller
         $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'image' => 'file|image|mimes:jpeg,png,jpg,gif|max:5000',
+            'image' => 'required|file|image|mimes:jpeg,png,jpg,gif|max:5000',
             'fields' => 'array',
             'fields.*' => 'string|max:255',
         ]);
@@ -114,17 +114,26 @@ class BlogController extends Controller
 
     public function update(Request $request)
     {
-        print_r($request->all());
-        // exit;
+        $request->merge(['has_old_image' => $request->old_image ? true : false]);
+
+        // Validation rules
         $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'image' => 'file|image|mimes:jpeg,png,jpg,gif|max:5000',
+            'image' => [
+                'required_if:has_old_image,false',
+                'file',
+                'image',
+                'mimes:jpeg,png,jpg,gif',
+                'max:5000',
+            ],
             'author' => 'required|exists:users,id,status,1,is_verified,1',
             'tags' => 'array',
             'fields' => 'array',
             'fields.*' => 'string|max:255',
         ]);
+
+
         $Blog = Blog::find($request->id);
         if ($Blog) {
             $Blog->title = $request['title'];

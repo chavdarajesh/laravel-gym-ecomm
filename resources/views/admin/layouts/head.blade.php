@@ -28,10 +28,12 @@
 <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
 <script src="{{ asset('assets/admin/js/config.js') }}"></script>
 <link rel="stylesheet" type="text/css" href="{{ asset('custom-assets/default/admin/css/toastr.min.css') }}">
+<link rel="stylesheet" href="{{asset('custom-assets/default/admin/css/select2.min.css')}}">
 
 @yield('css')
 <style>
-    div#cke_notifications_area_description,div#cke_notifications_area_content {
+    div#cke_notifications_area_description,
+    div#cke_notifications_area_content {
         display: none !important;
     }
 
@@ -59,7 +61,7 @@
         height: 100px;
         position: relative;
         border-style: solid;
-        border-width: 1px;
+        border-width: 3px;
         border-top-color: #ffcc29;
         border-bottom-color: transparent;
         border-left-color: transparent;
@@ -101,7 +103,7 @@
 
     /* line 636, C:/Users/HP/Desktop/July-HTML/292 Health coach/assets/scss/_common.scss */
     .preloader .preloader-img img {
-        max-width: 55px;
+        max-width: 85%;
     }
 
     /* line 639, C:/Users/HP/Desktop/July-HTML/292 Health coach/assets/scss/_common.scss */

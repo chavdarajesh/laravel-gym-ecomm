@@ -147,4 +147,9 @@ class PagesController extends Controller
     {
         return view('front.pages.return_and_refund');
     }
+
+    public function products()
+    {
+        return view('front.pages.product-list');
+    }
 }

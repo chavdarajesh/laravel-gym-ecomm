@@ -20,13 +20,14 @@
 <!-- Place this tag in your head or just before your close body tag. -->
 
 <script src="{{ asset('custom-assets/default/admin/js/toastr.min.js') }}"></script>
+<script src="{{ asset('custom-assets/default/admin/js/select2.min.js') }}"></script>
 
 <script>
     @if (Session::has('message'))
         toastr.options = {
             "closeButton": true,
             "progressBar": true,
-            "preventDuplicates": true
+            "preventDuplicates": false
         }
         toastr.success("{{ session('message') }}");
     @endif
@@ -35,7 +36,7 @@
         toastr.options = {
             "closeButton": true,
             "progressBar": true,
-            "preventDuplicates": true
+            "preventDuplicates": false
         }
         toastr.error("{{ session('error') }}");
     @endif
@@ -44,7 +45,7 @@
         toastr.options = {
             "closeButton": true,
             "progressBar": true,
-            "preventDuplicates": true
+            "preventDuplicates": false
         }
         toastr.info("{{ session('info') }}");
     @endif
@@ -53,7 +54,7 @@
         toastr.options = {
             "closeButton": true,
             "progressBar": true,
-            "preventDuplicates": true
+            "preventDuplicates": false
         }
         toastr.warning("{{ session('warning') }}");
     @endif
@@ -65,6 +66,11 @@
       $('body').delay(450).css({
         'overflow': 'visible'
       });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('.select2').select2();
     });
 </script>
 @yield('js')

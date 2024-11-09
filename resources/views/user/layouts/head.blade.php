@@ -58,7 +58,7 @@
         height: 100px;
         position: relative;
         border-style: solid;
-        border-width: 1px;
+        border-width: 3px;
         border-top-color: #ffcc29;
         border-bottom-color: transparent;
         border-left-color: transparent;
@@ -100,7 +100,7 @@
 
     /* line 636, C:/Users/HP/Desktop/July-HTML/292 Health coach/assets/scss/_common.scss */
     .preloader .preloader-img img {
-        max-width: 55px;
+        max-width: 85%;
     }
 
     /* line 639, C:/Users/HP/Desktop/July-HTML/292 Health coach/assets/scss/_common.scss */
