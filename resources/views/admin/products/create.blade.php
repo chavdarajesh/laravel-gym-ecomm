@@ -16,7 +16,7 @@
                         @csrf
                         <div class="row">
                             <div class="mb-3 col-md-12">
-                                <label for="cover_image" class="form-label">Image</label>
+                                <label for="cover_image" class="form-label">Cover Image</label>
                                 <input class="form-control" type="file" id="cover_image" name="cover_image">
                                 <div id="cover_image_error" class="text-danger"> @error('cover_image')
                                     {{ $message }}
@@ -36,7 +36,7 @@
                                 <label for="brand" class="form-label">Brand</label>
                                 <select class="form-select select2 @error('brand') is-invalid @enderror" id="brand"
                                     name="brand">
-                                    <option selected disabled >Select Brand</option>
+                                    <option selected disabled>Select Brand</option>
                                     @foreach ($Brands as $Brand)
                                     <option value="{{ $Brand->id }}">{{ $Brand->name }}</option>
                                     @endforeach
@@ -70,6 +70,30 @@
                             </div>
 
                             <div class="mb-3 col-md-12">
+                                <label for="flavors" class="form-label">Flavor</label>
+                                <select multiple class="form-select select2 @error('flavors') is-invalid @enderror" id="flavors"
+                                    name="flavors[]">
+                                    @foreach ($Flavors as $Flavor)
+                                    <option value="{{ $Flavor->id }}">{{ $Flavor->name }}</option>
+                                    @endforeach
+                                </select>
+                                <div id="flavors_error" class="text-danger"> @error('flavors')
+                                    {{ $message }}
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="mb-3 col-md-12">
+                                <label for="images" class="form-label">Images</label>
+                                <input class="form-control" type="file" id="images" name="images[]" multiple>
+                                <div id="images_error" class="text-danger">
+                                    @error('images')
+                                    {{ $message }}
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="mb-3 col-md-12">
                                 <label for="sizes" class="form-label">Size</label>
                                 <select multiple class="form-select select2 @error('sizes') is-invalid @enderror" id="sizes"
                                     name="sizes[]">
@@ -83,19 +107,8 @@
                                 </div>
                             </div>
 
-                            <div class="mb-3 col-md-12">
-                                <label for="flavors" class="form-label">Flavor</label>
-                                <select multiple class="form-select select2 @error('flavors') is-invalid @enderror" id="flavors"
-                                    name="flavors[]">
-                                    @foreach ($Flavors as $Flavor)
-                                    <option value="{{ $Flavor->id }}">{{ $Flavor->name }}</option>
-                                    @endforeach
-                                </select>
-                                <div id="flavors_error" class="text-danger"> @error('flavors')
-                                    {{ $message }}
-                                    @enderror
-                                </div>
-                            </div>
+                            <div id="priceInputsContainer" class="mb-3 col-md-12"></div>
+
 
                             <div class="mb-3 col-md-12">
                                 <label for="description" class="form-label">Description</label>
@@ -163,6 +176,8 @@
                 },
                 'sizes[]': "required",
                 'flavors[]': "required",
+                'prices[]': "required",
+                // 'images[]': "required",
                 description: {
                     required: function() {
                         var editor = CKEDITOR.instances.description;
@@ -207,9 +222,6 @@
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
-                    // Populate subcategories dropdown
-                    console.log(response);
-
                     if (response && response.subcategories && response.subcategories.length > 0) {
                         response.subcategories.forEach(function(subcategory) {
                             $('#subcategory').append(
@@ -249,6 +261,40 @@
                 error: function(xhr) {
                     toastr.error(xhr.responseText);
                     console.error('Failed to fetch category:', xhr.responseText);
+                }
+            });
+        });
+
+        $('#sizes').change(function() {
+            const selectedSizes = $(this).val();
+            $('#priceInputsContainer .price-input').each(function() {
+                const sizeId = $(this).data('size-id');
+                if (!selectedSizes.includes(sizeId.toString())) {
+                    $(this).remove();
+                }
+            });
+
+            selectedSizes.forEach(function(sizeId) {
+                if ($(`#price_${sizeId}`).length === 0) {
+                    const sizeName = $(`#sizes option[value="${sizeId}"]`).text();
+                    const priceInput = `
+                        <div class="mb-3 price-input" data-size-id="${sizeId}">
+                            <label for="price_${sizeId}" class="form-label">Price for ${sizeName}</label>
+                            <input type="number" step="0.01" class="form-control" id="price_${sizeId}" name="prices[${sizeId}]" placeholder="Enter price for ${sizeName}">
+                        </div>
+                    `;
+                    $('#priceInputsContainer').append(priceInput);
+
+                    $(`#price_${sizeId}`).rules("add", {
+                        required: true,
+                        number: true,
+                        min: 0.01,
+                        messages: {
+                            required: "Please enter a price for " + sizeName,
+                            number: "Please enter a valid number for " + sizeName,
+                            min: "Price must be greater than 0 for " + sizeName
+                        }
+                    });
                 }
             });
         });

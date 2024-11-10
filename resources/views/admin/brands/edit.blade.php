@@ -163,9 +163,6 @@
                 _token: '{{ csrf_token() }}'
             },
             success: function(response) {
-                // Populate subcategories dropdown
-                console.log(response);
-
                 if (response && response.subcategories && response.subcategories.length > 0) {
                     response.subcategories.forEach(function(subcategory) {
                         $('#subcategories').append(

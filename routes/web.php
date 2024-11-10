@@ -197,6 +197,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['is_
     Route::post('/products/delete/{id}', [AdminProductController::class, 'delete'])->name('admin.products.delete');
     Route::post('/products/categories', [AdminProductController::class, 'categories'])->name('admin.products.categories');
     Route::post('/products/subcategories', [AdminProductController::class, 'subcategories'])->name('admin.products.subcategories');
+    Route::post('/products/images/delete', [AdminProductController::class, 'imagesDelete'])->name('admin.products.images.delete');
 
 });
 // Admin route end

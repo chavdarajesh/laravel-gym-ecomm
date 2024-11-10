@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Size;
 use App\Models\Flavor;
+use App\Models\ProductImage;
 use App\Models\Subcategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -92,13 +93,34 @@ class ProductController extends Controller
             $Product->cover_image = 'custom-assets/upload/admin/images/products/images/' . $imageName;
         }
         $Product->save();
-        $Product->sizes()->attach($request->sizes);
-        $Product->flavors()->attach($request->flavors);
 
-        // foreach ($request->prices as $sizeId => $price) {
-        //     $Product->sizes()->updateExistingPivot($sizeId, ['price' => $price]);
-        // }
+        $sizeData = [];
+        foreach ($request->sizes as $sizeId) {
+            if (isset($request->prices[$sizeId])) {
+                $sizeData[$sizeId] = ['price' => $request->prices[$sizeId]]; // Add price for each size
+            }
+        }
+        $Product->sizes()->sync($sizeData);
+        $Product->flavors()->sync($request->flavors);
 
+        $images = $request->file('images');
+        if ($images && count($images) > 0) {
+            $images_arr = [];
+            $folderPath = public_path('custom-assets/upload/admin/images/products/multipleimages/');
+            if (!file_exists($folderPath)) {
+                mkdir($folderPath, 0777, true);
+            }
+            foreach ($images as $key => $file) {
+                $imageoriginalname = str_replace(" ", "-", $file->getClientOriginalName());
+                $imageName = rand(1000, 9999) . time() . $imageoriginalname;
+                $file->move($folderPath, $imageName);
+                $images_arr[] = [
+                    'product_id' => $Product->id,
+                    'image' => 'custom-assets/upload/admin/images/products/multipleimages/' . $imageName,
+                ];
+            }
+            ProductImage::insert($images_arr);
+        }
         if ($Product) {
             return redirect()->route('admin.products.index')->with('message', 'Product Added Sucssesfully..');
         } else {
@@ -109,7 +131,22 @@ class ProductController extends Controller
     {
         $Product = Product::find($id);
         if ($Product) {
-            return view('admin.products.view', ['Product' => $Product]);
+            $Brands = Brand::where('status', 1)->get();
+            $brandId = $Product->brand_id;
+            $Categorys = Category::whereHas('brandCategories', function ($query) use ($brandId) {
+                $query->where('brand_id', $brandId);
+            })->get();
+
+            $categoryId = $Product->category_id;
+            $subcategories = Subcategory::whereHas('brandSubcategories', function ($query) use ($brandId) {
+                $query->where('brand_id', $brandId);
+            })->whereHas('categories', function ($query) use ($categoryId) {
+                $query->where('category_id', $categoryId);
+            })->get();
+
+            $Sizes = Size::where('status', 1)->get();
+            $Flavors = Flavor::where('status', 1)->get();
+            return view('admin.products.view', ['Product' => $Product, 'Brands' => $Brands, 'Categorys' => $Categorys, 'subcategories' => $subcategories, 'Sizes' => $Sizes, 'Flavors' => $Flavors]);
         } else {
             return redirect()->back()->with('error', 'Product Not Found..!');
         }
@@ -119,12 +156,22 @@ class ProductController extends Controller
     {
         $Product = Product::find($id);
         if ($Product) {
-            $Categorys = Category::where('status', 1)->get();
-            $categoryIds = $Product->categories->pluck('id')->toArray();
-            $subcategories = Subcategory::whereHas('categories', function ($query) use ($categoryIds) {
-                $query->whereIn('categories.id', $categoryIds);
+            $Brands = Brand::where('status', 1)->get();
+            $brandId = $Product->brand_id;
+            $Categorys = Category::whereHas('brandCategories', function ($query) use ($brandId) {
+                $query->where('brand_id', $brandId);
             })->get();
-            return view('admin.products.edit', ['Product' => $Product, 'Categorys' => $Categorys, 'subcategories' => $subcategories]);
+
+            $categoryId = $Product->category_id;
+            $subcategories = Subcategory::whereHas('brandSubcategories', function ($query) use ($brandId) {
+                $query->where('brand_id', $brandId);
+            })->whereHas('categories', function ($query) use ($categoryId) {
+                $query->where('category_id', $categoryId);
+            })->get();
+
+            $Sizes = Size::where('status', 1)->get();
+            $Flavors = Flavor::where('status', 1)->get();
+            return view('admin.products.edit', ['Product' => $Product, 'Brands' => $Brands, 'Categorys' => $Categorys, 'subcategories' => $subcategories, 'Sizes' => $Sizes, 'Flavors' => $Flavors]);
         } else {
             return redirect()->back()->with('error', 'Product Not Found..!');
         }
@@ -132,7 +179,7 @@ class ProductController extends Controller
 
     public function update(Request $request)
     {
-        $request->merge(['has_old_image' => $request->old_image ? true : false]);
+        $request->merge(['has_old_image' => $request->old_cover_image ? true : false]);
         $request->validate([
             'name' => 'required',
             'description' => 'required',
@@ -143,8 +190,12 @@ class ProductController extends Controller
                 'mimes:jpeg,png,jpg,gif',
                 'max:5000',
             ],
-            'categories' => 'array',
-            'subcategories' => 'array',
+            'brand' => 'required|exists:brands,id',
+            'category' => 'required|exists:categories,id',
+            'subcategory' => 'required|exists:subcategories,id',
+            'sizes' => 'required|array',
+            'flavors' => 'required|array',
+            'images.*' => 'image',
         ]);
 
 
@@ -152,6 +203,10 @@ class ProductController extends Controller
         if ($Product) {
             $Product->name = $request['name'];
             $Product->description = $request['description'];
+            $Product->brand_id = $request['brand'];
+            $Product->category_id = $request['category'];
+            $Product->subcategory_id = $request['subcategory'];
+
             if ($request->cover_image) {
                 if ($request->old_cover_image && file_exists(public_path($request->old_cover_image))) {
                     unlink(public_path($request->old_cover_image));
@@ -167,8 +222,29 @@ class ProductController extends Controller
                 $Product->cover_image = 'custom-assets/upload/admin/images/products/images/' . $imageName;
             }
             $Product->update();
-            $Product->categories()->sync($request->categories);
-            $Product->subcategories()->sync($request->subcategories);
+
+
+            $images = $request->file('images');
+
+            if ($images && count($images) > 0) {
+                $images_arr = [];
+                $folderPath = public_path('custom-assets/upload/admin/images/products/multipleimages/');
+                if (!file_exists($folderPath)) {
+                    mkdir($folderPath, 0777, true);
+                }
+                foreach ($images as $key => $file) {
+                    $imageoriginalname = str_replace(" ", "-", $file->getClientOriginalName());
+                    $imageName = rand(1000, 9999) . time() . $imageoriginalname;
+                    $file->move($folderPath, $imageName);
+                    $images_arr[] = [
+                        'product_id' => $Product->id,
+                        'image' => 'custom-assets/upload/admin/images/products/multipleimages/' . $imageName,
+                    ];
+                }
+                ProductImage::insert($images_arr);
+            }
+
+
             if ($Product) {
                 return redirect()->route('admin.products.index')->with('message', 'Product Updated Sucssesfully..');
             } else {
@@ -247,6 +323,24 @@ class ProductController extends Controller
             }
         } else {
             return response()->json(['error' => 'Sub Categories Not Found..!']);
+        }
+    }
+
+    public function imagesDelete(Request $request)
+    {
+        if ($request->id) {
+            $ProductImage = ProductImage::find($request->id);
+            if ($ProductImage->image && file_exists(public_path($ProductImage->image))) {
+                unlink(public_path($ProductImage->image));
+            }
+            $ProductImage = $ProductImage->delete();
+            if ($ProductImage) {
+                return response()->json(['success' => 'Image Deleted Successfully.']);
+            } else {
+                return response()->json(['error' => 'Somthing Went Wrong..!']);
+            }
+        } else {
+            return response()->json(['error' => 'ProductImage Not Found..!']);
         }
     }
 }
