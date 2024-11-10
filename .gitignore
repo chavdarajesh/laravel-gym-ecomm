@@ -14,9 +14,9 @@ yarn-error.log
 /.idea
 /.vscode
 
-/public/custom-assets/uplode/
+/public/custom-assets/upload/
 
-/public/custom-assets/uplode/*
+/public/custom-assets/upload/*
 
 
-/public/custom-assets/uplode
+/public/custom-assets/upload
