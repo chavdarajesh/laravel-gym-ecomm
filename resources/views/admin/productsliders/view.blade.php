@@ -28,18 +28,14 @@
                         </div>
                         <div class="mb-3 col-md-12">
                             <label for="product" class="form-label">Product</label>
-                            <select disabled class="form-select select2 @error('product') is-invalid @enderror" id="product"
+                            <select disabled class="form-select select2" id="product"
                                 name="product">
                                 @if(!$ProductSlider->product_id)
                                 <option selected disabled>Select Product</option>
-                               @else
-                                    <option selected value="{{ $ProductSlider->product_id }}">{{ $ProductSlider->product->name }}</option>
+                                @else
+                                <option selected value="{{ $ProductSlider->product_id }}">{{ $ProductSlider->product->name }}</option>
                                 @endif
                             </select>
-                            <div id="product_error" class="text-danger"> @error('product')
-                                {{ $message }}
-                                @enderror
-                            </div>
                         </div>
                         <div class="mb-3 col-md-12">
                             <label for="order" class="form-label">Order</label>
