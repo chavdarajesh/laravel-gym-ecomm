@@ -10,10 +10,6 @@ use Illuminate\Support\Facades\Auth;
 class SiteSettingController extends Controller
 {
     //
-    public function __construct()
-    {
-    }
-
     public function index()
     {
         $siteSettingObj = SiteSetting::where('status', 1)->orderBy('order', 'asc')->get();

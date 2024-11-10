@@ -8,11 +8,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory;use SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
-        'name', 'cover_image', 'description', 'price',
-        'brand_id', 'category_id', 'subcategory_id'
+        'name',
+        'cover_image',
+        'description',
+        'price',
+        'brand_id',
+        'category_id',
+        'subcategory_id'
     ];
 
     public function images()
@@ -23,13 +29,13 @@ class Product extends Model
     public function sizes()
     {
         return $this->belongsToMany(Size::class, 'product_sizes')
-        ->withPivot('price') // Specify the additional pivot attribute
-        ->withTimestamps();  //
+            ->withPivot('price') // Specify the additional pivot attribute
+            ->withTimestamps();  //
     }
 
     public function flavors()
     {
-        return $this->belongsToMany(Flavor::class,'product_flavors');
+        return $this->belongsToMany(Flavor::class, 'product_flavors');
     }
 
     public function brand()
@@ -52,4 +58,13 @@ class Product extends Model
         return $this->hasMany(ProductReview::class);
     }
 
+    public function topSelling()
+    {
+        return $this->hasOne(TopSellingProduct::class);
+    }
+
+    public function productSlider()
+    {
+        return $this->hasOne(ProductSlider::class);
+    }
 }

@@ -9,10 +9,6 @@ use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
-    public function __construct()
-    {
-    }
-
     public function profileSettingsPasswordIndex()
     {
         return view('user.profile.password');

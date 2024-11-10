@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\SizeController as AdminSizeController;
 use App\Http\Controllers\Admin\FlavorController as AdminFlavorController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductSliderController as AdminProductSliderController;
+use App\Http\Controllers\Admin\TopSellingProductController as AdminTopSellingProductController;
 
 use App\Http\Controllers\User\AuthController as UserAuthController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\User\ProfileController as UserProfileController;
 
 use App\Http\Controllers\Front\ContactController as FrontContactController;
 use App\Http\Controllers\Front\PagesController as FrontPagesController;
+use App\Http\Controllers\Front\ProductController as FrontProductController;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -211,6 +213,20 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['is_
      Route::post('/productsliders/status/toggle', [AdminProductSliderController::class, 'statusToggle'])->name('admin.productsliders.status.toggle');
      Route::post('/productsliders/delete/{id}', [AdminProductSliderController::class, 'delete'])->name('admin.productsliders.delete');
 
+      // productsliders Modlue start
+      Route::any('/productsliders', [AdminProductSliderController::class, 'index'])->name('admin.productsliders.index');
+      Route::get('/productsliders/create', [AdminProductSliderController::class, 'create'])->name('admin.productsliders.create');
+      Route::post('/productsliders/save', [AdminProductSliderController::class, 'save'])->name('admin.productsliders.save');
+      Route::get('/productsliders/view/{id}', [AdminProductSliderController::class, 'view'])->name('admin.productsliders.view');
+      Route::get('/productsliders/edit/{id}', [AdminProductSliderController::class, 'edit'])->name('admin.productsliders.edit');
+      Route::put('/productsliders/update', [AdminProductSliderController::class, 'update'])->name('admin.productsliders.update');
+      Route::post('/productsliders/status/toggle', [AdminProductSliderController::class, 'statusToggle'])->name('admin.productsliders.status.toggle');
+      Route::post('/productsliders/delete/{id}', [AdminProductSliderController::class, 'delete'])->name('admin.productsliders.delete');
+
+       // topsellingproducts
+    Route::get('/topsellingproducts', [AdminTopSellingProductController::class, 'index'])->name('admin.topsellingproducts.index');
+    Route::post('/topsellingproducts/update', [AdminTopSellingProductController::class, 'update'])->name('admin.topsellingproducts.update');
+
 });
 // Admin route end
 
@@ -270,3 +286,6 @@ Route::get('/term_and_condition', [FrontPagesController::class, 'term_and_condit
 Route::get('/return_and_refund', [FrontPagesController::class, 'return_and_refund'])->name('front.return_and_refund');
 
 Route::get('/products', [FrontPagesController::class, 'products'])->name('front.products');
+
+
+Route::get('/products', [FrontProductController::class, 'products'])->name('front.products');

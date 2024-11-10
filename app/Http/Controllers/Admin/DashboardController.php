@@ -14,9 +14,6 @@ use App\Models\ContactUsEnquiry;
 class DashboardController extends Controller
 {
     //
-    public function __construct()
-    {
-    }
     public function dashboard()
     {
         $data['Total_Users'] = User::count();

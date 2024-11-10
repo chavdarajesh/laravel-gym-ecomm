@@ -13,9 +13,6 @@ use Yajra\DataTables\Facades\DataTables;
 class ContactController extends Controller
 {
     //
-    public function __construct()
-    {
-    }
     public function index(Request $request)
     {
         if ($request->ajax()) {

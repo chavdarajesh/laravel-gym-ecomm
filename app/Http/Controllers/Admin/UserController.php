@@ -17,9 +17,6 @@ use Yajra\DataTables\Facades\DataTables;
 class UserController extends Controller
 {
     //
-    public function __construct()
-    {
-    }
     public function index(Request $request)
     {
         if ($request->ajax()) {
