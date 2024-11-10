@@ -259,6 +259,12 @@ class ProductController extends Controller
     {
         if ($id) {
             $Product = Product::find($id);
+            foreach ($Product->images as $image) {
+                if ($image->image && file_exists(public_path($image->image))) {
+                    unlink(public_path($image->image));
+                }
+                $image->delete();
+            }
             if ($Product->cover_image && file_exists(public_path($Product->cover_image))) {
                 unlink(public_path($Product->cover_image));
             }
