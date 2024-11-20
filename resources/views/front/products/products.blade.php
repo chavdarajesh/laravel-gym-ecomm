@@ -150,11 +150,14 @@
         position: fixed;
         top: 100px;
         width: 100%;
-        -webkit-box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
-        box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
         z-index: 9999;
         -webkit-animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
         animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
+    }
+
+    .sticky-product-menu .navbar {
+        -webkit-box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
+        box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
         -webkit-box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
     }
 
@@ -380,6 +383,15 @@
     <div class="container box_1170">
         <h3 class="text-heading">TOP SELLING</h3>
         <div class="row">
+
+        </div>
+    </div>
+</section>
+@if($categories->count())
+<section class="my-5">
+    <div class="container box_1170">
+        <h3 class="text-heading">CATEGORIES</h3>
+        <div class="row">
             @foreach($categories as $category)
             <div class="col-6 col-md-4 col-lg-2 mb-4">
                 <div class="category-card text-center p-3 shadow-sm rounded">
@@ -393,16 +405,31 @@
         </div>
     </div>
 </section>
-<section class="my-5">
-    <div class="container box_1170">
-        <h3 class="text-heading">CATEGORIES</h3>
-    </div>
-</section>
+@endif
+@if($brands->count())
 <section class="my-5">
     <div class="container box_1170">
         <h3 class="text-heading">BRANDS</h3>
+        <div class="container">
+            @foreach ($brands as $letter => $brandGroup)
+            <div class="letter-section mb-4">
+                <h2>{{ $letter }}</h2>
+                <div class="row">
+                    @foreach ($brandGroup as $brand)
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3 text-center">
+                        <div class="brand-item d-flex align-items-center">
+                            <img src="{{ asset($brand->image) }}" alt="{{ $brand->name }}" class="brand-logo img-fluid mx-2">
+                            <span>{{ $brand->name }}</span>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endforeach
+        </div>
     </div>
 </section>
+@endif
 <section class="my-5">
     <div class="container container--flush">
         <div class="row ">
@@ -481,6 +508,7 @@
     </div>
 </section>
 
+
 @if (!$Blogs->isEmpty())
 <section class="home-blog-area pt-10 pb-50 bg-dark">
     <div class="container">
@@ -513,25 +541,27 @@
 
     </div>
 </section>
-<div class="col-lg-12">
-    <div class="blog_right_sidebar">
-        <aside class="single_sidebar_widget newsletter_widget">
-            <h4 class="widget_title" style="color: #2d2d2d;">Newsletter</h4>
-            <form id="form" action="{{ route('front.newsletter.save') }}" method="POST">
-                @csrf
-                <div class="form-group">
-                    <input type="email" name="email" class="form-control @error('email') border border-danger @enderror" placeholder='Enter email'>
-                    <div id="email_error" class="text-danger w-100 mx-4"> @error('email')
-                        {{ $message }}
-                        @enderror
+<section class="my-5">
+    <div class=" container box_1170">
+        <div class="blog_right_sidebar">
+            <aside class="single_sidebar_widget newsletter_widget">
+                <h4 class="widget_title" style="color: #2d2d2d;">Newsletter</h4>
+                <form id="form" action="{{ route('front.newsletter.save') }}" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <input type="email" name="email" class="form-control @error('email') border border-danger @enderror" placeholder='Enter email'>
+                        <div id="email_error" class="text-danger w-100 mx-4"> @error('email')
+                            {{ $message }}
+                            @enderror
+                        </div>
                     </div>
-                </div>
-                <button class="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
-                    type="submit">Subscribe</button>
-            </form>
-        </aside>
+                    <button class="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
+                        type="submit">Subscribe</button>
+                </form>
+            </aside>
+        </div>
     </div>
-</div>
+</section>
 @endif
 
 @stop
