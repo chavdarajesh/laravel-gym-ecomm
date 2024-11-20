@@ -9,7 +9,9 @@ use App\Models\Product;
 use App\Models\Size;
 use App\Models\Flavor;
 use App\Models\ProductImage;
+use App\Models\ProductSlider;
 use App\Models\Subcategory;
+use App\Models\TopSellingProduct;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
@@ -65,7 +67,7 @@ class ProductController extends Controller
             'cover_image' => 'required|file|image|mimes:jpeg,png,jpg,gif|max:5000',
             'brand' => 'required|exists:brands,id',
             'category' => 'required|exists:categories,id',
-            'subcategory' => 'required|exists:subcategories,id',
+            'subcategory' => 'exists:subcategories,id',
             'sizes' => 'required|array',
             'flavors' => 'required|array',
             'images.*' => 'image',
@@ -192,7 +194,7 @@ class ProductController extends Controller
             ],
             'brand' => 'required|exists:brands,id',
             'category' => 'required|exists:categories,id',
-            'subcategory' => 'required|exists:subcategories,id',
+            'subcategory' => 'exists:subcategories,id',
             'sizes' => 'required|array',
             'flavors' => 'required|array',
             'images.*' => 'image',
@@ -223,8 +225,17 @@ class ProductController extends Controller
             }
             $Product->update();
 
-
+            $sizeData = [];
+            foreach ($request->sizes as $sizeId) {
+                if (isset($request->prices[$sizeId])) {
+                    $sizeData[$sizeId] = ['price' => $request->prices[$sizeId]]; // Add price for each size
+                }
+            }
+            $Product->sizes()->sync($sizeData);
+            $Product->flavors()->sync($request->flavors);
             $images = $request->file('images');
+
+
 
             if ($images && count($images) > 0) {
                 $images_arr = [];
@@ -265,10 +276,25 @@ class ProductController extends Controller
                 }
                 $image->delete();
             }
+
             if ($Product->cover_image && file_exists(public_path($Product->cover_image))) {
                 unlink(public_path($Product->cover_image));
             }
             $Product = $Product->delete();
+            $TopSellingProduct = TopSellingProduct::where('product_id', $id)->first();
+            $TopSellingProduct = $TopSellingProduct->delete();
+
+            foreach ($Product->sizes as $item) {
+                $item->delete();
+            }
+            foreach ($Product->flavors as $item) {
+                $item->delete();
+            }
+
+            $ProductSliders = ProductSlider::where('product_id', $id)->get();
+            foreach ($ProductSliders as $item) {
+                $item->delete();
+            }
             if ($Product) {
                 return redirect()->route('admin.products.index')->with('message', 'Product Deleted Sucssesfully..');
             } else {

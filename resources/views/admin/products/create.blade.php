@@ -171,9 +171,9 @@
                 category: {
                     required: true,
                 },
-                subcategory: {
-                    required: true,
-                },
+                // subcategory: {
+                //     required: true,
+                // },
                 'sizes[]': "required",
                 'flavors[]': "required",
                 'prices[]': "required",

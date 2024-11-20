@@ -498,18 +498,17 @@ hr {
   background: #ffcc29;
   font-family: "Oswald", sans-serif;
   text-transform: uppercase;
-  padding: 27px 44px;
+  padding: 10px 25px;
   color: #fff;
   cursor: pointer;
   display: inline-block;
   font-size: 18px;
-  font-weight: 600;
+  /* font-weight: 600; */
   border-radius: 0px;
   line-height: 1;
   border: 2px solid #fff;
   -moz-user-select: none;
   letter-spacing: 1px;
-  line-height: 0;
   margin-bottom: 0;
   margin: 10px;
   cursor: pointer;
@@ -517,7 +516,6 @@ hr {
   position: relative;
   z-index: 1;
   overflow: hidden;
-  margin: 0;
 }
 
 /* line 272, C:/Users/HP/Desktop/July-HTML/292 Health coach/assets/scss/_common.scss */

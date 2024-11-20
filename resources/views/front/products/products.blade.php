@@ -2,229 +2,119 @@
 @section('title', 'Nutrition & Supplements')
 @section('css')
 <style>
-    #product-nav-menu,
-    #product-nav-menu .dropdown-menu,
-    #product-nav-menu .form-control {
-        font-size: 18px !important;
-    }
-
-    #product-nav-menu .navbar {
-        background-color: #ffcc29 !important;
-        color: #000;
-        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    }
-
-    #product-nav-menu .navbar .dropdown-menu div[class*="col"] {
-        margin-bottom: 1rem;
-    }
-
-    #product-nav-menu .navbar .dropdown-menu {
+    /* Custom styles for category cards */
+    .category-card {
         border: none;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        text-decoration: none;
+        /* Remove underline for the link */
+        display: block;
+        /* Ensure the link wraps the entire card */
+    }
+
+    .category-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .category-card img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .category-card:hover .category-card-title {
+        color: #fff;
         background-color: #ffcc29;
     }
 
-    @media screen and (min-width: 992px) {
-
-        #product-nav-menu .navbar {
-            padding-top: 0px;
-            padding-bottom: 0px;
-        }
-
-        #product-nav-menu .navbar .nav-item {
-            padding: .5rem .5rem;
-            margin: 0 .25rem;
-        }
-
-        #product-nav-menu .navbar .dropdown {
-            position: static;
-        }
-
-        #product-nav-menu .navbar .dropdown-menu.full-width-menu {
-            width: 100%;
-            left: 0;
-            right: 0;
-            top: 45px;
-            display: block;
-            visibility: hidden;
-            opacity: 0;
-            transition: visibility 0s, opacity 0.3s linear;
-        }
-
-        #product-nav-menu .navbar .dropdown:hover .dropdown-menu,
-        #product-nav-menu .navbar .dropdown .dropdown-menu:hover {
-            display: block;
-            visibility: visible;
-            opacity: 1;
-            transition: visibility 0s, opacity 0.3s linear;
-        }
-
-        #product-nav-menu .navbar .dropdown-menu {
-            border: 1px solid rgba(0, 0, 0, .15);
-            background-color: #fff;
-            box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
-        }
-
-        #product-nav-menu .dropdown-submenu .dropdown-menu {
-            display: none !important;
-            top: 15px;
-            left: 100%;
-            margin-top: -6px;
-        }
-
-
-        #product-nav-menu .dropdown-submenu:hover .dropdown-menu {
-            display: block !important;
-            /* End position */
-        }
+    .category-card-title {
+        padding: 10px;
+        color: #ffcc29;
+        background-color: #fff;
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: bold;
     }
 
-    #product-nav-menu .dropdown-submenu {
-        position: relative;
+    /* Custom styles for brand section */
+    .brand-section-list .brand-section {
+        margin-bottom: 30px;
     }
 
-    #product-nav-menu .nav-link:hover {
-        background-color: #ffcc29;
+    .brand-section-list .brand-header {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-bottom: 15px;
     }
 
-    #product-nav-menu form .form-control {
-        height: 40px;
-        border-color: #f0e9ff;
-        font-size: 13px;
-        color: #999999;
-        padding-left: 20px;
-        border-radius: 0;
-        border-right: 0;
+    .brand-section-list .brand-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    #product-nav-menu form .form-control::placeholder {
-        color: #999999;
+    .brand-section-list .brand-item img {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+        margin-right: 15px;
     }
 
-    #product-nav-menu form .form-control:focus {
-        border-color: #f0e9ff;
-        outline: 0;
-        box-shadow: none;
+    .brand-section-list .brand-item .brand-name {
+        font-size: 1.2rem;
+        font-weight: bold;
     }
 
-    #product-nav-menu form .input-group button {
-        background: #ffcc29;
-        border-left: 0;
-        border: 1px solid #f0e9ff;
-        padding: 0px 15px;
-        border-left: 0;
+    .brand-section-list .brand-item a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .brand-section-list .brand-item a:hover {
+        color: #007bff;
+    }
+
+    /* Hover effect */
+    .brand-section-list .brand-item:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         cursor: pointer;
     }
 
-    #product-nav-menu form .input-group button i {
-        color: #fff;
-    }
-
-    #product-nav-menu form .input-group button span {
-        font-size: 14px;
-        color: #999999;
-    }
-
-    #product-nav-menu .dropdown-toggle::after {
-        display: none !important;
-    }
-
-    .width-max-content {
-        width: max-content !important;
-    }
-
-    .brand-item {
-        padding: 10px;
-        border: 1px solid #e0e0e0;
-        border-radius: 5px;
-    }
-
-    .brand-logo {
-        max-width: 40px;
-        /* Adjust as necessary */
-        height: auto;
-    }
-
-    .sticky-product-menu {
-        left: 0;
-        margin: auto;
-        position: fixed;
-        top: 100px;
-        width: 100%;
-        z-index: 9999;
-        -webkit-animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
-        animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
-    }
-
-    .sticky-product-menu .navbar {
-        -webkit-box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
-        box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
-        -webkit-box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
-    }
-
-    @media (max-width: 991px) {
-        .sticky-product-menu {
-            top: 65px;
-        }
-    }
-
-
-
-    /* Category image styles */
-    .category-card .category-image {
-        width: 150px;
-        height: 150px;
-        object-fit: cover;
-        border: 2px solid #ddd;
-        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-        transition: box-shadow 0.3s ease;
-    }
-
-    .category-card {
-        background-color: #fff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: box-shadow 0.3s ease;
-    }
-
-    .category-card:hover .category-image {
-        animation: zoomIn 0.3s ease-in-out forwards;
-    }
-
-    @keyframes zoomIn {
-        0% {
-            transform: scale(1);
-        }
-
-        100% {
-            transform: scale(1.1);
-        }
-    }
-
-    .category-card:hover {
-        box-shadow: rgba(0, 0, 0, 0.50) 0px 5px 15px;
-    }
-
-    .category-card:hover {
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    @media (max-width: 992px) {
-        .col-md-4 {
-            max-width: 33.33%;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .col-sm-6 {
-            max-width: 50%;
-        }
-    }
-
+    /* Adjustments for small screens */
     @media (max-width: 576px) {
-        .col-6 {
-            max-width: 100%;
+        .brand-section-list .brand-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .brand-section-list .brand-item img {
+            margin-bottom: 10px;
+        }
+
+        .brand-section-list .brand-header {
+            font-size: 1.2rem;
+        }
+
+        .brand-section-list .brand-item .brand-name {
+            font-size: 1rem;
         }
     }
 </style>
+<link rel="stylesheet" href="{{ asset('assets/front/css/product-nav.css') }}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;700&amp;display=swap">
+<!-- Swiper slider-->
+<link rel="stylesheet" href="{{ asset('assets/front/css/swiper-bundle.min.css') }}">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+    integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 @stop
 
 @section('content')
@@ -269,7 +159,7 @@
                             @if($category->subcategories && $category->subcategories->count())
                             <!-- Nested dropdown -->
                             <div class="dropdown-submenu w-100">
-                                <a class="nav-link dropdown-item dropdown-toggle" href="#">
+                                <a class="nav-link dropdown-item dropdown-toggle" href="{{route('front.products-category',$category->id)}}">
                                     <span> {{ $category->name }}</span>
                                     @if($category->subcategories->count())
                                     <img class="mx-2 drop-down-arrow" width="10px" src="{{ asset('assets/front/img/product/arrow-down-filled-triangle-svgrepo-com.svg') }}" alt="">
@@ -284,7 +174,7 @@
                                 @endif
                             </div>
                             @else
-                            <a class="nav-link dropdown-item" href="#">{{ $category->name }}</a>
+                            <a class="nav-link dropdown-item" href="{{route('front.products-category',$category->id)}}">{{ $category->name }}</a>
                             @endif
                             @endforeach
                         </div>
@@ -292,7 +182,7 @@
                     </li>
 
 
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown brand-section-nav">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span> BRANDS</span>
@@ -342,64 +232,63 @@
                     </div>
                 </form>
             </div>
-
-
         </nav>
     </div>
-    @if (!$ProductSliders->isEmpty())
-    <div class="container my-5">
-        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">
-                @foreach ($ProductSliders as $key => $slider)
-                <li data-target="#carouselExampleIndicators" data-slide-to="{{ $key }}" class="{{ $key == 0 ? 'active' : '' }}"></li>
-                @endforeach
-            </ol>
-            <div class="carousel-inner">
-                @foreach ($ProductSliders as $key => $slider)
-                <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                    @if($slider->product_id)
-                    <a href="">
-                        <img style="max-height: 450px;" class="d-block w-100" src="{{ asset($slider->image) }}" alt="{{ $slider->name }}">
-                    </a>
-                    @else
-                    <img style="max-height: 450px;" class="d-block w-100" src="{{ asset($slider->image) }}" alt="{{ $slider->name }}">
-                    @endif
-                </div>
-                @endforeach
-            </div>
-            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
-        </div>
-    </div>
-    @endif
 </section>
-<section class="my-5">
-    <div class="container box_1170">
-        <h3 class="text-heading">TOP SELLING</h3>
-        <div class="row">
 
+@if (!$ProductSliders->isEmpty())
+
+<div class="container my-5">
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            @foreach ($ProductSliders as $key => $slider)
+            <li data-target="#carouselExampleIndicators" data-slide-to="{{ $key }}" class="{{ $key == 0 ? 'active' : '' }}"></li>
+            @endforeach
+        </ol>
+        <div class="carousel-inner">
+            @foreach ($ProductSliders as $key => $slider)
+            <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                @if($slider->product_id)
+                <a href="">
+                    <img style="max-height: 450px;" class="d-block w-100" src="{{ asset($slider->image) }}" alt="{{ $slider->name }}">
+                </a>
+                @else
+                <img style="max-height: 450px;" class="d-block w-100" src="{{ asset($slider->image) }}" alt="{{ $slider->name }}">
+                @endif
+            </div>
+            @endforeach
         </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
     </div>
+</div>
+@endif
+@if (!$topSellingProducts->isEmpty())
+<section class="my-5">
+    <x-front.product.slider :topSellingProducts="$topSellingProducts" slider-class="custom-slider-class">
+
+    </x-front.product.slider>
 </section>
+@endif
 @if($categories->count())
 <section class="my-5">
-    <div class="container box_1170">
-        <h3 class="text-heading">CATEGORIES</h3>
-        <div class="row">
-            @foreach($categories as $category)
-            <div class="col-6 col-md-4 col-lg-2 mb-4">
-                <div class="category-card text-center p-3 shadow-sm rounded">
-                    <!-- Category Image -->
-                    <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" class="category-image rounded-circle">
-                    <!-- Category Name -->
-                    <h3 class="mt-2">{{ $category->name }}</h3>
-                </div>
+    <header class="mb-3 text-center">
+        <h2 class="mb-0">Categories</h2>
+    </header>
+    <div class="container py-5">
+        <div class="row d-flex justify-content-center align-items-center">
+            @foreach ($categories as $category)
+            <div class="col-lg-2 col-md-4 col-sm-6 mb-4">
+                <a href="category1.html" class="category-card">
+                    <img src="{{ asset($category->image) }}" alt="{{ $category->name }}">
+                    <div class="category-card-title">{{ $category->name }}</div>
+                </a>
             </div>
             @endforeach
         </div>
@@ -407,26 +296,29 @@
 </section>
 @endif
 @if($brands->count())
-<section class="my-5">
-    <div class="container box_1170">
-        <h3 class="text-heading">BRANDS</h3>
-        <div class="container">
-            @foreach ($brands as $letter => $brandGroup)
-            <div class="letter-section mb-4">
-                <h2>{{ $letter }}</h2>
-                <div class="row">
-                    @foreach ($brandGroup as $brand)
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3 text-center">
-                        <div class="brand-item d-flex align-items-center">
-                            <img src="{{ asset($brand->image) }}" alt="{{ $brand->name }}" class="brand-logo img-fluid mx-2">
-                            <span>{{ $brand->name }}</span>
-                        </div>
+<section class="my-5 brand-section-list">
+    <header class="mb-3 text-center">
+        <h2 class="mb-0">Brands</h2>
+    </header>
+    <div class="container py-5">
+
+        @foreach ($brands as $letter => $brandGroup)
+        <div class="brand-section">
+            <div class="brand-header">{{ $letter }}</div>
+            <div class="row">
+                @foreach ($brandGroup as $brand)
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="brand-item">
+                        <img src="{{ asset($brand->image) }}" alt="{{ $brand->name }}">
+                        <a href="brand1.html" class="brand-name">{{ $brand->name }}</a>
                     </div>
-                    @endforeach
                 </div>
+                @endforeach
+
             </div>
-            @endforeach
         </div>
+        @endforeach
+
     </div>
 </section>
 @endif
@@ -541,6 +433,7 @@
 
     </div>
 </section>
+@endif
 <section class="my-5">
     <div class=" container box_1170">
         <div class="blog_right_sidebar">
@@ -562,12 +455,14 @@
         </div>
     </div>
 </section>
-@endif
+
 
 @stop
 
 
 @section('js')
+<script src="{{ asset('assets/front/js/swiper-bundle.min.js') }}"></script>
+
 <script>
     $(document).ready(function() {
         $('#product-nav-menu .dropdown-submenu .dropdown-toggle .drop-down-arrow').on('click', function(e) {

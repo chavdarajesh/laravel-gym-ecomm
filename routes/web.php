@@ -289,3 +289,6 @@ Route::get('/products', [FrontPagesController::class, 'products'])->name('front.
 
 
 Route::get('/products', [FrontProductController::class, 'products'])->name('front.products');
+Route::get('/products-sidebar', [FrontProductController::class, 'productsSidebar'])->name('front.products-sidebar');
+Route::get('/products/category/{id}', [FrontProductController::class, 'productsCategory'])->name('front.products-category');
+Route::post('/products/category/filters/{id}', [FrontProductController::class, 'getFilterCategoryProducts'])->name('front.products-category-filters');

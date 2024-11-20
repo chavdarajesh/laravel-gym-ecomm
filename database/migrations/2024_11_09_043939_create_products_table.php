@@ -18,9 +18,9 @@ class CreateProductsTable extends Migration
             $table->string('name')->nullable();
             $table->string('cover_image')->nullable();
             $table->text('description')->nullable();
-            $table->foreignId('brand_id')->constrained()->onDelete('cascade')->nullable();
-            $table->foreignId('category_id')->constrained()->onDelete('cascade')->nullable();
-            $table->foreignId('subcategory_id')->constrained()->onDelete('cascade')->nullable();
+            $table->foreignId('brand_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('category_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('subcategory_id')->nullable()->constrained()->onDelete('cascade');
             $table->boolean('status')->default(1);
             $table->timestamps();
             $table->softDeletes();

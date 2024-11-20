@@ -32,7 +32,7 @@ $current_route_name=Route::currentRouteName();
     @include('front.layouts.head')
 </head>
 
-<body class="{{ Route::currentRouteName() != 'front.contact' && Route::currentRouteName() != 'front.blogs' && Route::currentRouteName() != 'front.blog.details' && Route::currentRouteName() != 'front.blog.search' && Route::currentRouteName() != 'front.products'? 'black-bg' : '' }}">
+<body class="{{ Route::currentRouteName() != 'front.contact' && Route::currentRouteName() != 'front.blogs' && Route::currentRouteName() != 'front.blog.details' && Route::currentRouteName() != 'front.blog.search' && Route::currentRouteName() != 'front.products' && Route::currentRouteName() != 'front.products-sidebar' && Route::currentRouteName() != 'front.products-category'? 'black-bg' : '' }}">
     @include('front.include.header')
     <main>
     @yield('content')
