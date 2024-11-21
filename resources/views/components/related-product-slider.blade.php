@@ -2,7 +2,7 @@
     /* ==========================================
     SWIPER SLIDER
    ========================================== */
-    #newArrivals a:hover {
+    #similarItemsSlider a:hover {
         color: #deb226;
     }
 
@@ -61,7 +61,7 @@
         box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
     }
 
-    #newArrivals .product-list-btn {
+    #similarItemsSlider .product-list-btn {
         background: #ffcc29;
         padding: 10px 10px;
         color: #fff;
@@ -80,7 +80,7 @@
     }
 
     /* line 272, C:/Users/HP/Desktop/July-HTML/292 Health coach/assets/scss/_common.scss */
-    #newArrivals .product-list-btn::before {
+    #similarItemsSlider .product-list-btn::before {
         content: "";
         position: absolute;
         left: 0;
@@ -99,67 +99,71 @@
     }
 
     /* line 291, C:/Users/HP/Desktop/July-HTML/292 Health coach/assets/scss/_common.scss */
-    #newArrivals .product-list-btn:hover::before {
+    #similarItemsSlider .product-list-btn:hover::before {
         transform: scaleX(1);
         color: #fff !important;
         z-index: -1;
     }
 
     /* line 296, C:/Users/HP/Desktop/July-HTML/292 Health coach/assets/scss/_common.scss */
-    #newArrivals .product-list-btn:hover {
+    #similarItemsSlider .product-list-btn:hover {
         background-position: right;
     }
 
     /* line 299, C:/Users/HP/Desktop/July-HTML/292 Health coach/assets/scss/_common.scss */
-    #newArrivals .product-list-btn.focus,
-    #newArrivals .product-list-btn:focus {
+    #similarItemsSlider .product-list-btn.focus,
+    #similarItemsSlider .product-list-btn:focus {
         outline: 0;
         box-shadow: none;
     }
 </style>
-@if (!$topSellingProducts->isEmpty())
-<section class="py-5">
-    <div class="container py-5">
-        <header class="mb-3 text-center">
-            <h2 class="mb-0">TOP SELLING</h2>
-            <p class="text-muted">Browse the Top Products</p>
-        </header>
-        <div class="swiper-container pt-5" id="newArrivals">
-            <div class="swiper-wrapper d-flex align-items-stretch">
-                @foreach($topSellingProducts as $product)
-                <div class="swiper-slide pb-3">
-                    <div class="product mb-4">
-                        <a href="{{ route('front.products-details',$product->product->id) }}">
-                            <img class="img-fluid" src="{{ asset($product->product->cover_image) }}" alt="Round grey hanging decor">
-                        </a>
-                    </div>
-                    <!-- Product Name -->
-                    <h6 class="text-center">
-                        <a class="reset-anchor" href="{{ route('front.products-details',$product->product->id) }}">{{ $product->product->name }}</a>
-                    </h6>
-                    <!-- Product Price -->
-                    @php
-                    $minPrice = $product && $product->product && $product->product->sizes && $product->product->sizes->isNotEmpty()
-                    ? 'Price : $' . $product->product->sizes->min('pivot.price')
-                    : 'N/A';
-                    @endphp
-                    <p class="text-center text-muted font-weight-bold">{{ $minPrice }}</p>
-                    <!-- Action Buttons -->
-                    <div class="mt-auto d-flex justify-content-center align-items-center">
-                        <button class="product-list-btn">Add to Cart</button>
-                        <button class="product-list-btn">Buy Now</button>
-                    </div>
-                </div>
-                @endforeach
+@if (!$relatedProducts->isEmpty())
+<section class="pb-5">
+    <div class="container pb-5">
+        <div class="row">
+            <div class="col-xl-10 mx-auto">
+                <header class="mb-3 text-center">
+                    <h2>You may also like</h2>
+                    <p class="text-muted">Related products</p>
+                </header>
+                <div class="swiper-container pt-5" id="similarItemsSlider">
+                    <div class="swiper-wrapper d-flex align-items-stretch">
+                        @foreach($relatedProducts as $product)
+                        <div class="swiper-slide pb-3">
+                            <div class="product mb-4">
+                                <a href="{{ route('front.products-details',$product->id) }}">
+                                    <img class="img-fluid" src="{{ asset($product->cover_image) }}" alt="Round grey hanging decor">
+                                </a>
+                            </div>
+                            <!-- Product Name -->
+                            <h6 class="text-center">
+                                <a class="reset-anchor" href="{{ route('front.products-details',$product->id) }}">{{ $product->name }}</a>
+                            </h6>
+                            <!-- Product Price -->
+                            @php
+                            $minPrice = $product && $product && $product->sizes && $product->sizes->isNotEmpty()
+                            ? 'Price : $' . $product->sizes->min('pivot.price')
+                            : 'N/A';
+                            @endphp
+                            <p class="text-center text-muted font-weight-bold">{{ $minPrice }}</p>
+                            <!-- Action Buttons -->
+                            <div class="mt-auto d-flex justify-content-center align-items-center">
+                                <button class="product-list-btn">Add to Cart</button>
+                                <button class="product-list-btn">Buy Now</button>
+                            </div>
+                        </div>
+                        @endforeach
 
-            </div>
-            <div class=" d-flex justify-content-center align-items-center">
-                <div class="prev-newArrivals btn">
-                    Prev
-                </div>
-                <div class="next-newArrivals btn">
-                    Next
+                    </div>
+                    <div class=" d-flex justify-content-center align-items-center">
+                        <div class="prev-similarItemsSlider btn">
+                            Prev
+                        </div>
+                        <div class="next-similarItemsSlider btn">
+                            Next
 
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -171,7 +175,7 @@
         /* ==============================================
     NEW ARRIVALS SLIDER
   ============================================== */
-        var newArrivals = new Swiper("#newArrivals", {
+        var similarItemsSlider = new Swiper("#similarItemsSlider", {
             loop: true,
             autoplay: {
                 delay: 5000,
@@ -186,12 +190,12 @@
                     slidesPerView: 3,
                 },
                 1024: {
-                    slidesPerView: 5,
+                    slidesPerView: 4,
                 },
             },
             navigation: {
-                nextEl: ".next-newArrivals",
-                prevEl: ".prev-newArrivals",
+                nextEl: ".next-similarItemsSlider",
+                prevEl: ".prev-similarItemsSlider",
             },
         });
     });

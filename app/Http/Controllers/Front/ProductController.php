@@ -804,4 +804,20 @@ class ProductController extends Controller
             'pagination' => view('vendor.pagination.default', ['paginator' => $Products])->render(),
         ]);
     }
+
+
+    public function productsDetails($id)
+    {
+        if ($id) {
+            $Product = Product::where('status', 1)->where('id', $id)->first();
+            if ($Product) {
+                $relatedProducts = Product::where('id', '!=', $id)->where('category_id', $Product->category_id)->where('status', 1)->orderBy('id', 'DESC')->limit(7)->get();
+                return view('front.products.products-details', ['Product' => $Product, 'relatedProducts' => $relatedProducts]);
+            } else {
+                return redirect()->back()->with('error', 'Somthing Went Wrong..!');
+            }
+        } else {
+            return redirect()->back()->with('error', 'Product Not Found..!');
+        }
+    }
 }

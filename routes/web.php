@@ -302,3 +302,7 @@ Route::post('/products/top-selling/filters', [FrontProductController::class, 'ge
 
 Route::get('/products/search', [FrontProductController::class, 'productsSearch'])->name('front.products-search');
 Route::post('/products/search/filters', [FrontProductController::class, 'getFilterSearchProducts'])->name('front.products-search-filters');
+
+
+Route::get('/products/details/{id}', [FrontProductController::class, 'productsDetails'])->name('front.products-details');
+
