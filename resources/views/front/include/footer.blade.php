@@ -158,5 +158,5 @@
  </footer>
 
  <div id="back-top">
-     <a title="Go to Top" href="#"> <i class="fas fa-level-up-alt"></i></a>
+     <a title="Go to Top" href="javascript:void(0);"> <i class="fas fa-level-up-alt"></i></a>
  </div>

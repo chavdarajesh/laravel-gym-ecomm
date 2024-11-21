@@ -108,6 +108,12 @@
             font-size: 1rem;
         }
     }
+
+    @media (min-width: 1200px) {
+        .container {
+            max-width: 1480px;
+        }
+    }
 </style>
 <link rel="stylesheet" href="{{ asset('assets/front/css/product-nav.css') }}">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;700&amp;display=swap">
@@ -134,107 +140,8 @@
 </div>
 <!-- Hero End -->
 <!--? Team -->
-<section class="">
-    <div class="my-5" id="product-nav-menu">
-        <nav class="navbar navbar-expand-lg navbar-light container d-flex justify-content-end">
-            <!-- <a class="navbar-brand" href="https://bootstrapcreative.com/">Mega Dropdown</a> -->
-            <button class="navbar-toggler p-2 " type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">
-                            <span> CATEGORIES</span>
-                            @if($categories && $categories->count())
-                            <img class="mx-2 drop-down-arrow" width="10px" src="{{ asset('assets/front/img/product/arrow-down-filled-triangle-svgrepo-com.svg') }}" alt="">
-                            @endif
-                        </a>
-                        @if($categories->count())
-                        <div class="dropdown-menu m-0 p-0 normal-menu width-max-content" aria-labelledby="navbarDropdown">
-                            @foreach($categories as $category)
-                            @if($category->subcategories && $category->subcategories->count())
-                            <!-- Nested dropdown -->
-                            <div class="dropdown-submenu w-100">
-                                <a class="nav-link dropdown-item dropdown-toggle" href="{{route('front.products-category',$category->id)}}">
-                                    <span> {{ $category->name }}</span>
-                                    @if($category->subcategories->count())
-                                    <img class="mx-2 drop-down-arrow" width="10px" src="{{ asset('assets/front/img/product/arrow-down-filled-triangle-svgrepo-com.svg') }}" alt="">
-                                    @endif
-                                </a>
-                                @if($category->subcategories->count())
-                                <div class="dropdown-menu p-0 width-max-content">
-                                    @foreach($category->subcategories as $subcategory)
-                                    <a class="nav-link dropdown-item w-100" href="#"> {{ $subcategory->name }}</a>
-                                    @endforeach
-                                </div>
-                                @endif
-                            </div>
-                            @else
-                            <a class="nav-link dropdown-item" href="{{route('front.products-category',$category->id)}}">{{ $category->name }}</a>
-                            @endif
-                            @endforeach
-                        </div>
-                        @endif
-                    </li>
-
-
-                    <li class="nav-item dropdown brand-section-nav">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span> BRANDS</span>
-                            @if($brands->count())
-                            <img class="mx-2 drop-down-arrow" width="10px" src="{{ asset('assets/front/img/product/arrow-down-filled-triangle-svgrepo-com.svg') }}" alt="">
-                            @endif
-                        </a>
-                        @if($brands->count())
-                        <div class="dropdown-menu full-width-menu" aria-labelledby="navbarDropdown">
-                            <div class="container">
-                                @foreach ($brands as $letter => $brandGroup)
-                                <div class="letter-section mb-4">
-                                    <h2>{{ $letter }}</h2>
-                                    <div class="row">
-                                        @foreach ($brandGroup as $brand)
-                                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3 text-center">
-                                            <div class="brand-item d-flex align-items-center">
-                                                <img src="{{ asset($brand->image) }}" alt="{{ $brand->name }}" class="brand-logo img-fluid mx-2">
-                                                <span>{{ $brand->name }}</span>
-                                            </div>
-                                        </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                                @endforeach
-                            </div>
-                            <!--  /.container  -->
-
-
-                        </div>
-                        @endif
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link" href="#" id="navbarDropdown" role="button">
-                            TOP SELLINGs
-                        </a>
-                    </li>
-                </ul>
-                <form action="http://localhost/laravel/laravel-gym/blog/search" method="GET">
-                    <div class="form-group m-0">
-                        <div class="input-group ">
-                            <input type="text" class="form-control" placeholder="Search Keyword" name="search">
-                            <div class="input-group-append">
-                                <button class="btns" type="submit"><i class="ti-search"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </nav>
-    </div>
-</section>
+<x-front.product.nav_menu :categories="$categories" :brands="$brands">
+</x-front.product.nav_menu>
 
 @if (!$ProductSliders->isEmpty())
 
@@ -285,7 +192,7 @@
         <div class="row d-flex justify-content-center align-items-center">
             @foreach ($categories as $category)
             <div class="col-lg-2 col-md-4 col-sm-6 mb-4">
-                <a href="category1.html" class="category-card">
+                <a href="{{route('front.products-category',$category->id)}}" class="category-card">
                     <img src="{{ asset($category->image) }}" alt="{{ $category->name }}">
                     <div class="category-card-title">{{ $category->name }}</div>
                 </a>
@@ -400,7 +307,6 @@
     </div>
 </section>
 
-
 @if (!$Blogs->isEmpty())
 <section class="home-blog-area pt-10 pb-50 bg-dark">
     <div class="container">
@@ -462,34 +368,5 @@
 
 @section('js')
 <script src="{{ asset('assets/front/js/swiper-bundle.min.js') }}"></script>
-
-<script>
-    $(document).ready(function() {
-        $('#product-nav-menu .dropdown-submenu .dropdown-toggle .drop-down-arrow').on('click', function(e) {
-            e.stopPropagation();
-            $(this).parent().next('.dropdown-menu').toggle();
-        });
-        $(window).resize(function() {
-            if ($(window).width() >= 980) {
-                $("#product-nav-menu .navbar .dropdown-toggle").hover(function() {
-                    $(this).parent().toggleClass("show");
-                    $(this).parent().find(".dropdown-menu").toggleClass("show");
-                });
-                $("#product-nav-menu  .navbar .dropdown-menu").mouseleave(function() {
-                    $(this).removeClass("show");
-                });
-            }
-        });
-
-        $(window).on('scroll', function() {
-            var scroll = $(window).scrollTop();
-            if (scroll < 400) {
-                $("#product-nav-menu").removeClass("sticky-product-menu");
-            } else {
-                $("#product-nav-menu").addClass("sticky-product-menu");
-            }
-        });
-    });
-</script>
 
 @stop

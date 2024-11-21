@@ -1,5 +1,5 @@
 @extends('front.layouts.main')
-@section('title', 'Nutrition & Supplements | Category '.$Category->name)
+@section('title', 'Nutrition & Supplements | Sub Category '.$Subcategory->name)
 @section('css')
 <style>
     .noUi-horizontal {
@@ -153,8 +153,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-xl-12">
-                    <div >
-                        <h2 class="text-white">Nutrition & Supplements | Category : {{$Category->name}}</h2>
+                    <div>
+                        <h2 class="text-white">Nutrition & Supplements | Sub Category : {{$Subcategory->name}}</h2>
                     </div>
                 </div>
             </div>
@@ -173,19 +173,19 @@
             <div class="col-xl-2 col-lg-3 order-2 order-lg-1 px-2" id="sidebar">
                 <h2 class="mb-4">Filters</h2>
                 <hr>
-                @if($otherCategorys->count())
-                <h5 class="mb-2 d-flex align-items-center justify-content-between " data-toggle="collapse" data-target="#categoryCollapse">
-                    <span>Shop by Category</span>
+                @if($otherSubcategorys->count())
+                <h5 class="mb-2 d-flex align-items-center justify-content-between " data-toggle="collapse" data-target="#otherSubcategorys">
+                    <span>Shop by Sub Category</span>
                     <span>
                         <i class="fa fa-chevron-down" id="category-arrow"></i>
                     </span>
                 </h5>
-                <div id="categoryCollapse" class="collapse show">
+                <div id="otherSubcategorys" class="collapse show">
                     <ul class="list-unstyled text-muted mb-4">
-                        @foreach($otherCategorys as $otherCategory)
+                        @foreach($otherSubcategorys as $otherSubcategory)
                         <li class="mb-2 d-flex align-items-center justify-content-between">
-                            <a class="reset-anchor" href="{{route('front.products-category', $otherCategory->id)}}">{{$otherCategory->name}}</a>
-                            <span class="badge bg-light text-dark">{{ $otherCategory->products->count() }}</span>
+                            <a class="reset-anchor" href="{{route('front.products-sub-category', $otherSubcategory->id)}}">{{$otherSubcategory->name}}</a>
+                            <span class="badge bg-light text-dark">{{ $otherSubcategory->products->count() }}</span>
                         </li>
                         @endforeach
                     </ul>
@@ -204,15 +204,15 @@
                         <div class="col-6 text-end" style="text-align: end;"><strong class="small font-weight-bold">To</strong></div>
                     </div>
                 </div>
-                @if($categoryBrands->count())
-                <h5 class="mb-2 d-flex align-items-center justify-content-between " data-toggle="collapse" data-target="#categoryBrands">
+                @if($subCategoryBrands->count())
+                <h5 class="mb-2 d-flex align-items-center justify-content-between " data-toggle="collapse" data-target="#subCategoryBrands">
                     <span>Show by brand</span>
                     <span>
                         <i class="fa fa-chevron-down" id="category-arrow"></i>
                     </span>
                 </h5>
-                <div class="brand-filter show collapse mb-4" id="categoryBrands">
-                    @foreach($categoryBrands as $brand)
+                <div class="brand-filter show collapse mb-4" id="subCategoryBrands">
+                    @foreach($subCategoryBrands as $brand)
                     <div class="mb-2 form-check">
                         <input class="form-check-input" id="brand-filter-{{$brand->id}}" type="checkbox" value="{{$brand->id}}">
                         <label class="form-check-label" for="brand-filter-{{$brand->id}}">{{$brand->name}} | ({{$brand->products->count()}})</label>
@@ -258,9 +258,9 @@
             <div class="col-xl-10 col-lg-9 order-1 order-lg-2 mb-5 mb-lg-0 px-2" id="product-grid">
                 <!-- Listing filter-->
                 <div>
-                    <img style="max-height: 200px;" src="{{ asset($Category->image) }}" alt="{{$Category->name}}" class="img-fluid w-100 rounded shadow-lg mb-3">
-                    <h2>{{$Category->name}}</h2>
-                    <p>{!!$Category->description!!}</p>
+                    <img style="max-height: 200px;" src="{{ asset($Subcategory->image) }}" alt="{{$Subcategory->name}}" class="img-fluid w-100 rounded shadow-lg mb-3">
+                    <h2>{{$Subcategory->name}}</h2>
+                    <p>{!!$Subcategory->description!!}</p>
                 </div>
                 <div class="row mb-4 align-items-center">
                     <div class="col-md-6 text-md-start d-flex">
@@ -324,6 +324,7 @@
             'max': maxPrice
         }
     });
+
     if (minPrice == oldMaxPrice) {
         slider.noUiSlider.disable();
     }
@@ -347,7 +348,7 @@
     function fetchProducts(sort = 'latest', minPrice = 0, maxPrice = 999999, brands = [], sizes = [], flavors = [], page = 1, perPage = perPageItems) {
 
         $.ajax({
-            url: "{{ route('front.products-category-filters',$Category->id) }}",
+            url: "{{ route('front.products-sub-category-filters',$Subcategory->id) }}",
             method: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',

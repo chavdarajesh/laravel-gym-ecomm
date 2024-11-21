@@ -39,7 +39,7 @@
         width: 100%;
         left: 0;
         right: 0;
-        top: 50px;
+        top: 57px;
         display: block;
         visibility: hidden;
         opacity: 0;
@@ -141,15 +141,15 @@
 }
 
 .sticky-product-menu {
-    left: 0;
     margin: auto;
     position: fixed;
     top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
     width: 100%;
     z-index: 9999;
-    -webkit-animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
-    animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
 }
+
 
 .sticky-product-menu .navbar {
     -webkit-box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);

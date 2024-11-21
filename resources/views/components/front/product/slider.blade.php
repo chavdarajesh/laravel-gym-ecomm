@@ -130,20 +130,20 @@
                 <div class="swiper-slide pb-3">
                     <div class="product mb-4">
                         <a href="javascript:void(0);">
-                            <img class="img-fluid" src="{{ asset($product->cover_image) }}" alt="Round grey hanging decor">
+                            <img class="img-fluid" src="{{ asset($product->product->cover_image) }}" alt="Round grey hanging decor">
                         </a>
                     </div>
                     <!-- Product Name -->
                     <h6 class="text-center">
-                        <a class="reset-anchor" href="javascript:void(0);">{{ $product->name }}</a>
+                        <a class="reset-anchor" href="javascript:void(0);">{{ $product->product->name }}</a>
                     </h6>
                     <!-- Product Price -->
                     @php
-                    $firstPrice = $product->sizes->isNotEmpty()
-                    ? 'Price : $'.$product->sizes->first()->pivot->price
-                    : 'Not Available';
+                    $minPrice = $product && $product->product && $product->product->sizes && $product->product->sizes->isNotEmpty()
+                    ? 'Price : $' . $product->product->sizes->min('pivot.price')
+                    : 'N/A';
                     @endphp
-                    <p class="text-center text-muted font-weight-bold">{{ $firstPrice }}</p>
+                    <p class="text-center text-muted font-weight-bold">{{ $minPrice }}</p>
                     <!-- Action Buttons -->
                     <div class="mt-auto d-flex justify-content-center align-items-center">
                         <button class="product-list-btn">Add to Cart</button>

@@ -309,8 +309,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-xl-12">
-                    <div class="hero-cap hero-cap2 pt-70">
-                        <h2>Nutrition & Supplements</h2>
+                    <div>
+                        <h2 class="text-white">Nutrition & Supplements</h2>
                     </div>
                 </div>
             </div>

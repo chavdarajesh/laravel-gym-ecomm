@@ -1,5 +1,5 @@
 @extends('front.layouts.main')
-@section('title', 'Nutrition & Supplements | Category '.$Category->name)
+@section('title', 'Nutrition & Supplements | Brand '.$Brand->name)
 @section('css')
 <style>
     .noUi-horizontal {
@@ -143,6 +143,7 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
     integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
+<link rel="stylesheet" href="{{ asset('assets/front/css/product-nav.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/front/css/nouislider.min.css') }}">
 @stop
 
@@ -153,8 +154,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-xl-12">
-                    <div >
-                        <h2 class="text-white">Nutrition & Supplements | Category : {{$Category->name}}</h2>
+                    <div class="">
+                        <h2 class="text-white">Nutrition & Supplements | Brand : {{$Brand->name}}</h2>
                     </div>
                 </div>
             </div>
@@ -173,22 +174,20 @@
             <div class="col-xl-2 col-lg-3 order-2 order-lg-1 px-2" id="sidebar">
                 <h2 class="mb-4">Filters</h2>
                 <hr>
-                @if($otherCategorys->count())
-                <h5 class="mb-2 d-flex align-items-center justify-content-between " data-toggle="collapse" data-target="#categoryCollapse">
+                @if($categoriesWithProducts->count())
+                <h5 class="mb-2 d-flex align-items-center justify-content-between " data-toggle="collapse" data-target="#categoriesWithProducts">
                     <span>Shop by Category</span>
                     <span>
                         <i class="fa fa-chevron-down" id="category-arrow"></i>
                     </span>
                 </h5>
-                <div id="categoryCollapse" class="collapse show">
-                    <ul class="list-unstyled text-muted mb-4">
-                        @foreach($otherCategorys as $otherCategory)
-                        <li class="mb-2 d-flex align-items-center justify-content-between">
-                            <a class="reset-anchor" href="{{route('front.products-category', $otherCategory->id)}}">{{$otherCategory->name}}</a>
-                            <span class="badge bg-light text-dark">{{ $otherCategory->products->count() }}</span>
-                        </li>
-                        @endforeach
-                    </ul>
+                <div class="category-filter show collapse mb-4" id="categoriesWithProducts">
+                    @foreach($categoriesWithProducts as $category)
+                    <div class="mb-2 form-check">
+                        <input class="form-check-input" id="category-filter-{{$category->id}}" type="checkbox" value="{{$category->id}}">
+                        <label class="form-check-label" for="category-filter-{{$category->id}}">{{$category->name}} | ({{$category->products->count()}})</label>
+                    </div>
+                    @endforeach
                 </div>
                 @endif
                 <h5 class="mb-2 d-flex align-items-center justify-content-between " data-toggle="collapse" data-target="#Pricerange">
@@ -204,15 +203,15 @@
                         <div class="col-6 text-end" style="text-align: end;"><strong class="small font-weight-bold">To</strong></div>
                     </div>
                 </div>
-                @if($categoryBrands->count())
-                <h5 class="mb-2 d-flex align-items-center justify-content-between " data-toggle="collapse" data-target="#categoryBrands">
+                @if($brandslist->count())
+                <h5 class="mb-2 d-flex align-items-center justify-content-between " data-toggle="collapse" data-target="#brandslist">
                     <span>Show by brand</span>
                     <span>
                         <i class="fa fa-chevron-down" id="category-arrow"></i>
                     </span>
                 </h5>
-                <div class="brand-filter show collapse mb-4" id="categoryBrands">
-                    @foreach($categoryBrands as $brand)
+                <div class="brand-filter show collapse mb-4" id="brandslist">
+                    @foreach($brandslist as $brand)
                     <div class="mb-2 form-check">
                         <input class="form-check-input" id="brand-filter-{{$brand->id}}" type="checkbox" value="{{$brand->id}}">
                         <label class="form-check-label" for="brand-filter-{{$brand->id}}">{{$brand->name}} | ({{$brand->products->count()}})</label>
@@ -258,9 +257,9 @@
             <div class="col-xl-10 col-lg-9 order-1 order-lg-2 mb-5 mb-lg-0 px-2" id="product-grid">
                 <!-- Listing filter-->
                 <div>
-                    <img style="max-height: 200px;" src="{{ asset($Category->image) }}" alt="{{$Category->name}}" class="img-fluid w-100 rounded shadow-lg mb-3">
-                    <h2>{{$Category->name}}</h2>
-                    <p>{!!$Category->description!!}</p>
+                    <img style="max-height: 200px;" src="{{ asset($Brand->image) }}" alt="{{$Brand->name}}" class="img-fluid w-100 rounded shadow-lg mb-3">
+                    <h2>{{$Brand->name}}</h2>
+                    <p>{!!$Brand->description!!}</p>
                 </div>
                 <div class="row mb-4 align-items-center">
                     <div class="col-md-6 text-md-start d-flex">
@@ -309,11 +308,11 @@
     var maxPrice = '{{$maxPrice}}';
     minPrice = Number(minPrice);
     maxPrice = Number(maxPrice);
-    var slider = document.getElementById('priceRange');
     const oldMaxPrice = maxPrice;
     if (minPrice == maxPrice) {
         maxPrice = maxPrice + 1;
     }
+    var slider = document.getElementById('priceRange');
     noUiSlider.create(slider, {
         start: [minPrice, maxPrice],
         connect: true,
@@ -334,7 +333,8 @@
         const brands = getSelectedValues('.brand-filter input:checked');
         const sizes = getSelectedValues('.size-filter input:checked');
         const flavors = getSelectedValues('.flavor-filter input:checked');
-        fetchProducts(sort, minPrice, maxPrice, brands, sizes, flavors);
+        const categorys = getSelectedValues('.category-filter input:checked');
+        fetchProducts(sort, minPrice, maxPrice, brands, sizes, flavors, categorys);
 
     });
 </script>
@@ -343,11 +343,9 @@
     var totalItem = '{{$totalRecords}}';
     totalItem = Number(totalItem);
     const perPageItems = 1
-
-    function fetchProducts(sort = 'latest', minPrice = 0, maxPrice = 999999, brands = [], sizes = [], flavors = [], page = 1, perPage = perPageItems) {
-
+    function fetchProducts(sort = 'latest', minPrice = 0, maxPrice = 999999, brands = [], sizes = [], flavors = [], categorys = [], page = 1, perPage = perPageItems) {
         $.ajax({
-            url: "{{ route('front.products-category-filters',$Category->id) }}",
+            url: "{{ route('front.products-brand-filters',$Brand->id) }}",
             method: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
@@ -358,6 +356,7 @@
                 brands: brands.join(','),
                 sizes: sizes.join(','),
                 flavors: flavors.join(','),
+                categorys: categorys.join(','),
                 perPage: perPage,
             },
             success: function(response) {
@@ -407,8 +406,9 @@
         });
     }
     $(document).ready(function() {
-        $('#per-page-items').html(perPageItems);
+
         // Initial load
+        $('#per-page-items').html(perPageItems);
         fetchProducts();
 
         // Sort change event
@@ -420,11 +420,12 @@
             const brands = getSelectedValues('.brand-filter input:checked');
             const sizes = getSelectedValues('.size-filter input:checked');
             const flavors = getSelectedValues('.flavor-filter input:checked');
-            fetchProducts(sort, minPrice, maxPrice, brands, sizes, flavors);
+            const categorys = getSelectedValues('.category-filter input:checked');
+            fetchProducts(sort, minPrice, maxPrice, brands, sizes, flavors, categorys);
         });
 
         // Brand, Size, Flavor checkbox change events
-        $('.brand-filter input, .size-filter input, .flavor-filter input').on('change', function() {
+        $('.category-filter input,.brand-filter input, .size-filter input, .flavor-filter input').on('change', function() {
             const sort = $('#sortProducts').val();
             var sliderValues = slider.noUiSlider.get();
             const minPrice = sliderValues[0];
@@ -432,7 +433,8 @@
             const brands = getSelectedValues('.brand-filter input:checked');
             const sizes = getSelectedValues('.size-filter input:checked');
             const flavors = getSelectedValues('.flavor-filter input:checked');
-            fetchProducts(sort, minPrice, maxPrice, brands, sizes, flavors);
+            const categorys = getSelectedValues('.category-filter input:checked');
+            fetchProducts(sort, minPrice, maxPrice, brands, sizes, flavors, categorys);
         });
 
         // Pagination links handling (if needed)
@@ -446,7 +448,8 @@
             const brands = getSelectedValues('.brand-filter input:checked');
             const sizes = getSelectedValues('.size-filter input:checked');
             const flavors = getSelectedValues('.flavor-filter input:checked');
-            fetchProducts(sort, minPrice, maxPrice, brands, sizes, flavors, page);
+            const categorys = getSelectedValues('.category-filter input:checked');
+            fetchProducts(sort, minPrice, maxPrice, brands, sizes, flavors, categorys, page);
         });
 
         // // Function to get selected checkbox values as an array
