@@ -2,6 +2,22 @@
 use App\Models\SiteSetting;
 $favicon = SiteSetting::getSiteSettings('favicon');
 $current_route_name=Route::currentRouteName();
+
+
+// Routes that do not require the 'black-bg' class
+$excludedRoutes = [
+    'front.contact',
+    'front.blogs',
+    'front.blog.details',
+    'front.blog.search',
+    'front.products',
+    'front.products-sidebar',
+    'front.products-category',
+    'front.products-brand',
+    'front.products-sub-category',
+    'front.products-top-selling',
+    'front.products-search',
+];
 @endphp
 
 <!DOCTYPE html>
@@ -32,7 +48,7 @@ $current_route_name=Route::currentRouteName();
     @include('front.layouts.head')
 </head>
 
-<body class="{{ Route::currentRouteName() != 'front.contact' && Route::currentRouteName() != 'front.blogs' && Route::currentRouteName() != 'front.blog.details' && Route::currentRouteName() != 'front.blog.search' && Route::currentRouteName() != 'front.products' && Route::currentRouteName() != 'front.products-sidebar' && Route::currentRouteName() != 'front.products-category' && Route::currentRouteName() != 'front.products-brand' && Route::currentRouteName() != 'front.products-sub-category'? 'black-bg' : '' }}">
+<body class="{{ !in_array($current_route_name, $excludedRoutes) ? 'black-bg' : '' }}">
     @include('front.include.header')
     <main>
     @yield('content')

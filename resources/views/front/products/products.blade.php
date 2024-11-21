@@ -217,7 +217,7 @@
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="brand-item">
                         <img src="{{ asset($brand->image) }}" alt="{{ $brand->name }}">
-                        <a href="brand1.html" class="brand-name">{{ $brand->name }}</a>
+                        <a href="{{ route('front.products-brand',$brand->id) }}" class="brand-name">{{ $brand->name }}</a>
                     </div>
                 </div>
                 @endforeach

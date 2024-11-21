@@ -296,3 +296,9 @@ Route::get('/products/sub-category/{id}', [FrontProductController::class, 'produ
 Route::post('/products/sub-category/filters/{id}', [FrontProductController::class, 'getFilterSubCategoryProducts'])->name('front.products-sub-category-filters');
 Route::get('/products/brand/{id}', [FrontProductController::class, 'productsBrand'])->name('front.products-brand');
 Route::post('/products/brand/filters/{id}', [FrontProductController::class, 'getFilterBrandProducts'])->name('front.products-brand-filters');
+
+Route::get('/products/top-selling', [FrontProductController::class, 'productsTopSelling'])->name('front.products-top-selling');
+Route::post('/products/top-selling/filters', [FrontProductController::class, 'getFilterTopSellingProducts'])->name('front.products-top-selling-filters');
+
+Route::get('/products/search', [FrontProductController::class, 'productsSearch'])->name('front.products-search');
+Route::post('/products/search/filters', [FrontProductController::class, 'getFilterSearchProducts'])->name('front.products-search-filters');

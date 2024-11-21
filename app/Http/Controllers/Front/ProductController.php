@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\ProductSlider;
 use App\Models\Subcategory;
 use App\Models\TopSellingProduct;
@@ -467,6 +468,340 @@ class ProductController extends Controller
         return response()->json([
             'products' => $brandProducts->items(),
             'pagination' => view('vendor.pagination.default', ['paginator' => $brandProducts])->render(),
+        ]);
+    }
+
+
+    public function productsTopSelling()
+    {
+        $categories = Category::where('status', 1)->get();
+        $brands = Brand::select('name', 'image', 'id')
+            ->orderBy('name')
+            ->get()
+            ->groupBy(function ($brand) {
+                return strtoupper(substr($brand->name, 0, 1));
+            });
+
+        $topSellingCategories = Category::whereHas('products', function ($query) {
+            $query->whereIn('id', function ($subQuery) {
+                $subQuery->select('product_id')
+                    ->from('top_selling_products')
+                    ->where('status', 1); // Adjust this if you need to filter based on status in top_selling_products
+            });
+        })->get();
+
+        $topSellingProducts = TopSellingProduct::whereHas('product', function ($query) {
+            $query->where('status', 1); // Ensure the product is active
+        })
+            ->with(['product.sizes', 'product.flavors']) // Eager load related sizes and flavors
+            ->get();
+
+        $sizeArray = $topSellingProducts->flatMap(function ($product) {
+            return $product->product->sizes->map(function ($size) use ($product) {
+                return [
+                    'size_id' => $size->id,
+                    'size_name' => $size->name, // Assuming 'name' is a column in sizes table
+                    'product_id' => $product->product->id,
+                ];
+            });
+        })
+            ->groupBy('size_id') // Group by size ID
+            ->map(function ($items, $sizeId) {
+                return [
+                    'size_id' => $sizeId,
+                    'size_name' => $items[0]['size_name'], // All items have the same size name
+                    'product_count' => count($items),
+                ];
+            })
+            ->values();
+
+        // Group by flavors
+        $flavorsArray = $topSellingProducts->flatMap(function ($product) {
+            return $product->product->flavors->map(function ($flavor) use ($product) {
+                return [
+                    'flavor_id' => $flavor->id,
+                    'flavor_name' => $flavor->name, // Assuming 'name' is a column in flavors table
+                    'product_id' => $product->product->id,
+                ];
+            });
+        })
+            ->groupBy('flavor_id') // Group by flavor ID
+            ->map(function ($items, $flavorId) {
+                return [
+                    'flavor_id' => $flavorId,
+                    'flavor_name' => $items[0]['flavor_name'], // All items have the same flavor name
+                    'product_count' => count($items),
+                ];
+            })
+            ->values();
+
+        $prices = $topSellingProducts->map(function ($product) {
+            // Ensure you are referencing the pivot for prices
+            $minSize = $product->product->sizes->min(function ($size) {
+                return $size->pivot->price; // Access price through pivot
+            });
+            return $minSize ? $minSize : null;
+        })->filter();
+
+        $minPrice = $prices->min();
+        $maxPrice = $prices->max();
+
+        $topSellingBrands = Brand::whereHas('products', function ($query) {
+            $query->whereIn('id', function ($subQuery) {
+                $subQuery->select('product_id')
+                    ->from('top_selling_products')
+                    ->where('status', 1);
+            });
+        })->where('status', 1)
+            ->get();
+
+        $totalRecords = $topSellingProducts->count();
+
+        return view('front.products.product-top-selling', compact('categories', 'brands', 'topSellingCategories', 'flavorsArray', 'sizeArray', 'minPrice', 'maxPrice', 'totalRecords', 'topSellingBrands'));
+    }
+
+    public function getFilterTopSellingProducts(Request $request)
+    {
+        $perPage = $request->get('perPage', 1);
+        $sort = $request->get('sort', 'latest');
+        $minPrice = $request->get('minPrice', 0);
+        $maxPrice = $request->get('maxPrice', 999999);
+        $brands = $request->get('brands');
+        $sizes = $request->get('sizes');
+        $flavors = $request->get('flavors');
+
+        $topSellingProducts = TopSellingProduct::whereHas('product', function ($query) use ($minPrice, $maxPrice) {
+            $query->where('status', 1) // Ensure the product is active
+                ->whereHas('sizes', function ($query) use ($minPrice, $maxPrice) {
+                    $query->selectRaw('product_sizes.product_id, MIN(CAST(product_sizes.price AS DECIMAL(10, 2))) as min_price')
+                        ->groupBy('product_sizes.product_id')
+                        ->havingRaw('min_price BETWEEN ? AND ?', [$minPrice, $maxPrice]); // Filter sizes by price range
+                });
+        })->with(['product.sizes', 'product.flavors']); // Eager load sizes and flavors
+
+        // Apply Brand Filter
+        if ($brands) {
+            $brandsArray = explode(',', $brands);
+            $topSellingProducts = $topSellingProducts->whereHas('product', function ($query) use ($brandsArray) {
+                $query->whereIn('brand_id', $brandsArray);
+            });
+        }
+
+        // Apply Size Filter
+        if ($sizes) {
+            $sizesArray = explode(',', $sizes);
+            $topSellingProducts = $topSellingProducts->whereHas('product.sizes', function ($query) use ($sizesArray) {
+                $query->whereIn('size_id', $sizesArray);
+            });
+        }
+
+        // Apply Flavor Filter
+        if ($flavors) {
+            $flavorsArray = explode(',', $flavors);
+            $topSellingProducts = $topSellingProducts->whereHas('product.flavors', function ($query) use ($flavorsArray) {
+                $query->whereIn('flavor_id', $flavorsArray);
+            });
+        }
+
+        // Apply sorting
+        if ($sort === 'price_low_high') {
+            $topSellingProducts = $topSellingProducts->join('products', 'top_selling_products.product_id', '=', 'products.id')
+                ->leftJoin('product_sizes', 'products.id', '=', 'product_sizes.product_id')
+                ->select('top_selling_products.*')
+                ->groupBy('products.id')
+                ->orderByRaw('MIN(CAST(product_sizes.price AS DECIMAL(10, 2))) ASC');
+        } elseif ($sort === 'price_high_low') {
+            $topSellingProducts = $topSellingProducts->join('products', 'top_selling_products.product_id', '=', 'products.id')
+                ->leftJoin('product_sizes', 'products.id', '=', 'product_sizes.product_id')
+                ->select('top_selling_products.*')
+                ->groupBy('products.id')
+                ->orderByRaw('MIN(CAST(product_sizes.price AS DECIMAL(10, 2))) DESC');
+        } elseif ($sort === 'oldest') {
+            $topSellingProducts = $topSellingProducts->join('products', 'top_selling_products.product_id', '=', 'products.id')
+                ->select('top_selling_products.*')
+                ->orderBy('products.created_at', 'asc');
+        } else {
+            // Default to 'latest'
+            $topSellingProducts = $topSellingProducts->join('products', 'top_selling_products.product_id', '=', 'products.id')
+                ->select('top_selling_products.*')
+                ->orderBy('products.created_at', 'desc');
+        }
+
+
+        // Paginate Results
+        $topSellingProducts = $topSellingProducts->paginate($perPage);
+
+
+        return response()->json([
+            'products' => $topSellingProducts->items(),
+            'pagination' => view('vendor.pagination.default', ['paginator' => $topSellingProducts])->render(),
+        ]);
+    }
+
+
+    public function productsSearch(Request $request)
+    {
+        $search = $request->input('search');
+        if ($search) {
+            $Products = Product::where('name', 'like', "%$search%")->where('status', 1)->orderBy('id', 'DESC')
+                ->get();
+            $categories = Category::where('status', 1)->get();
+            $brands = Brand::select('name', 'image', 'id')
+                ->orderBy('name')
+                ->get()
+                ->groupBy(function ($brand) {
+                    return strtoupper(substr($brand->name, 0, 1));
+                });
+
+            $Othercategories = Category::whereIn('id', $Products->pluck('category_id')->unique())
+                ->take(7)
+                ->get()
+                ->map(function ($category) use ($Products) {
+                    return [
+                        'category_id' => $category->id,
+                        'category_name' => $category->name, // Assuming 'name' is a column in the categories table
+                        'product_count' => $Products->where('category_id', $category->id)->count(),
+                    ];
+                });
+
+            $sizeArray = $Products->flatMap(function ($product) {
+                return $product->sizes->map(function ($size) use ($product) {
+                    return [
+                        'size_id' => $size->id,
+                        'size_name' => $size->name, // Assuming 'name' is a column in sizes table
+                        'product_id' => $product->id,
+                    ];
+                });
+            })
+                ->groupBy('size_id') // Group by size ID
+                ->map(function ($items, $sizeId) {
+                    return [
+                        'size_id' => $sizeId,
+                        'size_name' => $items[0]['size_name'], // All items have the same size name
+                        'product_count' => count($items),
+                    ];
+                })
+                ->values();
+
+            $flavorsArray = $Products->flatMap(function ($product) {
+                return $product->flavors->map(function ($flavor) use ($product) {
+                    return [
+                        'flavor_id' => $flavor->id,
+                        'flavor_name' => $flavor->name, // Assuming 'name' is a column in sizes table
+                        'product_id' => $product->id,
+                    ];
+                });
+            })
+                ->groupBy('flavor_id') // Group by size ID
+                ->map(function ($items, $sizeId) {
+                    return [
+                        'flavor_id' => $sizeId,
+                        'flavor_name' => $items[0]['flavor_name'], // All items have the same size name
+                        'product_count' => count($items),
+                    ];
+                })
+                ->values();
+
+            $prices = $Products->map(function ($product) {
+                $minSize = $product->sizes->min('pivot.price');
+                return $minSize ? $minSize : null;
+            })->filter();
+
+
+            $minPrice = $prices->min();
+            $maxPrice = $prices->max();
+
+
+            $totalRecords = $Products->count();
+            $productsBrands = $Products->groupBy('brand_id')->map(function ($groupedProducts, $brandId) {
+                $brand = $groupedProducts->first()->brand; // All products in the group share the same brand
+                return [
+                    'brand_id' => $brand->id,
+                    'brand_name' => $brand->name, // Assuming 'name' is a column in the brands table
+                    'product_count' => $groupedProducts->count(), // Count of products for this brand
+                ];
+            })->values();
+
+            if ($Products) {
+                return view('front.products.products-search', compact('search', 'categories', 'brands', 'Othercategories', 'flavorsArray', 'sizeArray', 'minPrice', 'maxPrice', 'totalRecords', 'productsBrands'));
+            } else {
+                return redirect()->route('front.products');
+            }
+        } else {
+            return redirect()->route('front.products');
+        }
+    }
+
+    public function getFilterSearchProducts(Request $request)
+    {
+        $perPage = $request->get('perPage', 1);
+        $sort = $request->get('sort', 'latest');
+        $minPrice = $request->get('minPrice', 0);
+        $maxPrice = $request->get('maxPrice', 999999);
+        $brands = $request->get('brands');
+        $categorys = $request->get('categorys');
+        $sizes = $request->get('sizes');
+        $flavors = $request->get('flavors');
+        $search = $request->get('search');
+
+
+        $Products = Product::where('name', 'like', "%$search%")->where('status', 1)
+            ->with(['sizes', 'flavors'])
+            ->whereHas('sizes', function ($query) use ($minPrice, $maxPrice) {
+                $query->selectRaw('product_sizes.product_id, MIN(CAST(product_sizes.price AS DECIMAL(10, 2))) as min_price')
+                    ->groupBy('product_sizes.product_id')
+                    ->havingRaw('min_price BETWEEN ? AND ?', [$minPrice, $maxPrice]);
+            });
+
+
+        if ($categorys) {
+            $categorysArray = explode(',', $categorys);
+            $Products->whereHas('category', function ($query) use ($categorysArray) {
+                $query->whereIn('category_id', $categorysArray);
+            });
+        }
+
+
+        if ($brands) {
+            $brandsArray = explode(',', $brands);
+            $Products->whereIn('brand_id', $brandsArray);
+        }
+
+        if ($sizes) {
+            $sizesArray = explode(',', $sizes);
+            $Products->whereHas('sizes', function ($query) use ($sizesArray) {
+                $query->whereIn('size_id', $sizesArray);
+            });
+        }
+
+        if ($flavors) {
+            $flavorsArray = explode(',', $flavors);
+            $Products->whereHas('flavors', function ($query) use ($flavorsArray) {
+                $query->whereIn('flavor_id', $flavorsArray);
+            });
+        }
+
+        // Apply sorting
+        if ($sort === 'price_low_high') {
+            $Products->orderByRaw(
+                '(SELECT MIN(CAST(product_sizes.price AS DECIMAL(10, 2))) FROM product_sizes WHERE product_sizes.product_id = products.id) ASC'
+            );
+        } elseif ($sort === 'price_high_low') {
+            $Products->orderByRaw(
+                '(SELECT MIN(CAST(product_sizes.price AS DECIMAL(10, 2))) FROM product_sizes WHERE product_sizes.product_id = products.id) DESC'
+            );
+        } elseif ($sort === 'oldest') {
+            $Products->orderBy('created_at', 'asc');
+        } else {
+            $sort = 'latest';
+            $Products->orderBy('created_at', 'desc');
+        }
+
+        $Products = $Products->paginate($perPage);
+
+        return response()->json([
+            'products' => $Products->items(),
+            'pagination' => view('vendor.pagination.default', ['paginator' => $Products])->render(),
         ]);
     }
 }

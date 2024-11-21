@@ -84,15 +84,15 @@
                         @endif
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link" href="#" id="navbarDropdown" role="button">
+                        <a class="nav-link" href="{{route('front.products-top-selling')}}" id="navbarDropdown" role="button">
                             TOP SELLINGs
                         </a>
                     </li>
                 </ul>
-                <form action="http://localhost/laravel/laravel-gym/blog/search" method="GET">
+                <form action="{{ route('front.products-search') }}" method="GET">
                     <div class="form-group m-0">
                         <div class="input-group ">
-                            <input type="text" class="form-control" placeholder="Search Keyword" name="search">
+                            <input type="text" value="{{isset($search) ? $search : ''}}" class="form-control" placeholder="Search Keyword" name="search">
                             <div class="input-group-append">
                                 <button class="btns" type="submit"><i class="ti-search"></i></button>
                             </div>

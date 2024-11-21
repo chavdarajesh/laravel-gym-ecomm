@@ -1,5 +1,5 @@
 @extends('front.layouts.main')
-@section('title', 'Nutrition & Supplements | Top Selling')
+@section('title', 'Nutrition & Supplements | Search '.$search)
 @section('css')
 <style>
     .noUi-horizontal {
@@ -155,7 +155,7 @@
             <div class="row">
                 <div class="col-xl-12">
                     <div class="">
-                        <h2 class="text-white">Nutrition & Supplements | Top Selling</h2>
+                        <h2 class="text-white">Nutrition & Supplements | Search : {{$search}}</h2>
                     </div>
                 </div>
             </div>
@@ -164,7 +164,7 @@
 </div>
 <!-- Hero End -->
 <!--? Team -->
-<x-front.product.nav_menu :categories="$categories" :brands="$brands">
+<x-front.product.nav_menu :categories="$categories" :brands="$brands" :search="$search">
 </x-front.product.nav_menu>
 
 <section class="py-5">
@@ -174,18 +174,18 @@
             <div class="col-xl-2 col-lg-3 order-2 order-lg-1 px-2" id="sidebar">
                 <h2 class="mb-4">Filters</h2>
                 <hr>
-                @if($topSellingCategories->count())
-                <h5 class="mb-2 d-flex align-items-center justify-content-between " data-toggle="collapse" data-target="#topSellingCategories">
+                @if($Othercategories->count())
+                <h5 class="mb-2 d-flex align-items-center justify-content-between " data-toggle="collapse" data-target="#Othercategories">
                     <span>Shop by Category</span>
                     <span>
                         <i class="fa fa-chevron-down" id="category-arrow"></i>
                     </span>
                 </h5>
-                <div class="category-filter show collapse mb-4" id="topSellingCategories">
-                    @foreach($topSellingCategories as $category)
+                <div class="category-filter show collapse mb-4" id="Othercategories">
+                    @foreach($Othercategories as $category)
                     <div class="mb-2 form-check">
-                        <input class="form-check-input" id="category-filter-{{$category->id}}" type="checkbox" value="{{$category->id}}">
-                        <label class="form-check-label" for="category-filter-{{$category->id}}">{{$category->name}} | ({{$category->products->count()}})</label>
+                        <input class="form-check-input" id="category-filter-{{$category['category_id']}}" type="checkbox" value="{{$category['category_id']}}">
+                        <label class="form-check-label" for="category-filter-{{$category['category_id']}}">{{$category['category_name']}} | ({{$category['product_count']}})</label>
                     </div>
                     @endforeach
                 </div>
@@ -203,18 +203,18 @@
                         <div class="col-6 text-end" style="text-align: end;"><strong class="small font-weight-bold">To</strong></div>
                     </div>
                 </div>
-                @if($topSellingBrands->count())
-                <h5 class="mb-2 d-flex align-items-center justify-content-between " data-toggle="collapse" data-target="#topSellingBrands">
+                @if($productsBrands->count())
+                <h5 class="mb-2 d-flex align-items-center justify-content-between " data-toggle="collapse" data-target="#productsBrands">
                     <span>Show by brand</span>
                     <span>
                         <i class="fa fa-chevron-down" id="category-arrow"></i>
                     </span>
                 </h5>
-                <div class="brand-filter show collapse mb-4" id="topSellingBrands">
-                    @foreach($topSellingBrands as $brand)
+                <div class="brand-filter show collapse mb-4" id="productsBrands">
+                    @foreach($productsBrands as $brand)
                     <div class="mb-2 form-check">
-                        <input class="form-check-input" id="brand-filter-{{$brand->id}}" type="checkbox" value="{{$brand->id}}">
-                        <label class="form-check-label" for="brand-filter-{{$brand->id}}">{{$brand->name}} | ({{$brand->products->count()}})</label>
+                        <input class="form-check-input" id="brand-filter-{{$brand['brand_id']}}" type="checkbox" value="{{$brand['brand_id']}}">
+                        <label class="form-check-label" for="brand-filter-{{$brand['brand_id']}}">{{$brand['brand_name']}} | ({{$brand['product_count']}})</label>
                     </div>
                     @endforeach
                 </div>
@@ -300,7 +300,6 @@
 @section('js')
 <script src="{{ asset('assets/front/js/nouislider.min.js') }}"></script>
 
-
 <script>
     var minPrice = '{{$minPrice}}';
     var maxPrice = '{{$maxPrice}}';
@@ -321,7 +320,7 @@
             'max': maxPrice
         }
     });
-    if (minPrice == oldMaxPrice) {
+    if (minPrice === oldMaxPrice) {
         slider.noUiSlider.disable();
     }
     slider.noUiSlider.on('change', function(values, handle, unencoded) {
@@ -339,12 +338,13 @@
 
 <script>
     var totalItem = '{{$totalRecords}}';
+    var search = '{{$search}}';
     totalItem = Number(totalItem);
     const perPageItems = 1
 
     function fetchProducts(sort = 'latest', minPrice = 0, maxPrice = 999999, brands = [], sizes = [], flavors = [], categorys = [], page = 1, perPage = perPageItems) {
         $.ajax({
-            url: "{{ route('front.products-top-selling-filters') }}",
+            url: "{{ route('front.products-search-filters') }}",
             method: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
@@ -357,12 +357,12 @@
                 flavors: flavors.join(','),
                 categorys: categorys.join(','),
                 perPage: perPage,
+                search: search,
             },
             success: function(response) {
                 let productsHtml = '';
                 if (response.products && response.products.length > 0) {
-                    response.products.forEach(topSellingProduct => {
-                        const product = topSellingProduct.product;
+                    response.products.forEach(product => {
                         var imgUrl = '{{ asset("") }}' + product.cover_image;
                         let price = 'N/A';
                         if (product.sizes.length) {

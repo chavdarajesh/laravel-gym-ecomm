@@ -8,11 +8,13 @@ class nav_menu extends Component
 {
     public $categories;
     public $brands;
+    public $search;
 
-    public function __construct($categories, $brands)
+    public function __construct($categories, $brands, $search)
     {
         $this->categories = $categories;
         $this->brands = $brands;
+        $this->search = $search;
     }
     public function render()
     {
