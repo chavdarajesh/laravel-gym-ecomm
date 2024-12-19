@@ -277,8 +277,8 @@
                   <div class="row align-items-center">
                     <div class="col-md-9">
                       <ul class="list-inline mb-0 ">
-                        <li class="list-inline-item py-1"><a class="btn btn-outline-primary product-list-btn" href="{{route('front.products-cart')}}"> <i class="fas fa-shopping-cart me-2"></i>Back to cart</a></li>
-                        <li class="list-inline-item py-1"><a class="btn btn-primary product-list-btn" href="{{route('front.products-completed')}}"> <i class="far fa-credit-card me-2"></i>Place order</a></li>
+                        <li class="list-inline-item py-1"><a class="btn btn-outline-primary product-list-btn" href="{{route('front.products-cart')}}"> <i class="fas fa-shopping-cart mr-2"></i>Back to cart</a></li>
+                        <li class="list-inline-item py-1"><a class="btn btn-primary product-list-btn" href="{{route('front.products-completed')}}"> <i class="far fa-credit-card mr-2"></i>Place order</a></li>
                       </ul>
                     </div>
                     <div class="col-md-3 text-start text-md-end">

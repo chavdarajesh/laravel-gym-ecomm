@@ -156,7 +156,7 @@
             @foreach ($ProductSliders as $key => $slider)
             <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
                 @if($slider->product_id)
-                <a href="">
+                <a href="{{ route('front.products-details',$slider->product_id) }}">
                     <img style="max-height: 450px;" class="d-block w-100" src="{{ asset($slider->image) }}" alt="{{ $slider->name }}">
                 </a>
                 @else

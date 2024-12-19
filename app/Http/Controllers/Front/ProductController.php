@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\Brand;
+use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductSlider;
@@ -806,9 +807,47 @@ class ProductController extends Controller
         }
     }
 
+    public function productsCartPost(Request $request)
+    {
+        $request->validate([
+            'product' => 'required|exists:products,id',
+            'size' => 'required',
+            'flavor' => 'required',
+        ]);
+
+        $product = Product::findOrFail($request->product);
+        $cartItem = Cart::where('user_id', auth()->id())
+            ->where('product_id', $request->product)
+            ->where('size_id', $request->size)
+            ->where('flavor_id', $request->flavor)
+            ->first();
+
+        if ($cartItem) {
+            $cartItem->quantity += 1;
+            $cartItem->save();
+        } else {
+            $size = $product->sizes()->where('size_id', $request->size)->first();
+            if ($size) {
+                $price = $size->pivot->price;
+            } else {
+                $price = 0;
+            }
+            Cart::create([
+                'user_id' => auth()->id(),
+                'product_id' => $request->product,
+                'size_id' => $request->size,
+                'flavor_id' => $request->flavor,
+                'quantity' => 1,
+                'price' => $price, // Adjust as needed for size/flavor-specific pricing
+            ]);
+        }
+        return redirect()->route('front.products-cart')->with('message', 'Product added to cart successfully.');
+    }
+
     public function productsCart()
     {
-        return view('front.products.products-cart');
+        $cartItems = Cart::where('user_id', auth()->id())->with('product')->get();
+        return view('front.products.products-cart',compact('cartItems'));
     }
 
     public function productsCheckout()

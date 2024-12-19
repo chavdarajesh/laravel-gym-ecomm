@@ -239,52 +239,36 @@
                   </tr>
                 </thead>
                 <tbody>
+                @if($cartItems->count())
+                @foreach ($cartItems as $item)
                   <tr>
                     <th class="p-3 pl-0 border-0" scope="row">
-                      <div class="d-flex align-items-center"><a class="reset-anchor d-block animsition-link" href="detail.html"><img src="https://demo.bootstrapious.com/shopio/1-1/img/product-cart-1.2d55ea81.jpg" alt="..." width="70"></a>
-                        <div class="ms-3"><strong class="h6"><a class="reset-anchor animsition-link text-dark" href="detail.html">Red digital smartwatch</a></strong></div>
+                      <div class="d-flex align-items-center"><a class="reset-anchor d-block animsition-link" href="{{ route('front.products-details',$item->product->id) }}"><img src="{{asset($item->product->cover_image)}}" alt="..." width="70"></a>
+                        <div class="ml-3"><strong class="h6"><a class="reset-anchor animsition-link text-dark" href="{{ route('front.products-details',$item->product->id) }}">{{$item->product->name}}</a></strong></div>
                       </div>
                     </th>
                     <td class="p-3 align-middle border-0">
-                      <p class="mb-0 small">$250</p>
+                      <p class="mb-0 small">${{$item->price}}</p>
                     </td>
                     <td class="p-3 align-middle border-0">
                       <div class="border d-inline-block px-2">
                         <div class="quantity">
                           <button class="dec-btn p-0" onclick="decrease(this)"><i class="fas fa-caret-left"></i></button>
-                          <input class="form-control border-0 shadow-0 p-0 quantity-result" type="text" value="1">
+                          <input class="form-control border-0 shadow-0 p-0 quantity-result" type="text" value="{{$item->quantity}}">
                           <button class="inc-btn p-0" onclick="increase(this)"><i class="fas fa-caret-right"></i></button>
                         </div>
                       </div>
                     </td>
                     <td class="p-3 align-middle border-0">
-                      <p class="mb-0 small">$250</p>
+                      <p class="mb-0 small">$ <span class="total-price">{{$item->price * $item->quantity}}</span></p>
                     </td>
                     <td class="p-3 align-middle border-0"><a class="reset-anchor" href="javascript:void(0);"><i class="fas fa-trash-alt small text-muted"></i></a></td>
                   </tr>
-                  <tr>
-                    <th class="p-3 pl-0 border-light" scope="row">
-                      <div class="d-flex align-items-center"><a class="reset-anchor d-block animsition-link" href="detail.html"><img src="https://demo.bootstrapious.com/shopio/1-1/img/product-cart-1.2d55ea81.jpg" alt="..." width="70"></a>
-                        <div class="ms-3"><strong class="h6"><a class="reset-anchor animsition-link text-dark" href="detail.html">Apple watch</a></strong></div>
-                      </div>
-                    </th>
-                    <td class="p-3 align-middle border-light">
-                      <p class="mb-0 small">$250</p>
-                    </td>
-                    <td class="p-3 align-middle border-light">
-                      <div class="border d-inline-block px-2">
-                        <div class="quantity">
-                          <button class="dec-btn p-0" onclick="decrease(this)"><i class="fas fa-caret-left"></i></button>
-                          <input class="form-control border-0 shadow-0 p-0 quantity-result" type="text" value="1">
-                          <button class="inc-btn p-0" onclick="increase(this)"><i class="fas fa-caret-right"></i></button>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="p-3 align-middle border-light">
-                      <p class="mb-0 small">$250</p>
-                    </td>
-                    <td class="p-3 align-middle border-light"><a class="reset-anchor" href="javascript:void(0);"><i class="fas fa-trash-alt small text-muted"></i></a></td>
-                  </tr>
+                  @endforeach
+
+                  @else
+                  <tr colspan=5>No items found!</tr>
+                  @endif
                 </tbody>
               </table>
               <!-- Cart footer-->
@@ -292,8 +276,8 @@
                 <div class="row align-items-center">
                   <div class="col-md-6">
                     <ul class="list-inline mb-0">
-                      <li class="list-inline-item py-1 m-0"><a class="btn btn-outline-primary product-list-btn" href="{{route('front.products')}}"> <i class="fas fa-shopping-bag me-2"></i>Continue shopping</a></li>
-                      <li class="list-inline-item py-1 m-0"><a class="btn btn-primary product-list-btn" href="{{route('front.products-checkout')}}"> <i class="far fa-credit-card me-2"></i>Process checkout</a></li>
+                      <li class="list-inline-item py-1 m-0"><a class="btn btn-outline-primary product-list-btn" href="{{route('front.products')}}"> <i class="fas fa-shopping-bag mr-2"></i>Continue shopping</a></li>
+                      <li class="list-inline-item py-1 m-0"><a class="btn btn-primary product-list-btn" href="{{route('front.products-checkout')}}"> <i class="far fa-credit-card mr-2"></i>Process checkout</a></li>
                     </ul>
                   </div>
                   <div class="align-items-md-end align-items-start col-md-6 d-flex flex-column text-md-end text-start">

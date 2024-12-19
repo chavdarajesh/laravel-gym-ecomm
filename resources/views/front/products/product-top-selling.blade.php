@@ -268,7 +268,7 @@
                     </div>
                     <div class="col-md-6 text-lg-end">
                         <div class="d-flex align-items-center justify-content-center justify-content-md-end">
-                            <ul class="list-inline mb-0 ms-2">
+                            <ul class="list-inline mb-0 ml-2">
                                 <li class="list-inline-item text-start">
                                     <select id="sortProducts" class="form-control js-sort" name="sort">
                                         <option value="">Sort by</option>

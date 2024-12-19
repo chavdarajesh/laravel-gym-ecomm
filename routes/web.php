@@ -305,7 +305,11 @@ Route::post('/products/search/filters', [FrontProductController::class, 'getFilt
 
 
 Route::get('/products/details/{id}', [FrontProductController::class, 'productsDetails'])->name('front.products-details');
+
 Route::get('/products/cart', [FrontProductController::class, 'productsCart'])->name('front.products-cart');
 Route::get('/products/checkout', [FrontProductController::class, 'productsCheckout'])->name('front.products-checkout');
 Route::get('/products/completed', [FrontProductController::class, 'productsCompleted'])->name('front.products-completed');
+
+Route::post('/products/cart', [FrontProductController::class, 'productsCartPost'])->name('front.products-cart.post');
+
 

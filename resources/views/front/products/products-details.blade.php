@@ -155,7 +155,7 @@
                 <div class="badge bg-warning small rounded-0 mb-2">{{$Product->brand->name}}</div>
                 <h1>{{$Product->name}}</h1>
                 <div class="d-flex align-items-center">
-                    <ul class="list-inline mb-2 me-3 small">
+                    <ul class="list-inline mb-2 mr-3 small">
                         <li class="list-inline-item m-0"><i class="fas fa-star small text-warning"></i></li>
                         <li class="list-inline-item m-0"><i class="fas fa-star small text-warning"></i></li>
                         <li class="list-inline-item m-0"><i class="fas fa-star small text-warning"></i></li>
@@ -175,40 +175,46 @@
 }
 
                 @endphp
+                <form action="{{route('front.products-cart.post')}}" method="post">
+                @csrf
                 <p class="h4" id="product-price">{{$minPrice}}</p>
                 <!-- <p class="text-small mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ut ullamcorper leo, eget euismod orci. Cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus. Vestibulum ultricies aliquam convallis.</p> -->
-                <div class="d-flex flex-wrap align-items-center mb-4">
-                    <p class="mb-0 me-3">Select Flavor:</p>
-                    <ul class="list-inline mb-0">
-                        @foreach($Product->flavors as $flavor)
+                <div class="d-flex flex-wrap align-items-center mb-3">
+                    <p class="mb-0 mr-3">Select Flavor:</p>
+                    <ul class="list-inline mb-0 mx-1">
+                        @foreach($Product->flavors as  $index =>$flavor)
                         <li class="list-inline-item">
-                            <input class="btn-check" id="flavor-{{$flavor->id}}" type="radio" name="flavors" checked="">
+                            <input class="btn-check" id="flavor-{{$flavor->id}}" value="{{$flavor->id}}" type="radio" name="flavor"  {{ $index == 0 ? 'checked' : '' }}>
                             <label class="p-0 m-0" for="flavor-{{$flavor->id}}">{{$flavor->name}}</label>
                         </li>
                         @endforeach
                     </ul>
                 </div>
                 <div class="d-flex flex-wrap align-items-center mb-4">
-                    <p class="mb-0 me-3">Select size:</p>
+                    <p class="mb-0 mr-1">Select size:</p>
                     <select id="size-select" class="form-control" name="size">
                         @foreach($Product->sizes as $size)
                         <option {{$selectedSize == $size->id ? 'selected' : ''}} data-price="{{$size->pivot->price}}" value="{{$size->id}}">{{$size->name}}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="d-align-items-center d-flex flex-column flex-md-row mb-4">
-                    <div class="border d-flex align-items-center justify-content-center p-1 me-2">
-                        <div class="quantity py-0">
-                            <button class="dec-btn p-0" onclick="decrease(this)"><i class="fas fa-caret-left"></i></button>
-                            <input class="form-control border-0 shadow-0 p-0 quantity-result" type="text" value="1">
-                            <button class="inc-btn p-0" onclick="increase(this)"><i class="fas fa-caret-right"></i></button>
-                        </div>
-                    </div><a class="btn  btn-sm py-2 border-bottom-0 px-5 me-3" href="cart.html"> <i class="fas fa-shopping-bag py-1 me-2"></i>Add to cart</a><a class="p-0 reset-anchor d-inline-block mx-2" href="#"><i class="fas fa-heart"></i></a><a class="p-0 reset-anchor d-inline-block mx-2" href="#"><i class="fas fa-share-alt"></i></a>
-                </div><br>
-                <ul class="list-unstyled small d-inline-block">
-                    <!-- <li class="px-3 py-2 mb-1 bg-light"><strong class="text-uppercase">SKU:</strong><span class="ms-2 text-muted">039</span></li> -->
-                    <li class="px-3 py-2 mb-1 bg-light text-muted"><strong class="text-uppercase text-dark">Category:</strong><a class="text-dark ms-2" href="#">{{$Product->category->name}}</a></li>
-                    <li class="px-3 py-2 mb-1 bg-light text-muted"><strong class="text-uppercase text-dark">Sub Category:</strong><a class="reset-anchor ms-2" href="#">{{isset($Product->subcategory) ? $Product->subcategory->name : ''}}</a></li>
+
+                    <input type="hidden" name="product" value="{{$Product->id}}">
+                    <div class="d-align-items-center d-flex flex-column flex-md-row mb-4">
+                        <div class="border d-flex align-items-center justify-content-center p-1 mr-2">
+                            <div class="quantity py-0">
+                                <button class="dec-btn p-0" onclick="decrease(this)"><i class="fas fa-caret-left"></i></button>
+                                <input class="form-control border-0 shadow-0 p-0 quantity-result" type="text" value="1">
+                                <button class="inc-btn p-0" onclick="increase(this)"><i class="fas fa-caret-right"></i></button>
+                            </div>
+                        </div><button class="btn  btn-sm py-2 border-bottom-0 px-5 mr-3" type="submit"> <i class="fas fa-shopping-bag py-1 mr-2"></i>Add to cart</button>
+                        <!-- <button class="p-0 reset-anchor d-inline-block mx-2" href="javascript:void(0);"><i class="fas fa-heart"></i></button><a class="p-0 reset-anchor d-inline-block mx-2" href="javascript:void(0);"><i class="fas fa-share-alt"></i></a> -->
+                    </div><br>
+                </form>
+                    <ul class="list-unstyled small d-inline-block">
+                    <!-- <li class="px-3 py-2 mb-1 bg-light"><strong class="text-uppercase">SKU:</strong><span class="ml-2 text-muted">039</span></li> -->
+                    <li class="px-3 py-2 mb-1 bg-light text-muted"><strong class="text-uppercase text-dark">Category:</strong><a class="text-dark ml-2" href="javascript:void(0);">{{$Product->category->name}}</a></li>
+                    <li class="px-3 py-2 mb-1 bg-light text-muted"><strong class="text-uppercase text-dark">Sub Category:</strong><a class="reset-anchor ml-2" href="javascript:void(0);">{{isset($Product->subcategory) ? $Product->subcategory->name : ''}}</a></li>
                 </ul>
             </div>
         </div>
@@ -243,8 +249,8 @@
                             <h5 class="mb-4">How customers reviewed this item</h5>
                             <div class="row">
                                 <div class="col-lg-6">
-                                    <div class="d-flex mb-4"><img class="rounded-circle p-1 shadow-sm flex-grow-1 align-self-baseline" src="https://d19m59y37dris4.cloudfront.net/shopio/1-1/img/client-1.2821b67d.jpg" alt="..." width="60">
-                                        <div class="ms-3">
+                                    <div class="d-flex mb-4"><img class="rounded-circle p-1 shadow-sm flex-grow-1 align-self-baseline" src="{{asset('custom-assets/default/front/placeholder/author-1.png')}}" alt="..." width="60">
+                                        <div class="ml-3">
                                             <h3 class="h6 mb-0">Patrick Wood</h3>
                                             <p class="text-gray small mb-0">15 Mar 2019</p>
                                             <ul class="list-inline mb-3">
@@ -259,8 +265,8 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                    <div class="d-flex mb-4"><img class="rounded-circle p-1 shadow-sm flex-grow-1 align-self-baseline" src="https://d19m59y37dris4.cloudfront.net/shopio/1-1/img/client-2.f8d832d9.jpg" alt="..." width="60">
-                                        <div class="ms-3">
+                                    <div class="d-flex mb-4"><img class="rounded-circle p-1 shadow-sm flex-grow-1 align-self-baseline" src="{{asset('custom-assets/default/front/placeholder/author-1.png')}}" alt="..." width="60">
+                                        <div class="ml-3">
                                             <h3 class="h6 mb-0">Melissa Johanson</h3>
                                             <p class="text-gray small mb-0">15 Mar 2019</p>
                                             <ul class="list-inline mb-3">

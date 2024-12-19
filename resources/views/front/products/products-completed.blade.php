@@ -232,7 +232,7 @@
                 <div class="col-lg-7 mx-auto">
                   <p class="text-muted mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                 </div>
-              </div><a class="btn btn-primary product-list-btn" href="{{route('front.products')}}"> <i class="fas fa-shopping-bag me-2"></i>Continue shopping</a>
+              </div><a class="btn btn-primary product-list-btn" href="{{route('front.products')}}"> <i class="fas fa-shopping-bag mr-2"></i>Continue shopping</a>
             </div>
           </div>
         </div>
