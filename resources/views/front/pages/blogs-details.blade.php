@@ -41,7 +41,7 @@
                             <li>{{ \Carbon\Carbon::parse($Blog->published_date)->format('d-m-Y') }} |</li>
                             <li><a href="javascript:void(0);"><i class="fa fa-user"></i> {{ $Blog && $Blog->user && $Blog->user->name ? $Blog->user->name : 'Admin'  }}</a></li>
                             @if (!$Blog->tags->isEmpty())
-                            <li><a href="#"><i class="fa fa-tags"></i>@foreach ($Blog->tags as $tag) {{$tag->name }} @endforeach</a></li>
+                            <li><a href="javascript:void(0);"><i class="fa fa-tags"></i>@foreach ($Blog->tags as $tag) {{$tag->name }} @endforeach</a></li>
                             @endif
                         </ul>
                         {!! $Blog->description !!}

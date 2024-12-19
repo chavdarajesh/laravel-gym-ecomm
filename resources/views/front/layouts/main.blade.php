@@ -17,7 +17,10 @@ $excludedRoutes = [
     'front.products-sub-category',
     'front.products-top-selling',
     'front.products-search',
-    'front.products-details'
+    'front.products-details',
+    'front.products-cart',
+    'front.products-checkout',
+    'front.products-completed'
 ];
 @endphp
 

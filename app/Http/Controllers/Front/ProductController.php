@@ -11,7 +11,6 @@ use App\Models\ProductSlider;
 use App\Models\Subcategory;
 use App\Models\TopSellingProduct;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -140,7 +139,6 @@ class ProductController extends Controller
                     ->groupBy('product_sizes.product_id')
                     ->havingRaw('min_price BETWEEN ? AND ?', [$minPrice, $maxPrice]);
             });
-
 
         if ($brands) {
             $brandsArray = explode(',', $brands);
@@ -277,7 +275,6 @@ class ProductController extends Controller
                     ->havingRaw('min_price BETWEEN ? AND ?', [$minPrice, $maxPrice]);
             });
 
-
         if ($brands) {
             $brandsArray = explode(',', $brands);
             $subCategoryProducts->whereIn('brand_id', $brandsArray);
@@ -331,15 +328,15 @@ class ProductController extends Controller
 
             $categoriesWithProducts = Category::whereHas('products', function ($query) use ($Brand) {
                 $query->where('brand_id', $Brand->id) // Filter products belonging to the brand
-                    ->where('status', 1);           // Ensure the product is active
+                    ->where('status', 1); // Ensure the product is active
             })
                 ->with(['products' => function ($query) use ($Brand) {
                     $query->where('brand_id', $Brand->id) // Include products with the specific brand
-                        ->where('status', 1)            // Ensure product is active
-                        ->with('sizes', 'flavors');     // Eager load related sizes and flavors
+                        ->where('status', 1) // Ensure product is active
+                        ->with('sizes', 'flavors'); // Eager load related sizes and flavors
                 }])
                 ->where('status', 1) // Ensure the category is active
-                ->take(7)            // Limit the result to 7 categories
+                ->take(7) // Limit the result to 7 categories
                 ->get();
 
             $barndProducts = $Brand->products()
@@ -390,7 +387,7 @@ class ProductController extends Controller
                 return $minSize ? $minSize : null;
             })->filter();
 
-            $brandslist =  Brand::where('status', 1)->where('id', $id)->get();
+            $brandslist = Brand::where('status', 1)->where('id', $id)->get();
 
             $minPrice = $prices->min();
             $maxPrice = $prices->max();
@@ -424,14 +421,12 @@ class ProductController extends Controller
                     ->havingRaw('min_price BETWEEN ? AND ?', [$minPrice, $maxPrice]);
             });
 
-
         if ($categorys) {
             $categorysArray = explode(',', $categorys);
             $brandProducts->whereHas('category', function ($query) use ($categorysArray) {
                 $query->whereIn('category_id', $categorysArray);
             });
         }
-
 
         if ($brands) {
             $brandsArray = explode(',', $brands);
@@ -470,7 +465,6 @@ class ProductController extends Controller
             'pagination' => view('vendor.pagination.default', ['paginator' => $brandProducts])->render(),
         ]);
     }
-
 
     public function productsTopSelling()
     {
@@ -627,17 +621,14 @@ class ProductController extends Controller
                 ->orderBy('products.created_at', 'desc');
         }
 
-
         // Paginate Results
         $topSellingProducts = $topSellingProducts->paginate($perPage);
-
 
         return response()->json([
             'products' => $topSellingProducts->items(),
             'pagination' => view('vendor.pagination.default', ['paginator' => $topSellingProducts])->render(),
         ]);
     }
-
 
     public function productsSearch(Request $request)
     {
@@ -707,10 +698,8 @@ class ProductController extends Controller
                 return $minSize ? $minSize : null;
             })->filter();
 
-
             $minPrice = $prices->min();
             $maxPrice = $prices->max();
-
 
             $totalRecords = $Products->count();
             $productsBrands = $Products->groupBy('brand_id')->map(function ($groupedProducts, $brandId) {
@@ -744,7 +733,6 @@ class ProductController extends Controller
         $flavors = $request->get('flavors');
         $search = $request->get('search');
 
-
         $Products = Product::where('name', 'like', "%$search%")->where('status', 1)
             ->with(['sizes', 'flavors'])
             ->whereHas('sizes', function ($query) use ($minPrice, $maxPrice) {
@@ -753,14 +741,12 @@ class ProductController extends Controller
                     ->havingRaw('min_price BETWEEN ? AND ?', [$minPrice, $maxPrice]);
             });
 
-
         if ($categorys) {
             $categorysArray = explode(',', $categorys);
             $Products->whereHas('category', function ($query) use ($categorysArray) {
                 $query->whereIn('category_id', $categorysArray);
             });
         }
-
 
         if ($brands) {
             $brandsArray = explode(',', $brands);
@@ -805,7 +791,6 @@ class ProductController extends Controller
         ]);
     }
 
-
     public function productsDetails($id)
     {
         if ($id) {
@@ -819,5 +804,20 @@ class ProductController extends Controller
         } else {
             return redirect()->back()->with('error', 'Product Not Found..!');
         }
+    }
+
+    public function productsCart()
+    {
+        return view('front.products.products-cart');
+    }
+
+    public function productsCheckout()
+    {
+        return view('front.products.products-checkout');
+    }
+
+    public function productsCompleted()
+    {
+        return view('front.products.products-completed');
     }
 }

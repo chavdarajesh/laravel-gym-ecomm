@@ -165,9 +165,15 @@
                     <p class="small text-muted mb-2">12 customer reviews</p>
                 </div>
                 @php
-                $minPrice = $Product && $Product && $Product->sizes && $Product->sizes->isNotEmpty()
-                ? 'Price : $' . $Product->sizes->min('pivot.price')
-                : 'N/A';
+                if ($Product && $Product->sizes && $Product->sizes->isNotEmpty()) {
+    $minPriceSize = $Product->sizes->sortBy('pivot.price')->first(); // Sort and get the first size
+    $minPrice = 'Price: $' . $minPriceSize->pivot->price;
+    $selectedSize = $minPriceSize->id; // Assuming 'name' is a column for the size name
+} else {
+    $minPrice = 'N/A';
+    $selectedSize = 'N/A';
+}
+
                 @endphp
                 <p class="h4" id="product-price">{{$minPrice}}</p>
                 <!-- <p class="text-small mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ut ullamcorper leo, eget euismod orci. Cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus. Vestibulum ultricies aliquam convallis.</p> -->
@@ -186,7 +192,7 @@
                     <p class="mb-0 me-3">Select size:</p>
                     <select id="size-select" class="form-control" name="size">
                         @foreach($Product->sizes as $size)
-                        <option data-price="{{$size->pivot->price}}" value="{{$size->id}}">{{$size->name}}</option>
+                        <option {{$selectedSize == $size->id ? 'selected' : ''}} data-price="{{$size->pivot->price}}" value="{{$size->id}}">{{$size->name}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -227,12 +233,12 @@
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
-                        <div class="p-3 p-md-5">
+                        <div class="p-3 p-md-5" style="word-break: break-all;">
                             {!! $Product->description !!}
                         </div>
                     </div>
                     <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
-                        <div class="p-3 p-md-5">
+                        <div class="p-3 p-md-5" style="word-break: break-all;">
                             <p class="small text-muted mb-1">Based on 12 customers</p>
                             <h5 class="mb-4">How customers reviewed this item</h5>
                             <div class="row">
@@ -272,7 +278,7 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="shipping" role="tabpanel" aria-labelledby="shipping-tab">
-                        <div class="p-3 p-md-5">
+                        <div class="p-3 p-md-5" style="word-break: break-all;">
                             <p class="small text-muted mb-1">Enjoy fast and reliable delivery, with 30-day easy returns</p>
                         </div>
                     </div>
@@ -333,8 +339,6 @@
         });
     });
 
-
-
     function increase(x) {
         var inputVal = x.previousElementSibling;
         inputVal.value++;
@@ -346,5 +350,6 @@
             inputVal.value--;
         }
     }
+
 </script>
 @stop
