@@ -311,5 +311,7 @@ Route::get('/products/checkout', [FrontProductController::class, 'productsChecko
 Route::get('/products/completed', [FrontProductController::class, 'productsCompleted'])->name('front.products-completed');
 
 Route::post('/products/cart', [FrontProductController::class, 'productsCartPost'])->name('front.products-cart.post');
+Route::post('/products/cart/update-quantity', [FrontProductController::class, 'productsCartUpdateQuantity'])->name('front.products-cart.update-quantity');
+Route::post('/products/cart/delete-item', [FrontProductController::class, 'productsCartDeleteItem'])->name('front.products-cart.delete-item');
 
 

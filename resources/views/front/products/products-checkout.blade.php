@@ -283,7 +283,7 @@
                     </div>
                     <div class="col-md-3 text-start text-md-end">
                       <p class="text-muted mb-1">Cart total</p>
-                      <h6 class="h4 mb-0">$75.00</h6>
+                      <h6 class="h4 mb-0">${{$totalOrder}}</h6>
                     </div>
                   </div>
                 </div>

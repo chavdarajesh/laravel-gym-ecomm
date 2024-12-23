@@ -47,7 +47,7 @@
     toastr.options = {
         "closeButton": true,
         "progressBar": true,
-        "preventDuplicates": false
+        "preventDuplicates": true
     }
     toastr.success("{{ session('message') }}");
     @endif

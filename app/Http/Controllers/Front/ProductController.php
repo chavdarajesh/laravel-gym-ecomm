@@ -823,7 +823,8 @@ class ProductController extends Controller
             ->first();
 
         if ($cartItem) {
-            $cartItem->quantity += 1;
+            $cartItem->quantity += $request->quantity ? $request->quantity : 1;
+            $cartItem->total_price = $cartItem->quantity * $cartItem->price;
             $cartItem->save();
         } else {
             $size = $product->sizes()->where('size_id', $request->size)->first();
@@ -837,22 +838,62 @@ class ProductController extends Controller
                 'product_id' => $request->product,
                 'size_id' => $request->size,
                 'flavor_id' => $request->flavor,
-                'quantity' => 1,
+                'quantity' => $request->quantity,
+                'total_price' => $price,
                 'price' => $price, // Adjust as needed for size/flavor-specific pricing
             ]);
         }
         return redirect()->route('front.products-cart')->with('message', 'Product added to cart successfully.');
     }
 
+    public function productsCartUpdateQuantity(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:carts,id',
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        $cartItem = Cart::where('id', $request->id)->where('user_id', auth()->id())->first();
+        if ($cartItem) {
+            $cartItem->quantity = $request->quantity;
+            $cartItem->total_price = $cartItem->quantity * $cartItem->price;
+            $cartItem->save();
+            $totalOrder = Cart::where('user_id', auth()->id())->sum('total_price');
+            return response()->json(['success' => 'Quantity Updated Successfully.', 'totalOrder' => $totalOrder, 'totalPrice' => $cartItem->total_price]);
+        } else {
+            return response()->json(['error' => 'Somthing Went Wrong..!']);
+        }
+    }
+
+    public function productsCartDeleteItem(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:carts,id',
+        ]);
+
+        $cartItem = Cart::where('id', $request->id)->where('user_id', auth()->id())->first();
+        if ($cartItem) {
+            $cartItem->delete();
+            $totalOrder = Cart::where('user_id', auth()->id())->sum('total_price');
+            return response()->json(['success' => 'Item Deleted Successfully.', 'totalOrder' => $totalOrder]);
+        } else {
+            return response()->json(['error' => 'Somthing Went Wrong..!']);
+        }
+    }
+
     public function productsCart()
     {
         $cartItems = Cart::where('user_id', auth()->id())->with('product')->get();
-        return view('front.products.products-cart',compact('cartItems'));
+        return view('front.products.products-cart', compact('cartItems'));
     }
 
     public function productsCheckout()
     {
-        return view('front.products.products-checkout');
+        $totalOrder = Cart::where('user_id', auth()->id())->sum('total_price');
+        if($totalOrder == 0){
+            return redirect()->route('front.products')->with('error', 'Your Cart is Empty..!');
+        }
+        return view('front.products.products-checkout',['totalOrder' => $totalOrder]);
     }
 
     public function productsCompleted()

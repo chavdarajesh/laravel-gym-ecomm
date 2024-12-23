@@ -103,39 +103,46 @@
   display: block;
 }
 
-
 #product-cart .quantity {
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-align: center;
-  align-items: center;
-  max-width: 6rem;
-  min-width: 6rem;
-}
-#product-cart .quantity-outer {
-  max-width: 15rem;
-}
-#product-cart .quantity button {
-  border: none;
-  width: 2rem;
-  min-width: 2rem;
-  height: 2rem;
-  display: block;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-align: center;
-  align-items: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  font-size: 0.6rem;
-}
-#product-cart .quantity button:focus, .quantity button:hover {
-  border: none;
-  outline: none;
-}
-#product-cart .quantity input {
-  text-align: center;
-}
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-align: center;
+        align-items: center;
+        max-width: 6rem;
+        min-width: 6rem;
+        padding: 0.5rem 0;
+    }
+
+    #product-cart  .quantity-outer {
+        max-width: 15rem;
+    }
+
+    #product-cart  .quantity button {
+        background: #ffcc29;
+        cursor: pointer;
+        border: none;
+        width: 2rem;
+        min-width: 2rem;
+        height: 2rem;
+        display: block;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-align: center;
+        align-items: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        font-size: 0.6rem;
+    }
+
+    #product-cart  .quantity button:focus,
+    #product-cart   .quantity button:hover {
+        border: none;
+        outline: none;
+    }
+
+    #product-cart  .quantity input {
+        text-align: center;
+    }
 
 #product-cart .product-list-btn {
         background: #ffcc29;
@@ -223,7 +230,7 @@
           <div class="col-lg-10 mx-auto">
             <ul class="nav nav-tabs nav-fill border-bottom mb-5 flex-column flex-md-row">
               <li class="nav-item"><a class="nav-link active" aria-current="page" href="javascript:void(0);">1. Shopping cart</a></li>
-              <li class="nav-item"><a class="nav-link text-dark" href="{{route('front.products-checkout')}}">2. Billing Information</a></li>
+              <li class="nav-item"><a id="nav-item-billing-information" class="nav-link  {{ $cartItems->count() ? 'text-dark': 'disabled'}}" href="{{route('front.products-checkout')}}">2. Billing Information</a></li>
               <li class="nav-item"><a class="nav-link disabled" href="javascript:void(0);">3. Completed</a></li>
             </ul>
             <!-- Shopping cart-->
@@ -238,10 +245,10 @@
                     <th class="p-3 border-0" scope="col"><strong class="text-uppercase"></strong></th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="cart-items-table-body">
                 @if($cartItems->count())
-                @foreach ($cartItems as $item)
-                  <tr>
+                @foreach ($cartItems as $key=>$item)
+                  <tr id="cart-item-{{$item->id}}" data-id="{{$item->id}}">
                     <th class="p-3 pl-0 border-0" scope="row">
                       <div class="d-flex align-items-center"><a class="reset-anchor d-block animsition-link" href="{{ route('front.products-details',$item->product->id) }}"><img src="{{asset($item->product->cover_image)}}" alt="..." width="70"></a>
                         <div class="ml-3"><strong class="h6"><a class="reset-anchor animsition-link text-dark" href="{{ route('front.products-details',$item->product->id) }}">{{$item->product->name}}</a></strong></div>
@@ -253,21 +260,22 @@
                     <td class="p-3 align-middle border-0">
                       <div class="border d-inline-block px-2">
                         <div class="quantity">
-                          <button class="dec-btn p-0" onclick="decrease(this)"><i class="fas fa-caret-left"></i></button>
-                          <input class="form-control border-0 shadow-0 p-0 quantity-result" type="text" value="{{$item->quantity}}">
-                          <button class="inc-btn p-0" onclick="increase(this)"><i class="fas fa-caret-right"></i></button>
+                          <button class="dec-btn p-0" onclick="decrease('{{$item->id}}',this)"><i class="fas fa-caret-left"></i></button>
+                          <input class="form-control border-0 shadow-0 p-0 quantity-result" type="text" value="{{$item->quantity}}" onchange="updateQuantity(this)">
+                          <button class="inc-btn p-0" onclick="increase('{{$item->id}}',this)"><i class="fas fa-caret-right"></i></button>
                         </div>
                       </div>
                     </td>
                     <td class="p-3 align-middle border-0">
-                      <p class="mb-0 small">$ <span class="total-price">{{$item->price * $item->quantity}}</span></p>
+                      <p class="mb-0 small">$ <span class="total-price">{{$item->total_price}}</span></p>
                     </td>
-                    <td class="p-3 align-middle border-0"><a class="reset-anchor" href="javascript:void(0);"><i class="fas fa-trash-alt small text-muted"></i></a></td>
+                    <td class="p-3 align-middle border-0"><a class="reset-anchor" href="javascript:void(0);" data-id="{{ $item->id }}" onclick="deleteCartItem(this)"><i class="fas fa-trash-alt small text-muted"></i></a></td>
                   </tr>
                   @endforeach
-
                   @else
-                  <tr colspan=5>No items found!</tr>
+                  <tr >
+                    <td colspan="5" class="text-center">No items found!</td>
+                  </tr>
                   @endif
                 </tbody>
               </table>
@@ -277,13 +285,17 @@
                   <div class="col-md-6">
                     <ul class="list-inline mb-0">
                       <li class="list-inline-item py-1 m-0"><a class="btn btn-outline-primary product-list-btn" href="{{route('front.products')}}"> <i class="fas fa-shopping-bag mr-2"></i>Continue shopping</a></li>
+                      @if($cartItems->count())
                       <li class="list-inline-item py-1 m-0"><a class="btn btn-primary product-list-btn" href="{{route('front.products-checkout')}}"> <i class="far fa-credit-card mr-2"></i>Process checkout</a></li>
+                        @endif
                     </ul>
                   </div>
+                  @if($cartItems->count())
                   <div class="align-items-md-end align-items-start col-md-6 d-flex flex-column text-md-end text-start">
                     <p class="text-muted mb-1">Cart total</p>
-                    <h6 class="h4 mb-0">$75.00</h6>
+                    <h6 class="h4 mb-0">$ <span id="total-order"> {{$cartItems->sum('total_price')}}</span></h6>
                   </div>
+                  @endif
                 </div>
               </div>
             </div>
@@ -299,16 +311,102 @@
 <script src="{{ asset('assets/front/js/glightbox.js') }}"></script>
 <script>
 
-function increase(x) {
+function increase(cartItemId,x) {
     var inputVal = x.previousElementSibling;
     inputVal.value++;
+    updateQuantityAjax(cartItemId,inputVal.value);
 }
 
-function decrease(x) {
+function decrease(cartItemId,x) {
     var inputVal = x.nextElementSibling;
     if (inputVal.value > 1) {
         inputVal.value--;
+        updateQuantityAjax(cartItemId,inputVal.value);
     }
 }
+
+
+function updateQuantity(inputElement) {
+    const row = inputElement.closest('tr');
+    const cartItemId = row.getAttribute('data-id');
+    const newQuantity = parseInt(inputElement.value);
+    updateQuantityAjax(cartItemId,newQuantity);
+}
+
+function updateQuantityAjax(cartItemId,newQuantity) {
+    $.ajax({
+        url: '{{route("front.products-cart.update-quantity")}}',
+        type: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+            id: cartItemId,
+            quantity: newQuantity,
+        },
+        success: function (response) {
+            if (response.success) {
+                toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "preventDuplicates": true
+    }
+                            toastr.success(response.success);
+                            $('#cart-item-' + cartItemId+' .total-price').html(response.totalPrice);
+                            $('#total-order').html(response.totalOrder);
+                        }
+                        if (response.error) {
+                            toastr.error(response.error);
+                        }
+        },
+        error: function () {
+            toastr.error('Failed to update quantity. Please try again.');
+        }
+    });
+}
+
+function deleteCartItem(deleteButton) {
+    const cartItemId = deleteButton.getAttribute('data-id');
+    const row = deleteButton.closest('tr');
+
+    if (confirm('Are you sure you want to delete this item?')) {
+        $.ajax({
+            url: '{{route("front.products-cart.delete-item")}}',
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                id: cartItemId
+            },
+            success: function (response) {
+                if (response.success) {
+                toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "preventDuplicates": true
+    }
+                            toastr.success(response.success);
+                            location.reload();
+                // row.remove();
+                            // if(response.totalOrder == 0){
+                            //     $('#total-order').parent().parent().hide();
+                            //     $('#nav-item-billing-information').addClass('disabled');
+                            //     $('#cart-items-table-body').html('<tr><td colspan="5" class="text-center">No items found!</td></tr>');
+
+                            // }else{
+                            //     $('#nav-item-billing-information').addClass('text-dark');
+                            //     $('#total-order').html(response.totalOrder);
+                            //     $('#total-order').parent().parent().show();
+                            // }
+                        }
+                        if (response.error) {
+                            toastr.error(response.error);
+                        }
+            },
+            error: function () {
+                toastr.error('Failed to delete the item. Please try again.');
+            }
+        });
+    }
+}
+
+
 </script>
 @stop

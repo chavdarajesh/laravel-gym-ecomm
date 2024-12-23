@@ -203,9 +203,9 @@
                     <div class="d-align-items-center d-flex flex-column flex-md-row mb-4">
                         <div class="border d-flex align-items-center justify-content-center p-1 mr-2">
                             <div class="quantity py-0">
-                                <button class="dec-btn p-0" onclick="decrease(this)"><i class="fas fa-caret-left"></i></button>
-                                <input class="form-control border-0 shadow-0 p-0 quantity-result" type="text" value="1">
-                                <button class="inc-btn p-0" onclick="increase(this)"><i class="fas fa-caret-right"></i></button>
+                                <button type="button" class="dec-btn p-0" onclick="decrease(this)"><i class="fas fa-caret-left"></i></button>
+                                <input class="form-control border-0 shadow-0 p-0 quantity-result" type="text" value="1" name="quantity">
+                                <button type="button" class="inc-btn p-0" onclick="increase(this)"><i class="fas fa-caret-right"></i></button>
                             </div>
                         </div><button class="btn  btn-sm py-2 border-bottom-0 px-5 mr-3" type="submit"> <i class="fas fa-shopping-bag py-1 mr-2"></i>Add to cart</button>
                         <!-- <button class="p-0 reset-anchor d-inline-block mx-2" href="javascript:void(0);"><i class="fas fa-heart"></i></button><a class="p-0 reset-anchor d-inline-block mx-2" href="javascript:void(0);"><i class="fas fa-share-alt"></i></a> -->

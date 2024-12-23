@@ -21,6 +21,7 @@ class CreateCartsTable extends Migration
             $table->unsignedBigInteger('flavor_id')->nullable();
             $table->integer('quantity')->nullable()->default(1); // Optional
             $table->string('price')->nullable();
+            $table->string('total_price')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
