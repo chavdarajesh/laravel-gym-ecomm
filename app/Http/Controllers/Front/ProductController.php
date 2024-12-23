@@ -839,7 +839,7 @@ class ProductController extends Controller
                 'size_id' => $request->size,
                 'flavor_id' => $request->flavor,
                 'quantity' => $request->quantity,
-                'total_price' => $price,
+                'total_price' => $request->quantity *  $price,
                 'price' => $price, // Adjust as needed for size/flavor-specific pricing
             ]);
         }
