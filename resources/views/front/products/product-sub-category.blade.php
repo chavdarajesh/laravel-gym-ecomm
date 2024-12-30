@@ -367,6 +367,7 @@
                     response.products.forEach(product => {
                         var imgUrl = '{{ asset("") }}' + product.cover_image;
                         let price = 'N/A';
+                        let detailsUrl = '{{ route("front.products-details",":id") }}';
                         if (product.sizes.length) {
                             const prices = product.sizes.map(size => size.pivot.price); // Extract all prices
                             price = Math.min(...prices); // Get the minimum price
@@ -375,16 +376,16 @@
                         <div class="col-12 col-lg-4 col-md-6 col-xl-3 d-flex">
                             <div class="product-box w-100 d-flex flex-column mb-4">
                                 <div class="product mb-4">
-                                    <a href="javascript:void(0);">
+                                    <a href="${detailsUrl.replace(':id', product.id)}">
                                         <img class="img-fluid" src="${imgUrl}" alt="${product.name}">
                                     </a>
                                 </div>
                                 <h6 class="text-center">
-                                    <a class="reset-anchor" href="javascript:void(0);">${product.name}</a>
+                                    <a class="reset-anchor" href="${detailsUrl.replace(':id', product.id)}">${product.name}</a>
                                 </h6>
                                 <p class="text-center text-muted font-weight-bold">Price: $${price}</p>
                                 <div class="mt-auto d-flex justify-content-center align-items-center">
-                                    <button class="product-list-btn" data-product-id="${product.id}">Add to Cart</button>
+                                    <button onclick=addToCart(${product.id}) class="product-list-btn" data-product-id="${product.id}">Add to Cart</button>
                                     <button class="product-list-btn" data-product-id="${product.id}">Buy Now</button>
                                 </div>
                             </div>
@@ -461,6 +462,84 @@
             }
         });
         return selected;
+    }
+</script>
+
+<script>
+    function addToCart(product) {
+        const isUserLoggedIn = @json(auth()->check());
+        if (isUserLoggedIn) {
+            console.log('1111');
+            $.ajax({
+                url: '{{route("front.products-cart.ajax.other")}}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    product: product,
+                    quantity: 1
+                },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.options = {
+                            "closeButton": true,
+                            "progressBar": true,
+                            "preventDuplicates": true
+                        }
+                        toastr.success(response.success);
+                    }
+                    if (response.error) {
+                        toastr.error(response.error);
+                    }
+                },
+                error: function() {
+                    toastr.error('Somthing Went Wrong..!');
+                }
+            });
+        } else {
+            $.ajax({
+                url: '{{route("front.products.size.flover.ajax")}}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: product,
+                },
+                success: function(response) {
+                    if (response.success) {
+                        let cart = JSON.parse(localStorage.getItem('guestCart')) || [];
+                        let existingItem = cart.find(item =>
+                            item.product == product && item.size == response.size.id && item.flavor == response.flavor.id
+                        );
+
+                        if (existingItem) {
+                            existingItem.quantity += 1;
+                        } else {
+                            cart.push({
+                                product: product,
+                                size: response.size.id,
+                                flavor: response.flavor.id,
+                                quantity: 1
+                            });
+
+                        }
+                            console.log('ccccccccccc', cart);
+
+                            localStorage.setItem('guestCart', JSON.stringify(cart));
+                            toastr.options = {
+                                "closeButton": true,
+                                "progressBar": true,
+                                "preventDuplicates": true
+                            }
+                            toastr.success('Item added to cart successfully!');
+                    }
+                    if (response.error) {
+                        toastr.error(response.error);
+                    }
+                },
+                error: function() {
+                    toastr.error('Somthing Went Wrong..!');
+                }
+            });
+        }
     }
 </script>
 

@@ -115,4 +115,40 @@
     });
 </script>
 
+
+<script>
+    // Sync guest cart to database after login
+    document.addEventListener('DOMContentLoaded', function() {
+        const guestCart = JSON.parse(localStorage.getItem('guestCart')) || [];
+
+        if (guestCart.length > 0 && @json(auth()->check())) {
+            $.ajax({
+                url: '{{route("front.products-cart.sync")}}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    cartItems: guestCart
+                },
+                success: function(response) {
+                    localStorage.removeItem('guestCart');
+                    if (response.success) {
+                        toastr.options = {
+                            "closeButton": true,
+                            "progressBar": true,
+                            "preventDuplicates": true
+                        }
+                        toastr.success(response.success);
+                    }
+                    if (response.error) {
+                        toastr.error(response.error);
+                    }
+                },
+                error: function() {
+                    toastr.error('Somthing Went Wrong..!');
+                }
+            });
+        }
+    });
+</script>
+
 @yield('js')

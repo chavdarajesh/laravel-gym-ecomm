@@ -94,7 +94,7 @@
                         <div class="input-group ">
                             <input type="text" value="{{isset($search) ? $search : ''}}" class="form-control" placeholder="Search Keyword" name="search">
                             <div class="input-group-append">
-                                <button class="btns" type="submit"><i class="ti-search"></i></button>
+                                <button class="btn" type="submit"><i class="ti-search"></i></button>
                             </div>
                         </div>
                     </div>

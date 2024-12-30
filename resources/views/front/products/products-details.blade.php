@@ -90,6 +90,21 @@
         border: 1px #ffcc29 solid !important;
         color: #ffcc29;
     }
+
+    input.quantity-result::-webkit-outer-spin-button,
+    input.quantity-result::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input.quantity-result {
+        pointer-events: none;
+    }
+
+    /* Firefox */
+    input.quantity-result[type=number] {
+        -moz-appearance: textfield;
+    }
 </style>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;700&amp;display=swap">
@@ -166,52 +181,52 @@
                 </div>
                 @php
                 if ($Product && $Product->sizes && $Product->sizes->isNotEmpty()) {
-    $minPriceSize = $Product->sizes->sortBy('pivot.price')->first(); // Sort and get the first size
-    $minPrice = 'Price: $' . $minPriceSize->pivot->price;
-    $selectedSize = $minPriceSize->id; // Assuming 'name' is a column for the size name
-} else {
-    $minPrice = 'N/A';
-    $selectedSize = 'N/A';
-}
+                $minPriceSize = $Product->sizes->sortBy('pivot.price')->first(); // Sort and get the first size
+                $minPrice = 'Price: $' . $minPriceSize->pivot->price;
+                $selectedSize = $minPriceSize->id; // Assuming 'name' is a column for the size name
+                } else {
+                $minPrice = 'N/A';
+                $selectedSize = '';
+                }
 
                 @endphp
                 <form action="{{route('front.products-cart.post')}}" method="post">
-                @csrf
-                <p class="h4" id="product-price">{{$minPrice}}</p>
-                <!-- <p class="text-small mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ut ullamcorper leo, eget euismod orci. Cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus. Vestibulum ultricies aliquam convallis.</p> -->
-                <div class="d-flex flex-wrap align-items-center mb-3">
-                    <p class="mb-0 mr-3">Select Flavor:</p>
-                    <ul class="list-inline mb-0 mx-1">
-                        @foreach($Product->flavors as  $index =>$flavor)
-                        <li class="list-inline-item">
-                            <input class="btn-check" id="flavor-{{$flavor->id}}" value="{{$flavor->id}}" type="radio" name="flavor"  {{ $index == 0 ? 'checked' : '' }}>
-                            <label class="p-0 m-0" for="flavor-{{$flavor->id}}">{{$flavor->name}}</label>
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
-                <div class="d-flex flex-wrap align-items-center mb-4">
-                    <p class="mb-0 mr-1">Select size:</p>
-                    <select id="size-select" class="form-control" name="size">
-                        @foreach($Product->sizes as $size)
-                        <option {{$selectedSize == $size->id ? 'selected' : ''}} data-price="{{$size->pivot->price}}" value="{{$size->id}}">{{$size->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
+                    @csrf
+                    <p class="h4" id="product-price">{{$minPrice}}</p>
+                    <!-- <p class="text-small mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ut ullamcorper leo, eget euismod orci. Cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus. Vestibulum ultricies aliquam convallis.</p> -->
+                    <div class="d-flex flex-wrap align-items-center mb-3">
+                        <p class="mb-0 mr-3">Select Flavor:</p>
+                        <ul class="list-inline mb-0 mx-1">
+                            @foreach($Product->flavors as $index =>$flavor)
+                            <li class="list-inline-item">
+                                <input class="btn-check" id="flavor-{{$flavor->id}}" value="{{$flavor->id}}" type="radio" name="flavor" {{ $index == 0 ? 'checked' : '' }}>
+                                <label class="p-0 m-0" for="flavor-{{$flavor->id}}">{{$flavor->name}}</label>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <div class="d-flex flex-wrap align-items-center mb-4">
+                        <p class="mb-0 mr-1">Select size:</p>
+                        <select id="size-select" class="form-control" name="size">
+                            @foreach($Product->sizes as $size)
+                            <option {{$selectedSize == $size->id ? 'selected' : ''}} data-price="{{$size->pivot->price}}" value="{{$size->id}}">{{$size->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
                     <input type="hidden" name="product" value="{{$Product->id}}">
                     <div class="d-align-items-center d-flex flex-column flex-md-row mb-4">
                         <div class="border d-flex align-items-center justify-content-center p-1 mr-2">
                             <div class="quantity py-0">
                                 <button type="button" class="dec-btn p-0" onclick="decrease(this)"><i class="fas fa-caret-left"></i></button>
-                                <input class="form-control border-0 shadow-0 p-0 quantity-result" type="text" value="1" name="quantity">
+                                <input class="form-control border-0 shadow-0 p-0 quantity-result" type="number" min="1" value="1" name="quantity">
                                 <button type="button" class="inc-btn p-0" onclick="increase(this)"><i class="fas fa-caret-right"></i></button>
                             </div>
-                        </div><button class="btn  btn-sm py-2 border-bottom-0 px-5 mr-3" type="submit"> <i class="fas fa-shopping-bag py-1 mr-2"></i>Add to cart</button>
+                        </div><button class="btn  btn-sm py-2 border-bottom-0 px-5 mr-3" type="button" onclick="addToCart()"> <i class="fas fa-shopping-bag py-1 mr-2"></i>Add to cart</button>
                         <!-- <button class="p-0 reset-anchor d-inline-block mx-2" href="javascript:void(0);"><i class="fas fa-heart"></i></button><a class="p-0 reset-anchor d-inline-block mx-2" href="javascript:void(0);"><i class="fas fa-share-alt"></i></a> -->
                     </div><br>
                 </form>
-                    <ul class="list-unstyled small d-inline-block">
+                <ul class="list-unstyled small d-inline-block">
                     <!-- <li class="px-3 py-2 mb-1 bg-light"><strong class="text-uppercase">SKU:</strong><span class="ml-2 text-muted">039</span></li> -->
                     <li class="px-3 py-2 mb-1 bg-light text-muted"><strong class="text-uppercase text-dark">Category:</strong><a class="text-dark ml-2" href="javascript:void(0);">{{$Product->category->name}}</a></li>
                     <li class="px-3 py-2 mb-1 bg-light text-muted"><strong class="text-uppercase text-dark">Sub Category:</strong><a class="reset-anchor ml-2" href="javascript:void(0);">{{isset($Product->subcategory) ? $Product->subcategory->name : ''}}</a></li>
@@ -307,6 +322,7 @@
 <script src="{{ asset('assets/front/js/glightbox.js') }}"></script>
 <script>
     $(document).ready(function() {
+        const productImageCount = '{{$Product->images?$Product->images->count():0}}';
         var galleryThumbs = new Swiper("#detailSliderThumb", {
             direction: "horizontal",
             breakpoints: {
@@ -315,7 +331,7 @@
                 },
             },
             spaceBetween: 15,
-            slidesPerView: {{ $Product->images->count() > 1 ? $Product->images->count() +1  : 1 }},
+            slidesPerView: (productImageCount > 1 ? productImageCount + 1 : 1),
             watchSlidesVisibility: true,
             watchSlidesProgress: false,
         });
@@ -356,6 +372,73 @@
             inputVal.value--;
         }
     }
+</script>
 
+
+<script>
+    function addToCart() {
+        const isUserLoggedIn = @json(auth()->check());
+        const product = @json($Product->id);
+        const size = $('#size-select').val();
+        const flavor = $('input[name="flavor"]:checked').val();
+        const quantity = $('.quantity-result').val();
+        const positiveQuantity = Math.abs(quantity);
+        if (isUserLoggedIn) {
+            console.log('1111');
+            $.ajax({
+                url: '{{route("front.products-cart.ajax")}}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    product: product,
+                    size: size,
+                    flavor: flavor,
+                    quantity: positiveQuantity
+                },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.options = {
+                            "closeButton": true,
+                            "progressBar": true,
+                            "preventDuplicates": true
+                        }
+                        toastr.success(response.success);
+                    }
+                    if (response.error) {
+                        toastr.error(response.error);
+                    }
+                },
+                error: function() {
+                    toastr.error('Somthing Went Wrong..!');
+                }
+            });
+        } else {
+            // User is not logged in - add item to localStorage
+            let cart = JSON.parse(localStorage.getItem('guestCart')) || [];
+            let existingItem = cart.find(item =>
+                item.product == product && item.size == size && item.flavor == flavor
+            );
+
+            if (existingItem) {
+                existingItem.quantity += positiveQuantity ? positiveQuantity : 1;
+            } else {
+                cart.push({
+                    product: product,
+                    size: size,
+                    flavor: flavor,
+                    quantity: positiveQuantity
+                });
+            }
+            console.log('ccccccccccc', cart);
+
+            localStorage.setItem('guestCart', JSON.stringify(cart));
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "preventDuplicates": true
+            }
+            toastr.success('Item added to cart successfully!');
+        }
+    }
 </script>
 @stop

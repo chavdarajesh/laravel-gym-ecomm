@@ -91,16 +91,15 @@
   background: #fff;
   color: #ffcc29 !important;
   display: inline-block;
-  padding: 18px 44px;
+  padding: 5px 15px;
   font-family: "Oswald", sans-serif;
   font-size: 14px;
   font-weight: 400;
   border: 0;
   border: 1px solid #ffcc29;
-  letter-spacing: 3px;
+  letter-spacing: 1px;
   text-align: center;
   color: #ffcc29;
-  text-transform: uppercase;
   cursor: pointer;
 }
 
@@ -3184,7 +3183,7 @@ hr {
 }
 
 /* line 62, C:/Users/HP/Desktop/July-HTML/292 Health coach/assets/scss/_headerMenu.scss */
-.header-area .menu-wrapper .main-menu ul li a {
+.header-area .menu-wrapper .main-menu ul li a.nav-item-a {
   color: #fff;
   font-weight: 500;
   padding: 39px 21px;
@@ -3201,7 +3200,7 @@ hr {
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
   /* line 62, C:/Users/HP/Desktop/July-HTML/292 Health coach/assets/scss/_headerMenu.scss */
-  .header-area .menu-wrapper .main-menu ul li a {
+  .header-area .menu-wrapper .main-menu ul li a.nav-item-a {
     padding: 39px 9px;
   }
 }
@@ -3313,6 +3312,7 @@ hr {
 /* line 173, C:/Users/HP/Desktop/July-HTML/292 Health coach/assets/scss/_headerMenu.scss */
 .mobile_menu .slicknav_menu .slicknav_nav {
   margin-top: 15px !important;
+  overflow-y: auto;
 }
 
 /* line 176, C:/Users/HP/Desktop/July-HTML/292 Health coach/assets/scss/_headerMenu.scss */

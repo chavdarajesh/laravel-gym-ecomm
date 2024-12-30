@@ -27,6 +27,6 @@ class isAuth
         if (FacadesRequest::segment(1) == 'user') {
             return redirect()->route('user.login.get')->with('error', 'Please Login To Access This Page..!');
         }
-        return redirect()->route('front.home')->with('error', 'Please Login To Access This Page..!');
+        return redirect()->route('front.login')->with('error', 'Please Login To Access This Page..!');
     }
 }

@@ -148,7 +148,7 @@
                             <p class="text-center text-muted font-weight-bold">{{ $minPrice }}</p>
                             <!-- Action Buttons -->
                             <div class="mt-auto d-flex justify-content-center align-items-center">
-                                <button class="product-list-btn">Add to Cart</button>
+                                <button onclick=addToCart({{$product->product->id}}) class="product-list-btn">Add to Cart</button>
                                 <button class="product-list-btn">Buy Now</button>
                             </div>
                         </div>
@@ -199,4 +199,85 @@
             },
         });
     });
+</script>
+
+
+
+
+<script>
+    function addToCart(product) {
+        const isUserLoggedIn = @json(auth()->check());
+        if (isUserLoggedIn) {
+            console.log('1111');
+            $.ajax({
+                url: '{{route("front.products-cart.ajax.other")}}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    product: product,
+                    quantity: 1
+                },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.options = {
+                            "closeButton": true,
+                            "progressBar": true,
+                            "preventDuplicates": true
+                        }
+                        toastr.success(response.success);
+                    }
+                    if (response.error) {
+                        toastr.error(response.error);
+                    }
+                },
+                error: function() {
+                    toastr.error('Somthing Went Wrong..!');
+                }
+            });
+        } else {
+            $.ajax({
+                url: '{{route("front.products.size.flover.ajax")}}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: product,
+                },
+                success: function(response) {
+                    if (response.success) {
+                        let cart = JSON.parse(localStorage.getItem('guestCart')) || [];
+                        let existingItem = cart.find(item =>
+                            item.product == product && item.size == response.size.id && item.flavor == response.flavor.id
+                        );
+
+                        if (existingItem) {
+                            existingItem.quantity += 1;
+                        } else {
+                            cart.push({
+                                product: product,
+                                size: response.size.id,
+                                flavor: response.flavor.id,
+                                quantity: 1
+                            });
+
+                        }
+                            console.log('ccccccccccc', cart);
+
+                            localStorage.setItem('guestCart', JSON.stringify(cart));
+                            toastr.options = {
+                                "closeButton": true,
+                                "progressBar": true,
+                                "preventDuplicates": true
+                            }
+                            toastr.success('Item added to cart successfully!');
+                    }
+                    if (response.error) {
+                        toastr.error(response.error);
+                    }
+                },
+                error: function() {
+                    toastr.error('Somthing Went Wrong..!');
+                }
+            });
+        }
+    }
 </script>

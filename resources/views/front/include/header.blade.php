@@ -34,17 +34,48 @@ $loader = SiteSetting::getSiteSettings('loader');
                     <div class="main-menu f-right d-none d-lg-block">
                         <nav>
                             <ul id="navigation">
-                                <li class="{{ Route::currentRouteName() == 'front.home' ? 'active' : '' }}"><a href="{{route('front.home')}}">Home</a></li>
-                                <li class="{{ Route::currentRouteName() == 'front.about' ? 'active' : '' }}"><a href="{{ route('front.about') }}">About</a></li>
-                                <li class="{{ Route::currentRouteName() == 'front.services' ? 'active' : '' }}"><a href="{{ route('front.services') }}">Services</a></li>
-                                <li class="{{ Route::currentRouteName() == 'front.products' ? 'active' : '' }}"><a href="{{ route('front.products') }}">Nutrition & Supplements</a></li>
-                                <li class="{{ Route::currentRouteName() == 'front.blogs' ? 'active' : '' }}"><a href="{{ route('front.blogs') }}">Blog</a></li>
-                                <li class="d-block d-lg-none {{ Route::currentRouteName() == 'front.contact' ? 'active' : '' }}"><a href="{{ route('front.contact') }}">Contact</a></li>
+                                <li class="{{ Route::currentRouteName() == 'front.home' ? 'active' : '' }}"><a class="nav-item-a" href="{{route('front.home')}}">Home</a></li>
+                                <li class="{{ Route::currentRouteName() == 'front.about' ? 'active' : '' }}"><a class="nav-item-a" href="{{ route('front.about') }}">About</a></li>
+                                <li class="{{ Route::currentRouteName() == 'front.services' ? 'active' : '' }}"><a class="nav-item-a" href="{{ route('front.services') }}">Services</a></li>
+                                <li class="{{ Route::currentRouteName() == 'front.products' ? 'active' : '' }}"><a class="nav-item-a" href="{{ route('front.products') }}">Nutrition & Supplements</a></li>
+                                <li class="{{ Route::currentRouteName() == 'front.blogs' ? 'active' : '' }}"><a class="nav-item-a" href="{{ route('front.blogs') }}">Blog</a></li>
+                                @if (Auth::check())
+                                <li class="nav-item dropdown">
+                                    <a class="nav-item-a nav-link dropdown-toggle" href="javascript:void(0);" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Account
+                                    </a>
+                                    <div class="dropdown-menu p-0" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item text-center" href="#">Profile</a>
+                                        <div>
+                                            <form action="{{ route('front.post.logout') }}" method="POST">
+                                                @csrf
+                                                {{-- <a href="{{ route('front.all_emipage') }}">Log Out</a> --}}
+                                                <button class="btn w-100" type="submit">
+                                                    Log Out
+                                                </button>
+                                        </div>
+                                    </div>
+                                </li>
+                                @else
+                                <li class="nav-item dropdown">
+                                    <a class="nav-item-a nav-link dropdown-toggle" href="javascript:void(0);" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Account
+                                    </a>
+                                    <div class="dropdown-menu p-0" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item text-center" href="#">Register</a>
+                                        <a class="dropdown-item text-center" href="{{route('front.login')}}">Login</a>
+                                    </div>
+                                </li>
+                                @endif
+
+                                <li class="d-block d-lg-none {{ Route::currentRouteName() == 'front.products-cart' ? 'active' : '' }}"><a class="nav-item-a" href="{{ route('front.products-cart') }}">Cart</a></li>
+                                <li class="d-block d-lg-none {{ Route::currentRouteName() == 'front.contact' ? 'active' : '' }}"><a class="nav-item-a" href="{{ route('front.contact') }}">Contact</a></li>
                             </ul>
                         </nav>
                     </div>
                     <!-- Header-btn -->
                     <div class="header-btns d-none d-lg-block f-right">
+                        <a class="mx-1 text-dark" href="{{ route('front.products-cart') }}"><i class="fas fa-cart-plus"></i></a>
                         <a href="{{ route('front.contact') }}" class="btn">Contact Us</a>
                     </div>
                     <!-- Mobile Menu -->

@@ -26,6 +26,7 @@ use App\Http\Controllers\User\ProfileController as UserProfileController;
 use App\Http\Controllers\Front\ContactController as FrontContactController;
 use App\Http\Controllers\Front\PagesController as FrontPagesController;
 use App\Http\Controllers\Front\ProductController as FrontProductController;
+use App\Http\Controllers\Front\AuthController as FrontAuthController;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -305,13 +306,44 @@ Route::post('/products/search/filters', [FrontProductController::class, 'getFilt
 
 
 Route::get('/products/details/{id}', [FrontProductController::class, 'productsDetails'])->name('front.products-details');
+Route::post('/products/details', [FrontProductController::class, 'productsDetailsAjax'])->name('front.products-details.ajax');
+
+Route::post('/products/size/flover', [FrontProductController::class, 'productsSizeFloverAjax'])->name('front.products.size.flover.ajax');
 
 Route::get('/products/cart', [FrontProductController::class, 'productsCart'])->name('front.products-cart');
-Route::get('/products/checkout', [FrontProductController::class, 'productsCheckout'])->name('front.products-checkout');
-Route::get('/products/completed', [FrontProductController::class, 'productsCompleted'])->name('front.products-completed');
 
 Route::post('/products/cart', [FrontProductController::class, 'productsCartPost'])->name('front.products-cart.post');
+
+Route::post('/products/cart/ajax', [FrontProductController::class, 'productsCartAjax'])->name('front.products-cart.ajax');
+Route::post('/products/cart/sync', [FrontProductController::class, 'productsCartSync'])->name('front.products-cart.sync');
+
 Route::post('/products/cart/update-quantity', [FrontProductController::class, 'productsCartUpdateQuantity'])->name('front.products-cart.update-quantity');
 Route::post('/products/cart/delete-item', [FrontProductController::class, 'productsCartDeleteItem'])->name('front.products-cart.delete-item');
 
+Route::post('/products/cart/ajax/other', [FrontProductController::class, 'productsCartAjaxOther'])->name('front.products-cart.ajax.other');
+Route::post('/products/cart/sync/other', [FrontProductController::class, 'productsCartSyncOther'])->name('front.products-cart.sync.other');
+
+
+
+Route::get('/login', [FrontAuthController::class, 'login'])->name('front.login');
+Route::get('/register', [FrontAuthController::class, 'register'])->name('front.register');
+Route::get('/forgotpassword', [FrontAuthController::class, 'forgotpasswordget'])->name('front.forgotpassword');
+Route::get('/reset-password/{token}', [FrontAuthController::class, 'showResetPasswordFormget'])->name('front.reset.password.get');
+Route::get('/otp_verification/{id}', [FrontAuthController::class, 'showotp_verificationFormget'])->name('front.otp_verification.get');
+
+
+Route::post('/login', [FrontAuthController::class, 'postlogin'])->name('front.post.login');
+Route::post('/register', [FrontAuthController::class, 'postregister'])->name('front.post.register');
+Route::post('/otp_verification', [FrontAuthController::class, 'postotp_verification'])->name('front.post.otp_verification');
+Route::post('/forgotpassword', [FrontAuthController::class, 'postforgotpassword'])->name('front.post.forgotpassword');
+Route::post('/reset-password', [FrontAuthController::class, 'submitResetPasswordFormpost'])->name('front.reset.password.post');
+
+
+Route::group(['namespace' => 'User', 'middleware' => ['is_auth', 'is_user_active', 'is_user_verified']], function () {
+
+    Route::post('/logout', [FrontAuthController::class, 'logout'])->name('front.post.logout');
+
+    Route::get('/products/checkout', [FrontProductController::class, 'productsCheckout'])->name('front.products-checkout');
+    Route::get('/products/completed', [FrontProductController::class, 'productsCompleted'])->name('front.products-completed');
+});
 

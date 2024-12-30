@@ -200,6 +200,20 @@
         outline: 0;
         box-shadow: none;
     }
+    input.quantity-result::-webkit-outer-spin-button,
+    input.quantity-result::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input.quantity-result {
+        pointer-events: none;
+    }
+
+    /* Firefox */
+    input.quantity-result[type=number] {
+        -moz-appearance: textfield;
+    }
 
 </style>
 @stop
@@ -261,7 +275,7 @@
                       <div class="border d-inline-block px-2">
                         <div class="quantity">
                           <button class="dec-btn p-0" onclick="decrease('{{$item->id}}',this)"><i class="fas fa-caret-left"></i></button>
-                          <input class="form-control border-0 shadow-0 p-0 quantity-result" type="text" value="{{$item->quantity}}" onchange="updateQuantity(this)">
+                          <input class="form-control border-0 shadow-0 p-0 quantity-result" type="number" value="{{$item->quantity}}" onchange="updateQuantity(this)">
                           <button class="inc-btn p-0" onclick="increase('{{$item->id}}',this)"><i class="fas fa-caret-right"></i></button>
                         </div>
                       </div>

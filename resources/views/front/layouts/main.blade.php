@@ -20,7 +20,8 @@ $excludedRoutes = [
     'front.products-details',
     'front.products-cart',
     'front.products-checkout',
-    'front.products-completed'
+    'front.products-completed',
+    'front.login',
 ];
 @endphp
 

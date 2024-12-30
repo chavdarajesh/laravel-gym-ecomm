@@ -12,6 +12,7 @@ use App\Models\ProductSlider;
 use App\Models\Subcategory;
 use App\Models\TopSellingProduct;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -130,7 +131,7 @@ class ProductController extends Controller
         $sizes = $request->get('sizes');
         $flavors = $request->get('flavors');
 
-        $Category = Category::findOrFail($id);
+        $Category = Category::where('status', 1)->findOrFail($id);
 
         $categoryProducts = $Category->products()
             ->where('status', 1)
@@ -265,7 +266,7 @@ class ProductController extends Controller
         $sizes = $request->get('sizes');
         $flavors = $request->get('flavors');
 
-        $Subcategory = Subcategory::findOrFail($id);
+        $Subcategory = Subcategory::where('status', 1)->findOrFail($id);
 
         $subCategoryProducts = $Subcategory->products()
             ->where('status', 1)
@@ -411,7 +412,7 @@ class ProductController extends Controller
         $sizes = $request->get('sizes');
         $flavors = $request->get('flavors');
 
-        $Brand = Brand::findOrFail($id);
+        $Brand = Brand::where('status', 1)->findOrFail($id);
 
         $brandProducts = $Brand->products()
             ->where('status', 1)
@@ -807,6 +808,37 @@ class ProductController extends Controller
         }
     }
 
+    public function productsDetailsAjax(Request $request)
+    {
+        $productId = $request->input('id');
+        $product = Product::where('id', $productId)->first();
+        if(!$product) {
+            return response()->json(['error' => 'Product not found']);
+        }
+        $size = $product->sizes()->where('size_id', $request->size)->first();
+        if ($size) {
+            $price = $size->pivot->price;
+        } else {
+            $price = 0;
+        }
+        $product->price = $price;
+        return response()->json(['success'=>true,'product'=>$product]);
+    }
+
+    public function productsSizeFloverAjax(Request $request)
+    {
+        $productId = $request->input('id');
+        $product = Product::where('id', $productId)->first();
+        if(!$product) {
+            return response()->json(['error' => 'Product not found']);
+        }
+        $minPriceSize = $product->sizes->sortBy('pivot.price')->first();
+        $size = $product->sizes()->where('size_id', $minPriceSize->id)->first();
+        $flavor = $product->flavors->first();
+        return response()->json(['success'=>true,'flavor'=>$flavor,'size'=>$size]);
+    }
+
+
     public function productsCartPost(Request $request)
     {
         $request->validate([
@@ -815,7 +847,7 @@ class ProductController extends Controller
             'flavor' => 'required',
         ]);
 
-        $product = Product::findOrFail($request->product);
+        $product = Product::where('status', 1)->findOrFail($request->product);
         $cartItem = Cart::where('user_id', auth()->id())
             ->where('product_id', $request->product)
             ->where('size_id', $request->size)
@@ -839,11 +871,192 @@ class ProductController extends Controller
                 'size_id' => $request->size,
                 'flavor_id' => $request->flavor,
                 'quantity' => $request->quantity,
-                'total_price' => $request->quantity *  $price,
+                'total_price' => $request->quantity * $price,
                 'price' => $price, // Adjust as needed for size/flavor-specific pricing
             ]);
         }
         return redirect()->route('front.products-cart')->with('message', 'Product added to cart successfully.');
+    }
+
+    public function productsCartAjax(Request $request)
+    {
+        $request->validate([
+            'product' => 'required|exists:products,id',
+            'size' => 'required',
+            'flavor' => 'required',
+        ]);
+
+        $product = Product::where('status', 1)->where('id', $request->product)->first();
+        if (!$product) {
+            return response()->json(['error' => 'Somthing Went Wrong..!']);
+        }
+        $cartItem = Cart::where('user_id', auth()->id())
+            ->where('product_id', $request->product)
+            ->where('size_id', $request->size)
+            ->where('flavor_id', $request->flavor)
+            ->first();
+
+        if ($cartItem) {
+            $cartItem->quantity += $request->quantity ? $request->quantity : 1;
+            $cartItem->total_price = $cartItem->quantity * $cartItem->price;
+            $cartItem->save();
+        } else {
+            $size = $product->sizes()->where('size_id', $request->size)->first();
+            if ($size) {
+                $price = $size->pivot->price;
+            } else {
+                $price = 0;
+            }
+            Cart::create([
+                'user_id' => auth()->id(),
+                'product_id' => $request->product,
+                'size_id' => $request->size,
+                'flavor_id' => $request->flavor,
+                'quantity' => $request->quantity,
+                'total_price' => $request->quantity * $price,
+                'price' => $price, // Adjust as needed for size/flavor-specific pricing
+            ]);
+        }
+        return response()->json(['success' => 'Item added to cart successfully.']);
+        // return redirect()->back()->with('message', 'Product added to cart successfully.');
+    }
+
+    public function productsCartAjaxOther(Request $request)
+    {
+        $request->validate([
+            'product' => 'required|exists:products,id',
+        ]);
+
+        $product = Product::where('status', 1)->where('id', $request->product)->first();
+        if (!$product) {
+            return response()->json(['error' => 'Somthing Went Wrong..!']);
+        }
+        $minPriceSize = $product->sizes->sortBy('pivot.price')->first();
+        $flavor = $product->flavors->first();
+        $cartItem = Cart::where('user_id', auth()->id())
+            ->where('product_id', $request->product)
+            ->where('size_id', $minPriceSize->id)
+            ->where('flavor_id', $flavor->id)
+            ->first();
+
+        if ($cartItem) {
+            $cartItem->quantity += $request->quantity ? $request->quantity : 1;
+            $cartItem->total_price = $cartItem->quantity * $cartItem->price;
+            $cartItem->save();
+        } else {
+            $size = $product->sizes()->where('size_id', $minPriceSize->id)->first();
+            if ($size) {
+                $price = $size->pivot->price;
+            } else {
+                $price = 0;
+            }
+            Cart::create([
+                'user_id' => auth()->id(),
+                'product_id' => $request->product,
+                'size_id' => $minPriceSize->id,
+                'flavor_id' => $flavor->id,
+                'quantity' => $request->quantity,
+                'total_price' => $request->quantity * $price,
+                'price' => $price, // Adjust as needed for size/flavor-specific pricing
+            ]);
+        }
+        return response()->json(['success' => 'Item added to cart successfully.']);
+        // return redirect()->back()->with('message', 'Product added to cart successfully.');
+    }
+
+    public function productsCartSync(Request $request)
+    {
+        $request->validate([
+            'cartItems' => 'required|array',
+            'cartItems.*.product' => 'required|exists:products,id',
+            'cartItems.*.size' => 'required|string',
+            'cartItems.*.flavor' => 'required|string',
+            'cartItems.*.quantity' => 'required|integer|min:1',
+        ]);
+
+        $userId = auth()->id();
+
+        foreach ($request->cartItems as $item) {
+            $product = Product::where('status', 1)->findOrFail($item['product']);
+
+            if ($product) {
+                $existingCartItem = Cart::where('user_id', auth()->id())
+                    ->where('product_id', $item['product'])
+                    ->where('size_id', $item['size'])
+                    ->where('flavor_id', $item['flavor'])
+                    ->first();
+
+                if ($existingCartItem) {
+                    $existingCartItem->quantity += $item['quantity'] ? $item['quantity'] : 1;
+                    $existingCartItem->total_price = $existingCartItem['quantity'] * $existingCartItem->price;
+                    $existingCartItem->save();
+                } else {
+                    $size = $product->sizes()->where('size_id', $item['size'])->first();
+                    if ($size) {
+                        $price = $size->pivot->price;
+                    } else {
+                        $price = 0;
+                    }
+                    Cart::create([
+                        'user_id' => $userId,
+                        'product_id' => $item['product'],
+                        'size_id' => $item['size'],
+                        'flavor_id' => $item['flavor'],
+                        'quantity' => $item['quantity'],
+                        'total_price' => $item['quantity'] * $price,
+                        'price' => $price,
+                    ]);
+                }
+            }
+        }
+        return response()->json(['success' => 'Guest cart synced successfully']);
+    }
+
+    public function productsCartSyncOther(Request $request)
+    {
+        $request->validate([
+            'cartItems' => 'required|array',
+            'cartItems.*.product' => 'required|exists:products,id',
+            'cartItems.*.quantity' => 'required|integer|min:1',
+        ]);
+
+        $userId = auth()->id();
+
+        foreach ($request->cartItems as $item) {
+            $product = Product::where('status', 1)->findOrFail($item['product']);
+            if ($product) {
+                $minPriceSize = $product->sizes->sortBy('pivot.price')->first();
+                $flavor = $product->flavors->first();
+                $existingCartItem = Cart::where('user_id', auth()->id())
+                    ->where('product_id', $item['product'])
+                    ->where('size_id', $minPriceSize->id)
+                    ->where('flavor_id', $flavor->id)
+                    ->first();
+
+                if ($existingCartItem) {
+                    $existingCartItem->quantity += $item['quantity'] ? $item['quantity'] : 1;
+                    $existingCartItem->total_price = $existingCartItem['quantity'] * $existingCartItem->price;
+                    $existingCartItem->save();
+                } else {
+                    $size = $product->sizes()->where('size_id', $minPriceSize->id)->first();
+                    if ($size) {
+                        $price = $size->pivot->price;
+                    } else {
+                        $price = 0;
+                    }
+                    Cart::create([
+                        'user_id' => $userId,
+                        'product_id' => $item['product'],
+                        'size_id' => $minPriceSize->id,
+                        'flavor_id' => $flavor->id,
+                        'quantity' => $item['quantity'],
+                        'total_price' => $item['quantity'] * $price,
+                        'price' => $price,
+                    ]);
+                }
+            }
+        }
+        return response()->json(['success' => 'Guest cart synced successfully']);
     }
 
     public function productsCartUpdateQuantity(Request $request)
@@ -883,17 +1096,21 @@ class ProductController extends Controller
 
     public function productsCart()
     {
-        $cartItems = Cart::where('user_id', auth()->id())->with('product')->get();
-        return view('front.products.products-cart', compact('cartItems'));
+        if (Auth::check()) {
+            $cartItems = Cart::where('user_id', auth()->id())->with('product')->get();
+            return view('front.products.products-cart', compact('cartItems'));
+        } else {
+            return view('front.products.products-cart-guest');
+        }
     }
 
     public function productsCheckout()
     {
         $totalOrder = Cart::where('user_id', auth()->id())->sum('total_price');
-        if($totalOrder == 0){
+        if ($totalOrder == 0) {
             return redirect()->route('front.products')->with('error', 'Your Cart is Empty..!');
         }
-        return view('front.products.products-checkout',['totalOrder' => $totalOrder]);
+        return view('front.products.products-checkout', ['totalOrder' => $totalOrder]);
     }
 
     public function productsCompleted()
