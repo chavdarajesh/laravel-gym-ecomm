@@ -29,6 +29,6 @@ class ForgotPassword extends Mailable
      */
     public function build()
     {
-        return $this->subject('Reset Password For '.env('APP_NAME', 'Laravel App'))->view('admin.mail.mailtemplete')->with('data',$this->data);
+        return $this->subject('Reset Password For '.env('APP_NAME', 'Laravel App'))->view('front.mail.mailtemplete')->with('data',$this->data);
     }
 }

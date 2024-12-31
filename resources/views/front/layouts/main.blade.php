@@ -22,6 +22,9 @@ $excludedRoutes = [
     'front.products-checkout',
     'front.products-completed',
     'front.login',
+    'front.otp_verification.get',
+    'front.forgotpassword',
+    'front.reset.password.get',
 ];
 @endphp
 

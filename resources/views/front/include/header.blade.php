@@ -57,15 +57,7 @@ $loader = SiteSetting::getSiteSettings('loader');
                                     </div>
                                 </li>
                                 @else
-                                <li class="nav-item dropdown">
-                                    <a class="nav-item-a nav-link dropdown-toggle" href="javascript:void(0);" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Account
-                                    </a>
-                                    <div class="dropdown-menu p-0" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item text-center" href="#">Register</a>
-                                        <a class="dropdown-item text-center" href="{{route('front.login')}}">Login</a>
-                                    </div>
-                                </li>
+                                <li class="{{ Route::currentRouteName() == 'front.login' ? 'active' : '' }}"><a class="nav-item-a" href="{{ route('front.login') }}">Login & Register</a></li>
                                 @endif
 
                                 <li class="d-block d-lg-none {{ Route::currentRouteName() == 'front.products-cart' ? 'active' : '' }}"><a class="nav-item-a" href="{{ route('front.products-cart') }}">Cart</a></li>
@@ -74,8 +66,8 @@ $loader = SiteSetting::getSiteSettings('loader');
                         </nav>
                     </div>
                     <!-- Header-btn -->
-                    <div class="header-btns d-none d-lg-block f-right">
-                        <a class="mx-1 text-dark" href="{{ route('front.products-cart') }}"><i class="fas fa-cart-plus"></i></a>
+                    <div class="header-btns d-none d-lg-flex f-right align-items-center">
+                        <a class="mx-2 fa-2x text-warning" href="{{ route('front.products-cart') }}"><i  class="fas fa-cart-plus"></i></a>
                         <a href="{{ route('front.contact') }}" class="btn">Contact Us</a>
                     </div>
                     <!-- Mobile Menu -->

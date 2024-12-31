@@ -16,9 +16,10 @@ class OTPVerification extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($data)
     {
         //
+        $this->data= $data;
     }
 
     /**
@@ -28,6 +29,6 @@ class OTPVerification extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->subject('OTP Verification For '.env('APP_NAME', 'Laravel App'))->view('front.mail.otp_verification')->with('data',$this->data);
     }
 }

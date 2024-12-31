@@ -2956,7 +2956,7 @@ hr {
 
 /* line 924, C:/Users/HP/Desktop/July-HTML/292 Health coach/assets/scss/_common.scss */
 .section-tittle2 h2 {
-  font-size: 70px;
+  font-size: 50px;
   display: block;
   color: #2c234d;
   font-weight: 700;
@@ -3449,7 +3449,7 @@ hr {
 
 /* line 58, C:/Users/HP/Desktop/July-HTML/292 Health coach/assets/scss/_h1-hero.scss */
 .slider-area .hero__caption span {
-  font-size: 70px;
+  font-size: 50px;
   font-family: "Oswald", sans-serif;
   font-weight: 700;
   display: inline-block;
@@ -3488,7 +3488,7 @@ hr {
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
   /* line 75, C:/Users/HP/Desktop/July-HTML/292 Health coach/assets/scss/_h1-hero.scss */
   .slider-area .hero__caption h1 {
-    font-size: 70px;
+    font-size: 50px;
   }
 }
 
@@ -3695,7 +3695,7 @@ hr {
 /* line 230, C:/Users/HP/Desktop/July-HTML/292 Health coach/assets/scss/_h1-hero.scss */
 .slider-area2 .hero-cap h2 {
   color: #fff;
-  font-size: 70px;
+  font-size: 50px;
   font-weight: 700;
   text-transform: uppercase;
   line-height: 1;

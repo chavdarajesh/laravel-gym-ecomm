@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
-use App\Mail\Admin\ForgotPassword;
+use App\Mail\User\ForgotPassword;
 use App\Mail\User\OTPVerification;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -40,25 +40,47 @@ class AuthController extends Controller
     {
         $request->validate([
             'name' => 'required|max:40',
-            'email' => 'required|unique:users,email,NULL,id,deleted_at,NULL',
-            'phone' => 'required |unique:users,phone,NULL,id,deleted_at,NULL',
-            'username' => 'required |unique:users,username,NULL,id,deleted_at,NULL',
-            'address' => 'required',
-            'dateofbirth' => 'required',
+            'email' => 'required|email',
+            // 'phone' => 'required |unique:users,phone,NULL,id,deleted_at,NULL',
+            // 'address' => 'required',
+            // 'dateofbirth' => 'required',
             'password' => 'required',
             // 'accept_t_c' => 'required',
         ]);
-        if ($request['referral_code']) {
-            $request->validate([
-                'referral_code' => 'exists:users',
-            ]);
+        // if ($request['referral_code']) {
+        //     $request->validate([
+        //         'referral_code' => 'exists:users',
+        //     ]);
+        // }
+
+        $user_email_check_is_verified  = User::where([['email',$request->email],['is_verified','0']])->first();
+        if ($user_email_check_is_verified) {
+            $random_pass = rand(100000, 999999);
+            $user_email_check_is_verified->otp = $random_pass;
+            $user_email_check_is_verified->save();
+
+            if ($user_email_check_is_verified) {
+                $data = [
+                    'otp' => $random_pass
+                ];
+                $user_id = encrypt($user_email_check_is_verified->id);
+                Mail::to($request->email)->send(new OTPVerification($data));
+            }
+            return redirect()->route('front.otp_verification.get', ['id' => $user_id])->with('error', 'User Already Exist..! Please Verify Your Email..');
         }
+        $user_email_check_verified  = User::where([['email',$request->email],['is_verified','1']])->first();
+        if ($user_email_check_verified) {
+            return redirect()->back()->with('error', 'User Already Exist..! Please Login..');
+        }
+
+
+
         $user = new User();
         $user->name = $request['name'];
         $user->email = $request['email'];
-        $user->phone = $request['phone'];
-        $user->address = $request['address'];
-        $user->dateofbirth = $request['dateofbirth'];
+        // $user->phone = $request['phone'];
+        // $user->address = $request['address'];
+        // $user->dateofbirth = $request['dateofbirth'];
         // $user->referral_code = Str::slug($request['name'], "-").Str::slug($request['email'], "-");
         // $user->other_referral_code = $request['referral_code'] ? $request['referral_code'] : '';
         $random_pass = rand(100000, 999999);
@@ -100,13 +122,10 @@ class AuthController extends Controller
 
             $user  = User::where([['id', '=', $request->user_id], ['otp', '=', $request->otp], ['email', '=', $request->email]])->first();
             if ($user) {
-                User::where('id', '=', $request->user_id)->where('email', '=', $request->email)->update(['otp' => null]);
+                User::where('id', '=', $request->user_id)->where('email', '=', $request->email)->update(['otp' => null, 'is_verified' => 1]);
                 User::where('id', '=', $request->user_id)->where('email', '=', $request->email)->update(['email_verified_at' =>  Carbon::now('Asia/Kolkata')]);
-                if (Auth::attempt(['email' => $request->email, 'password' => $request->otp])) {
-                    return redirect()->route('front.first_paymentpage')->with('message', 'Account Created Successfully..');
-                } else {
-                    return redirect()->back()->with('error', 'Somthing Went Wrong11..');
-                }
+                Auth::login($user);
+                return redirect()->route('front.home')->with('message', 'Account Created Successfully..');
             } else {
                 return redirect()->back()->with('error', 'OTP Is Invalid..!');
             }
@@ -118,14 +137,14 @@ class AuthController extends Controller
     public function postlogin(Request $request)
     {
         $ValidatedData = Validator::make($request->all(), [
-            'email' => 'required',
-            'password' => 'required',
+            'login_email' => 'required',
+            'login_password' => 'required',
             // 'accept_t_c' => 'required',
         ]);
         if ($ValidatedData->fails()) {
             return redirect()->back()->with('error', 'All Filed Require..!');
         } else {
-            if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'is_verified' => 1, 'status' => 1])) {
+            if (Auth::attempt(['email' => $request->login_email, 'password' => $request->login_password, 'is_verified' => 1, 'status' => 1])) {
                 if (Auth::user()->email_verified_at != null && Auth::user()->otp == null) {
                     return redirect()->route('front.home')->with('message', 'User Login Successfully');
                 } else {
@@ -138,13 +157,13 @@ class AuthController extends Controller
             }
         }
     }
+
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->flush();
         return redirect()->route('front.home')->with('message', 'User Logout Successfully');;
     }
-
 
     public function forgotpasswordget()
     {
@@ -158,7 +177,6 @@ class AuthController extends Controller
         ]);
         $user = User::where('email', $request->email)->where('status', 1)->where('is_verified', 1)->first();
         if ($user) {
-
             $token = Str::random(64);
             DB::table('password_resets')->insert([
                 'email' => $request->email,

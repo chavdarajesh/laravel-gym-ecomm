@@ -326,7 +326,7 @@ Route::post('/products/cart/sync/other', [FrontProductController::class, 'produc
 
 
 Route::get('/login', [FrontAuthController::class, 'login'])->name('front.login');
-Route::get('/register', [FrontAuthController::class, 'register'])->name('front.register');
+// Route::get('/register', [FrontAuthController::class, 'register'])->name('front.register');
 Route::get('/forgotpassword', [FrontAuthController::class, 'forgotpasswordget'])->name('front.forgotpassword');
 Route::get('/reset-password/{token}', [FrontAuthController::class, 'showResetPasswordFormget'])->name('front.reset.password.get');
 Route::get('/otp_verification/{id}', [FrontAuthController::class, 'showotp_verificationFormget'])->name('front.otp_verification.get');
