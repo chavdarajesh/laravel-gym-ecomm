@@ -384,7 +384,6 @@
         const quantity = $('.quantity-result').val();
         const positiveQuantity = Math.abs(quantity);
         if (isUserLoggedIn) {
-            console.log('1111');
             $.ajax({
                 url: '{{route("front.products-cart.ajax")}}',
                 method: 'POST',
@@ -429,7 +428,6 @@
                     quantity: positiveQuantity
                 });
             }
-            console.log('ccccccccccc', cart);
 
             localStorage.setItem('guestCart', JSON.stringify(cart));
             toastr.options = {

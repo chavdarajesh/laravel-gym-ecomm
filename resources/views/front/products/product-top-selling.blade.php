@@ -473,7 +473,6 @@
     function addToCart(product) {
         const isUserLoggedIn = @json(auth()->check());
         if (isUserLoggedIn) {
-            console.log('1111');
             $.ajax({
                 url: '{{route("front.products-cart.ajax.other")}}',
                 method: 'POST',
@@ -525,7 +524,6 @@
                             });
 
                         }
-                            console.log('ccccccccccc', cart);
 
                             localStorage.setItem('guestCart', JSON.stringify(cart));
                             toastr.options = {

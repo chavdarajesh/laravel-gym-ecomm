@@ -308,7 +308,6 @@
     function loadGuestCart() {
 
         const cartItems = JSON.parse(localStorage.getItem('guestCart')) || [];
-        console.log('1111111111111',cartItems);
         const cartTableBody = document.getElementById('cart-items-table-body');
         cartTableBody.innerHTML = ''; // Clear existing rows
 
