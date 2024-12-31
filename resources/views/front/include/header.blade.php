@@ -45,14 +45,14 @@ $loader = SiteSetting::getSiteSettings('loader');
                                         Account
                                     </a>
                                     <div class="dropdown-menu p-0" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item text-center" href="#">Profile</a>
+                                        <a class="dropdown-item text-center" href="{{ route('front.profilepage') }}">Profile</a>
                                         <div>
                                             <form action="{{ route('front.post.logout') }}" method="POST">
                                                 @csrf
-                                                {{-- <a href="{{ route('front.all_emipage') }}">Log Out</a> --}}
                                                 <button class="btn w-100" type="submit">
                                                     Log Out
                                                 </button>
+                                            </form>
                                         </div>
                                     </div>
                                 </li>

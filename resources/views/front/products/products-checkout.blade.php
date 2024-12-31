@@ -228,15 +228,15 @@
             </ul>
             <div class="row">
               <div class="col-lg-6">
-                <form action="from-action" method="post">
+                <form action="from-action" method="post" >
                   <div class="row">
                     <div class="form-group col-12 mb-3">
                       <label class="form-label small text-uppercase">Full name</label>
-                      <input class="form-control" type="text" name="name" placeholder="Enter your full name">
+                      <input class="form-control" type="text" name="name" placeholder="Enter your full name" value="{{ $user->name }}">
                     </div>
                     <div class="form-group col-12 mb-3">
                       <label class="form-label small text-uppercase">Email address</label>
-                      <input class="form-control" type="email" name="email" placeholder="Enter your email address">
+                      <input class="form-control" type="email" name="email" placeholder="Enter your email address" value="{{ $user->email }}">
                     </div>
                     <div class="form-group col-12 mb-3">
                       <label class="form-label small text-uppercase">Adress 1</label>

@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\ProductSlider;
 use App\Models\Subcategory;
 use App\Models\TopSellingProduct;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -1110,7 +1111,8 @@ class ProductController extends Controller
         if ($totalOrder == 0) {
             return redirect()->route('front.products')->with('error', 'Your Cart is Empty..!');
         }
-        return view('front.products.products-checkout', ['totalOrder' => $totalOrder]);
+        $user = User::find(Auth::user()->id);
+        return view('front.products.products-checkout', ['totalOrder' => $totalOrder,'user'=>$user]);
     }
 
     public function productsCompleted()

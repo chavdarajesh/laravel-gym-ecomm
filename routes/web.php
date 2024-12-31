@@ -27,6 +27,7 @@ use App\Http\Controllers\Front\ContactController as FrontContactController;
 use App\Http\Controllers\Front\PagesController as FrontPagesController;
 use App\Http\Controllers\Front\ProductController as FrontProductController;
 use App\Http\Controllers\Front\AuthController as FrontAuthController;
+use App\Http\Controllers\Front\ProfileController as FrontProfileController;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -342,6 +343,10 @@ Route::post('/reset-password', [FrontAuthController::class, 'submitResetPassword
 Route::group(['namespace' => 'User', 'middleware' => ['is_auth', 'is_user_active', 'is_user_verified']], function () {
 
     Route::post('/logout', [FrontAuthController::class, 'logout'])->name('front.post.logout');
+
+    Route::get('/profile', [FrontProfileController::class, 'profilepage'])->name('front.profilepage');
+    Route::post('/profile', [FrontProfileController::class, 'postprofilepage'])->name('front.post.profilepage');
+    Route::post('/profile/changepassword', [FrontProfileController::class, 'postprofilechangepassword'])->name('front.post.profile.changepassword');
 
     Route::get('/products/checkout', [FrontProductController::class, 'productsCheckout'])->name('front.products-checkout');
     Route::get('/products/completed', [FrontProductController::class, 'productsCompleted'])->name('front.products-completed');

@@ -25,6 +25,7 @@ $excludedRoutes = [
     'front.otp_verification.get',
     'front.forgotpassword',
     'front.reset.password.get',
+    'front.profilepage',
 ];
 @endphp
 

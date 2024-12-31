@@ -35,14 +35,14 @@
                     <div class="form-group">
                         <label for="login_email">Email address</label>
                         <input class="form-control @error('login_email') border border-danger @enderror" name="login_email" id="login_email" type="text" placeholder="Enter Email" value="{{ old('login_email') }}">
-                        <div id="email_error" class="text-danger">
+                        <div id="login_email_error" class="text-danger">
                             @error('login_email') {{ $message }} @enderror
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="login_password">Password</label>
                         <input class="form-control @error('login_password') border border-danger @enderror" name="login_password" id="login_password" type="login_password" placeholder="Enter Password" value="{{ old('login_password') }}">
-                        <div id="password_error" class="text-danger">
+                        <div id="login_password_error" class="text-danger">
                             @error('login_password') {{ $message }} @enderror
                         </div>
                         <a href="{{ route('front.forgotpassword') }}"> <small id="emailHelp" class="fa-1x form-text text-muted">
@@ -77,14 +77,14 @@
                     <div class="form-group">
                         <label for="email">Email address</label>
                         <input class="form-control @error('email') border border-danger @enderror" name="email" id="email" type="email" placeholder="Enter Email" value="{{ old('email') }}">
-                        <div id="email_register_error" class="text-danger">
+                        <div id="email_error" class="text-danger">
                             @error('email') {{ $message }} @enderror
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input class="form-control @error('password') border border-danger @enderror" name="password" id="password" type="password" placeholder="Enter Password">
-                        <div id="password_register_error" class="text-danger">
+                        <div id="password_error" class="text-danger">
                             @error('password') {{ $message }} @enderror
                         </div>
                     </div>
