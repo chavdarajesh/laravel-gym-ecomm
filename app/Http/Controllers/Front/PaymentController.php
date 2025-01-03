@@ -13,9 +13,16 @@ class PaymentController extends Controller
 {
     //
 
-    public function process($orderId)
+    public function process($id)
     {
-        $order = Order::findOrFail($orderId);
+        $order = Order::findOrFail($id);
+        if (!$order) {
+            return redirect()->back()->with('error', 'Order not found.');
+        }
+
+        // if ($order->status === 'completed') {
+        //     return redirect()->route('payment.success')->with('success', 'Payment successful!');
+        // }
 
         $provider = new PayPalClient;
         $provider->setApiCredentials(config('paypal'));
@@ -27,14 +34,13 @@ class PaymentController extends Controller
                 [
                     "amount" => [
                         "currency_code" => "USD",
-                        "value" => $order->total_price,
+                        "value" => $order->price,
                     ],
                 ],
             ],
         ]);
 
         if (isset($response['id'])) {
-            // Store the PayPal order ID for reference
             $order->update(['payment_id' => $response['id']]);
             return redirect($response['links'][1]['href']);
         }
@@ -42,7 +48,7 @@ class PaymentController extends Controller
         return redirect()->back()->with('error', 'Unable to process payment.');
     }
 
-    public function success(Request $request)
+    public function successRedirect(Request $request)
     {
         $provider = new PayPalClient;
         $provider->setApiCredentials(config('paypal'));
@@ -51,7 +57,6 @@ class PaymentController extends Controller
         $response = $provider->capturePaymentOrder($request->query('token'));
 
         if ($response['status'] === 'COMPLETED') {
-            // Update order and payment status
             $order = Order::where('payment_id', $response['id'])->first();
             $order->update(['status' => 'completed']);
 
@@ -62,19 +67,26 @@ class PaymentController extends Controller
                 'payment_status' => 'Completed',
             ]);
 
-            return redirect()->route('payment.success')->with('success', 'Payment successful!');
+            return redirect()->route('front.products-completed')->with('success', 'Payment successful!');
         }
 
         return redirect()->route('payment.failed')->with('error', 'Payment failed.');
     }
 
-    public function cancel()
+    public function cancelRedirect()
     {
-        return redirect('/orders')->with('error', 'Payment cancelled.');
+        return redirect()->route('payment.cancel')->with('error', 'Payment cancelled.');
     }
 
-    public function failed()
+
+
+    public function cancelGet()
     {
-        return redirect('/orders')->with('error', 'Payment failed.');
+        return view('front.products.products-completed');
+    }
+
+    public function failedGet()
+    {
+        return view('front.products.products-completed');
     }
 }

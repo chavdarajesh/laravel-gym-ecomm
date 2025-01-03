@@ -363,29 +363,25 @@ Route::group(['namespace' => 'User', 'middleware' => ['is_auth', 'is_user_active
     Route::post('/profile/changepassword', [FrontProfileController::class, 'postprofilechangepassword'])->name('front.post.profile.changepassword');
 
 
-
-
     Route::get('/products/checkout', [FrontProductController::class, 'productsCheckout'])->name('front.products-checkout');
-    Route::post('/products/checkout', [FrontOrderController::class, 'checkout'])->name('front.products-checkout.post');
+    Route::post('/products/checkout/post', [FrontOrderController::class, 'checkout'])->name('front.products-checkout.post');
+
+    Route::get('/payment/process/{id}', [FrontPaymentController::class, 'process'])->name('payment.process');
+
+    Route::get('/payment/success/redirect', [FrontPaymentController::class, 'successRedirect'])->name('payment.success.redirect');
+    Route::get('/payment/cancel/redirect', [FrontPaymentController::class, 'cancelRedirect'])->name('payment.cancel.redirect');
 
 
-    Route::get('/products/completed', [FrontProductController::class, 'productsCompleted'])->name('front.products-completed');
-
-    Route::get('/payment/process/:id', [FrontPaymentController::class, 'process'])->name('payment.process');
-
-    Route::get('/payment/success', [FrontPaymentController::class, 'success'])->name('payment.success');
-    Route::get('/payment/cancel', [FrontPaymentController::class, 'cancel'])->name('payment.cancel');
-    Route::get('/payment/failed', [FrontPaymentController::class, 'failed'])->name('payment.failed');
+    Route::get('/products/completed/{id}', [FrontProductController::class, 'productsCompleted'])->name('front.products-completed');
+    Route::get('/payment/failed', [FrontPaymentController::class, 'failedGet'])->name('payment.failed');
+    Route::get('/payment/cancel', [FrontPaymentController::class, 'cancelGet'])->name('payment.cancel');
 
 
     Route::get('/orders', [FrontOrderController::class, 'orders'])->name('front.orders');
+    Route::get('/orders/details/{id}', [FrontOrderController::class, 'ordersDetails'])->name('front.orders-details');
 
-
-
-
-
-    Route::get('create-transaction', [FrontPayPalController::class, 'createTransaction'])->name('createTransaction');
-    Route::get('process-transaction', [FrontPayPalController::class, 'processTransaction'])->name('processTransaction');
-    Route::get('success-transaction', [FrontPayPalController::class, 'successTransaction'])->name('successTransaction');
-    Route::get('cancel-transaction', [FrontPayPalController::class, 'cancelTransaction'])->name('cancelTransaction');
+    // Route::get('create-transaction', [FrontPayPalController::class, 'createTransaction'])->name('createTransaction');
+    // Route::get('process-transaction', [FrontPayPalController::class, 'processTransaction'])->name('processTransaction');
+    // Route::get('success-transaction', [FrontPayPalController::class, 'successTransaction'])->name('successTransaction');
+    // Route::get('cancel-transaction', [FrontPayPalController::class, 'cancelTransaction'])->name('cancelTransaction');
 });

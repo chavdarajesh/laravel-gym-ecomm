@@ -228,6 +228,8 @@
             </ul>
             <div class="text-center">
               <h1>Thank you</h1>
+                <p class="text-muted">Your order has been completed</p>
+                order number: <strong>{{$id}}</strong>
               <div class="row">
                 <div class="col-lg-7 mx-auto">
                   <p class="text-muted mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>

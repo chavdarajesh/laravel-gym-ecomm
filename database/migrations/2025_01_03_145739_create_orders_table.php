@@ -15,9 +15,11 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('payment_id');
-            $table->string('price');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('payment_id')->nullable();
+            $table->string('price')->nullable();
+            $table->string('status')->nullable()->default('pending');
+            $table->string('payment_type')->nullable()->default('paypal');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

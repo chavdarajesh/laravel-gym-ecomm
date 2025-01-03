@@ -15,8 +15,8 @@ class CreateOrderStatusPivotsTable extends Migration
     {
         Schema::create('order_status_pivots', function (Blueprint $table) {
             $table->id();
-        $table->unsignedBigInteger('order_id');
-        $table->unsignedBigInteger('status_id');
+        $table->unsignedBigInteger('order_id')->nullable();
+        $table->unsignedBigInteger('status_id')->nullable();
         $table->text('description')->nullable();
         $table->timestamps();
         $table->softDeletes();

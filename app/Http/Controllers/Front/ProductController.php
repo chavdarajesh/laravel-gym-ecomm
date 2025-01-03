@@ -1115,8 +1115,8 @@ class ProductController extends Controller
         return view('front.products.products-checkout', ['totalOrder' => $totalOrder,'user'=>$user]);
     }
 
-    public function productsCompleted()
+    public function productsCompleted($id)
     {
-        return view('front.products.products-completed');
+        return view('front.products.products-completed',['id'=>$id]);
     }
 }

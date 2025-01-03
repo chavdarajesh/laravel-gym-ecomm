@@ -15,6 +15,7 @@ class CreateOrderProductsTable extends Migration
     {
         Schema::create('order_products', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('order_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable(); // Optional for guest users
             $table->unsignedBigInteger('product_id')->nullable();
             $table->unsignedBigInteger('size_id')->nullable();
@@ -26,6 +27,7 @@ class CreateOrderProductsTable extends Migration
             $table->softDeletes();
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->foreign('size_id')->references('id')->on('sizes')->onDelete('cascade');
             $table->foreign('flavor_id')->references('id')->on('flavors')->onDelete('cascade');
         });
