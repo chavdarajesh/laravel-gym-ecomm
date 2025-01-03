@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\OrderStatus;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -45,11 +46,15 @@ class OrderController extends Controller
         }
         $cartItems->each->delete();
 
-        if($request->payment_type == 'cod') {
+        if ($request->payment_type == 'cod') {
             $order->update([
                 'status' => 'completed',
             ]);
-            return redirect()->route('front.products-completed',['id' => $order->id])->with('success', 'Order placed successfully!');
+            $statusId = OrderStatus::where('name', 'Pending')->first()->id;
+            $order->statuses()->attach($statusId, [
+                'description' => 'Order has been placed but not yet processed.',
+            ]);
+            return redirect()->route('front.products-completed', ['id' => $order->id])->with('success', 'Order placed successfully!');
         }
         // Redirect to payment
         return redirect()->route('payment.process', ['id' => $order->id]);

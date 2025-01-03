@@ -40,7 +40,7 @@ class Order extends Model
     public function statuses()
     {
         return $this->belongsToMany(OrderStatus::class, 'order_status_pivot')
-            ->withPivot('description');
+            ->withPivot('description')->withTimestamps();;
     }
 
     public function payment()

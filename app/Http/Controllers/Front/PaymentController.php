@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderStatus;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
@@ -20,9 +21,13 @@ class PaymentController extends Controller
             return redirect()->back()->with('error', 'Order not found.');
         }
 
-        // if ($order->status === 'completed') {
-        //     return redirect()->route('payment.success')->with('success', 'Payment successful!');
-        // }
+        if ($order->status === 'completed') {
+            return redirect()->route('payment.success')->with('success', 'Payment successful!');
+        }
+
+        $order->update([
+            'status' => 'pending',
+        ]);
 
         $provider = new PayPalClient;
         $provider->setApiCredentials(config('paypal'));
@@ -56,9 +61,16 @@ class PaymentController extends Controller
 
         $response = $provider->capturePaymentOrder($request->query('token'));
 
+        $order = Order::where('payment_id', $response['id'])->first();
         if ($response['status'] === 'COMPLETED') {
-            $order = Order::where('payment_id', $response['id'])->first();
-            $order->update(['status' => 'completed']);
+            $order->update([
+                'status' => 'completed',
+            ]);
+
+            $statusId = OrderStatus::where('name', 'Pending')->first()->id;
+            $order->statuses()->attach($statusId, [
+                'description' => 'Order has been placed but not yet processed.',
+            ]);
 
             Payment::create([
                 'transaction_id' => $response['id'],
@@ -70,10 +82,10 @@ class PaymentController extends Controller
             return redirect()->route('front.products-completed')->with('success', 'Payment successful!');
         }
 
-        return redirect()->route('payment.failed')->with('error', 'Payment failed.');
+        return redirect()->route('payment.failed',['id',$order->id])->with('error', 'Payment failed.');
     }
 
-    public function cancelRedirect()
+    public function cancelRedirect(Request $request)
     {
         return redirect()->route('payment.cancel')->with('error', 'Payment cancelled.');
     }
@@ -85,8 +97,16 @@ class PaymentController extends Controller
         return view('front.products.products-completed');
     }
 
-    public function failedGet()
+    public function failedGet($id)
     {
+        $statusId = OrderStatus::where('name', 'Failed')->first()->id;
+        $order = Order::findOrFail($id);
+        $order->update([
+            'status' => 'failed',
+        ]);
+        $order->statuses()->attach($statusId, [
+            'description' => 'Order has failed.',
+        ]);
         return view('front.products.products-completed');
     }
 }
