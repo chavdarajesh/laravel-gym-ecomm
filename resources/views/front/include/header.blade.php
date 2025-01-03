@@ -40,6 +40,7 @@ $loader = SiteSetting::getSiteSettings('loader');
                                 <li class="{{ Route::currentRouteName() == 'front.products' ? 'active' : '' }}"><a class="nav-item-a" href="{{ route('front.products') }}">Nutrition & Supplements</a></li>
                                 <li class="{{ Route::currentRouteName() == 'front.blogs' ? 'active' : '' }}"><a class="nav-item-a" href="{{ route('front.blogs') }}">Blog</a></li>
                                 @if (Auth::check())
+                                <li class="{{ Route::currentRouteName() == 'front.orders' ? 'active' : '' }}"><a class="nav-item-a" href="{{ route('front.orders') }}">Orders</a></li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-item-a nav-link dropdown-toggle" href="javascript:void(0);" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Account

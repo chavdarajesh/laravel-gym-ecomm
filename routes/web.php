@@ -379,6 +379,7 @@ Route::group(['namespace' => 'User', 'middleware' => ['is_auth', 'is_user_active
 
     Route::get('/orders', [FrontOrderController::class, 'orders'])->name('front.orders');
     Route::get('/orders/details/{id}', [FrontOrderController::class, 'ordersDetails'])->name('front.orders-details');
+    Route::post('/orders/cancel/{id}', [FrontOrderController::class, 'ordersCancel'])->name('front.orders-cancel');
 
     // Route::get('create-transaction', [FrontPayPalController::class, 'createTransaction'])->name('createTransaction');
     // Route::get('process-transaction', [FrontPayPalController::class, 'processTransaction'])->name('processTransaction');

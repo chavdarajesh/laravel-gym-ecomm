@@ -26,6 +26,8 @@ $excludedRoutes = [
     'front.forgotpassword',
     'front.reset.password.get',
     'front.profilepage',
+    'front.orders',
+    'front.orders-details',
 ];
 @endphp
 

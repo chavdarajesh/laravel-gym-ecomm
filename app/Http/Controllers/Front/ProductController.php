@@ -1107,12 +1107,14 @@ class ProductController extends Controller
 
     public function productsCheckout()
     {
-        $totalOrder = Cart::where('user_id', auth()->id())->sum('total_price');
-        if ($totalOrder == 0) {
+        $subTotal = Cart::where('user_id', auth()->id())->sum('total_price');
+        if ($subTotal == 0) {
             return redirect()->route('front.products')->with('error', 'Your Cart is Empty..!');
         }
         $user = User::find(Auth::user()->id);
-        return view('front.products.products-checkout', ['totalOrder' => $totalOrder,'user'=>$user]);
+        $shippingCharge = env('SHIPPING_CHARGE', 100);
+        $totalOrder = $subTotal + $shippingCharge;
+        return view('front.products.products-checkout', ['subTotal' => $subTotal,'user'=>$user, 'shippingCharge' => $shippingCharge, 'totalOrder' => $totalOrder]);
     }
 
     public function productsCompleted($id)

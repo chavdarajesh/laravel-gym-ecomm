@@ -17,9 +17,13 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->string('payment_id')->nullable();
-            $table->string('price')->nullable();
+            $table->string('total_order')->nullable();
+            $table->string('sub_total')->nullable();
+            $table->string('shipping_charge')->nullable();
             $table->string('status')->nullable()->default('pending');
             $table->string('payment_type')->nullable()->default('paypal');
+            $table->string('payment_status')->nullable()->default('pending');
+            $table->string('order_status')->nullable()->default('pending');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

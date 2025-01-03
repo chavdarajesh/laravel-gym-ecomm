@@ -19,7 +19,11 @@ class Order extends Model
         'status',
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
+        'total_order',
+        'sub_total',
+        'shipping_charge',
+        'payment_type',
     ];
 
 
@@ -39,7 +43,7 @@ class Order extends Model
 
     public function statuses()
     {
-        return $this->belongsToMany(OrderStatus::class, 'order_status_pivot')
+        return $this->belongsToMany(OrderStatus::class, 'order_status_pivots', 'order_id', 'status_id')
             ->withPivot('description')->withTimestamps();;
     }
 

@@ -27,6 +27,8 @@ class PaymentController extends Controller
 
         $order->update([
             'status' => 'pending',
+            'payment_status' => 'pending',
+            'order_status' => 'pending',
         ]);
 
         $provider = new PayPalClient;
@@ -39,7 +41,7 @@ class PaymentController extends Controller
                 [
                     "amount" => [
                         "currency_code" => "USD",
-                        "value" => $order->price,
+                        "value" => $order->total_order,
                     ],
                 ],
             ],
@@ -65,6 +67,8 @@ class PaymentController extends Controller
         if ($response['status'] === 'COMPLETED') {
             $order->update([
                 'status' => 'completed',
+                'payment_status' => 'completed',
+                'order_status' => 'pending',
             ]);
 
             $statusId = OrderStatus::where('name', 'Pending')->first()->id;
@@ -103,6 +107,8 @@ class PaymentController extends Controller
         $order = Order::findOrFail($id);
         $order->update([
             'status' => 'failed',
+            'payment_status' => 'failed',
+            'order_status' => 'pending',
         ]);
         $order->statuses()->attach($statusId, [
             'description' => 'Order has failed.',

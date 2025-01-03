@@ -281,43 +281,55 @@
                             </div>
                         </form>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 mx-auto">
+                        <!-- Payment Details -->
                         <div class="bg-light px-3 py-2 mb-3">
-                            <h6 class="mb-0 py-1">Payment method</h6>
+                            <h6 class="mb-0 py-1">Order Summary</h6>
                         </div>
-                        <!-- Footer-->
-                        <div class="bg-light p-2">
-                            <div class="row align-items-center">
-                                <div class="col-md-9">
-                                    <form action="{{route('front.products-checkout.post')}}" method="post">
-                                        <div>
-                                            @csrf
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="payment_type" id="exampleRadios1" value="paypal" checked>
-                                                <label class="form-check-label" for="exampleRadios1">
-                                                    PayPal
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="payment_type" id="exampleRadios2" value="cod">
-                                                <label class="form-check-label" for="exampleRadios2">
-                                                    Cash On Delivery
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <ul class="list-inline mb-0 ">
-                                            <li class="list-inline-item py-1"><a class="btn btn-outline-primary product-list-btn" href="{{route('front.products-cart')}}"> <i class="fas fa-shopping-cart mr-2"></i>Back to cart</a></li>
-                                            <li class="list-inline-item py-1"><button class="btn btn-primary product-list-btn"> <i class="far fa-credit-card mr-2"></i>Place order</button></li>
-                                        </ul>
-                                    </form>
-                                </div>
-                                <div class="col-md-3 text-start text-md-end">
-                                    <p class="text-muted mb-1">Cart total</p>
-                                    <h6 class="h4 mb-0">${{$totalOrder}}</h6>
-                                </div>
+                        <div class="bg-light p-3 mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="text-muted mb-0">Subtotal</p>
+                                <p class="font-weight-bold mb-0">${{$subTotal}}</p>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="text-muted mb-0">Shipping</p>
+                                <p class="font-weight-bold mb-0">${{$shippingCharge}}</p>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="font-weight-bold h5 mb-0">Total</p>
+                                <p class="font-weight-bold h5 mb-0">${{$totalOrder}}</p>
                             </div>
                         </div>
+
+                        <!-- Payment Method -->
+                        <div class="bg-light px-3 py-2 mb-3">
+                            <h6 class="mb-0 py-1">Payment Method</h6>
+                        </div>
+                        <div class="bg-light p-3">
+                            <form action="{{route('front.products-checkout.post')}}" method="post">
+                                @csrf
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="payment_type" id="paypal" value="paypal" checked>
+                                    <label class="form-check-label" for="paypal">PayPal</label>
+                                </div>
+                                <div class="form-check mb-4">
+                                    <input class="form-check-input" type="radio" name="payment_type" id="cod" value="cod">
+                                    <label class="form-check-label" for="cod">Cash On Delivery</label>
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+                                    <a class="btn btn-outline-warning" href="{{route('front.products-cart')}}">
+                                        <i class="fas fa-shopping-cart mr-2"></i> Back to cart
+                                    </a>
+                                    <button class="btn btn-warning">
+                                        <i class="far fa-credit-card mr-2"></i> Place Order
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>

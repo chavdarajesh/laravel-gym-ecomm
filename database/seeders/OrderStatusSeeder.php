@@ -26,6 +26,7 @@ class OrderStatusSeeder extends Seeder
             ['name' => 'Cancelled', 'description' => 'Order has been cancelled.', 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'Refunded', 'description' => 'Order has been refunded.', 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'Failed', 'description' => 'Order has failed.', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Cancelled By User', 'description' => 'Order has been cancelled by the user.', 'created_at' => now(), 'updated_at' => now()]
         ];
 
         DB::table('order_statuses')->insert($statuses);

@@ -13,7 +13,7 @@ class OrderStatus extends Model
 
     public function orders()
     {
-        return $this->belongsToMany(Order::class, 'order_status_pivot')
+        return $this->belongsToMany(Order::class, 'order_status_pivots', 'status_id', 'order_id')
                     ->withPivot('description')->withTimestamps();;
     }
 }

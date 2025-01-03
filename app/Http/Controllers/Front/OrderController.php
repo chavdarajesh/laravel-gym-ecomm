@@ -21,15 +21,18 @@ class OrderController extends Controller
             return redirect()->back()->with('message', 'No items in the cart.');
         }
 
-        $total_price = $cartItems->sum(function ($cartItem) {
-            return $cartItem->price * $cartItem->quantity;
-        });
-
+        $subTotal = Cart::where('user_id', auth()->id())->sum('total_price');
+        $shippingCharge = env('SHIPPING_CHARGE', 100);
+        $total_order = $subTotal + $shippingCharge; // Add delivery charge
         // Create an order
         $order = Order::create([
             'user_id' => auth()->id(),
-            'price' => $total_price,
+            'total_order' => $total_order,
+            'sub_total' => $subTotal,
+            'shipping_charge' => $shippingCharge,
             'payment_type' => $request->payment_type,
+            'payment_status' => 'pending',
+            'order_status' => 'pending',
         ]);
 
         // Attach products to the order
@@ -49,6 +52,8 @@ class OrderController extends Controller
         if ($request->payment_type == 'cod') {
             $order->update([
                 'status' => 'completed',
+                'payment_status' => 'pending',
+                'order_status' => 'pending',
             ]);
             $statusId = OrderStatus::where('name', 'Pending')->first()->id;
             $order->statuses()->attach($statusId, [
@@ -58,5 +63,46 @@ class OrderController extends Controller
         }
         // Redirect to payment
         return redirect()->route('payment.process', ['id' => $order->id]);
+    }
+
+    public function orders()
+    {
+        $orders = Order::orderBy('created_at', 'desc')
+            ->get();
+        return view('front.orders.index', compact('orders'));
+    }
+
+    public function ordersDetails($id)
+    {
+        $order = Order::where('user_id', auth()->id())->findOrFail($id);
+        if(!$order){
+            return redirect()->route('front.orders')->with('error', 'Order not found.');
+        }
+        if($order->user_id != auth()->id()){
+            return redirect()->route('front.orders')->with('error', 'You are not authorized to view this order.');
+        }
+        return view('front.orders.details', compact('order'));
+    }
+
+    public function ordersCancel($id)
+    {
+        $order = Order::where('user_id', auth()->id())->findOrFail($id);
+
+        if(!$order){
+            return redirect()->route('front.orders')->with('error', 'Order not found.');
+        }
+        if ($order->order_status === 'pending') {
+            $order->order_status = 'canceled';
+            $order->save();
+
+            $statusId = OrderStatus::where('name', 'Cancelled By User')->first()->id;
+            $order->statuses()->attach($statusId, [
+                'description' => 'Order has been canceled by the user.',
+            ]);
+
+            return redirect()->route('front.orders-details', $id)->with('success', 'Order has been canceled.');
+        }
+
+        return redirect()->route('front.orders-details', $id)->with('error', 'Only pending orders can be canceled.');
     }
 }
