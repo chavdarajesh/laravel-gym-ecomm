@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductSliderController as AdminProductSliderController;
 use App\Http\Controllers\Admin\TopSellingProductController as AdminTopSellingProductController;
 use App\Http\Controllers\Admin\OrderStatusController as AdminOrderStatusController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 
 use App\Http\Controllers\User\AuthController as UserAuthController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
@@ -243,6 +244,14 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['is_
     Route::post('/orderstatus/status/toggle', [AdminOrderStatusController::class, 'statusToggle'])->name('admin.orderstatus.status.toggle');
     Route::post('/orderstatus/delete/{id}', [AdminOrderStatusController::class, 'delete'])->name('admin.orderstatus.delete');
     Route::post('/orderstatus/subcategories', [AdminOrderStatusController::class, 'subcategories'])->name('admin.orderstatus.subcategories');
+
+
+    // contact us msg Modlue start
+    Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
+    Route::get('/orders/view/{id}', [AdminOrderController::class, 'view'])->name('admin.orders.view');
+    Route::post('/orders/delete/{id}', [AdminOrderController::class, 'delete'])->name('admin.orders.delete');
+    Route::post('/orders/updateStatus/{id}', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
+    // contact us msg Modlue end
 });
 // Admin route end
 

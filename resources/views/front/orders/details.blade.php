@@ -152,7 +152,9 @@
                         <strong>Status:</strong>
                         <span class="badge
                         {{ $order->status == 'pending' ? 'badge-warning' : ($order->status == 'completed' ? 'badge-success' : 'badge-info') }}">
-                            {{ ucfirst($order->status) }}
+                            {{ $order->statuses()
+    ->orderBy('pivot_created_at', 'desc') // Use pivot table's `created_at` column
+    ->first()->name; }}
                         </span>
                     </p>
                 </div>
@@ -192,7 +194,9 @@
                     <div class="timeline-icon {{ $loop->last ? 'bg-primary' : 'bg-success' }}"></div>
                     <div class="timeline-content">
                         <div class="d-flex justify-content-between">
-                            <strong class="text-uppercase">{{ ucfirst($status->name) }}</strong>
+                            <div>
+                                <strong class="text-uppercase">{{ ucfirst($status->name) }}</strong> | ({{ $status->description }})
+                            </div>
                             <small class="text-muted">
                                 {{ $status->pivot->created_at->format('d M Y, h:i A') }}
                             </small>

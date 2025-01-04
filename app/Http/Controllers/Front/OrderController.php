@@ -107,7 +107,7 @@ class OrderController extends Controller
 
     public function ordersDetails($id)
     {
-        $order = Order::where('user_id', auth()->id())->findOrFail($id);
+        $order = Order::where('user_id', auth()->id())->where('id', $id)->first();
         if (!$order) {
             return redirect()->route('front.orders')->with('error', 'Order not found.');
         }
@@ -119,7 +119,7 @@ class OrderController extends Controller
 
     public function ordersCancel($id)
     {
-        $order = Order::where('user_id', auth()->id())->findOrFail($id);
+        $order = Order::where('user_id', auth()->id())->where('id', $id)->first();
 
         if (!$order) {
             return redirect()->route('front.orders')->with('error', 'Order not found.');

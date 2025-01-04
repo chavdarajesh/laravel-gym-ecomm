@@ -46,6 +46,26 @@ $headerLogo = SiteSetting::getSiteSettings('header_logo');
                 </li>
             </ul>
         </li>
+        <li class="menu-item {{ $current_route_name == 'admin.orderstatus.index' || $current_route_name == 'admin.orderstatus.create' || $current_route_name == 'admin.orderstatus.edit' || $current_route_name == 'admin.orderstatus.view' || $current_route_name == 'admin.orders.index'  || $current_route_name == 'admin.orders.view'  ? 'open active' : '' }}">
+            <a href="{{ route('admin.orderstatus.index') }}" class="menu-link menu-toggle">
+                <i class='menu-icon tf-icons bx bxs-doughnut-chart'></i>
+                <div data-i18n="Layouts">Order Settings</div>
+            </a>
+            <ul class="menu-sub">
+                <li
+                    class="menu-item  {{  $current_route_name == 'admin.orders.index'  || $current_route_name == 'admin.orders.view' ? 'active' : '' }}">
+                    <a href="{{ route('admin.orders.index') }}" class="menu-link">
+                        <div>Order</div>
+                    </a>
+                </li>
+                <li
+                    class="menu-item  {{ $current_route_name == 'admin.orderstatus.index' || $current_route_name == 'admin.orderstatus.create' || $current_route_name == 'admin.orderstatus.edit' || $current_route_name == 'admin.orderstatus.view' ? 'active' : '' }}">
+                    <a href="{{ route('admin.orderstatus.index') }}" class="menu-link">
+                        <div>Order Status</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
         <li class="menu-item {{ $current_route_name == 'admin.subcategorys.index' ||$current_route_name == 'admin.subcategorys.create' ||$current_route_name == 'admin.subcategorys.edit' ||$current_route_name == 'admin.subcategorys.view' || $current_route_name == 'admin.categorys.index' ||$current_route_name == 'admin.categorys.create' ||$current_route_name == 'admin.categorys.edit' ||$current_route_name == 'admin.categorys.view' || $current_route_name == 'admin.brands.index' ||$current_route_name == 'admin.brands.create' ||$current_route_name == 'admin.brands.edit' ||$current_route_name == 'admin.brands.view' || $current_route_name == 'admin.sizes.index' ||$current_route_name == 'admin.sizes.create' ||$current_route_name == 'admin.sizes.edit' ||$current_route_name == 'admin.sizes.view' || $current_route_name == 'admin.flavors.index' ||$current_route_name == 'admin.flavors.create' ||$current_route_name == 'admin.flavors.edit' ||$current_route_name == 'admin.flavors.view' || $current_route_name == 'admin.products.index' ||$current_route_name == 'admin.products.create' ||$current_route_name == 'admin.products.edit' ||$current_route_name == 'admin.products.view' || $current_route_name == 'admin.productsliders.index' || $current_route_name == 'admin.productsliders.create' || $current_route_name == 'admin.productsliders.edit' || $current_route_name == 'admin.productsliders.view' || $current_route_name == 'admin.topsellingproducts.index' || $current_route_name == 'admin.topsellingproducts.create' || $current_route_name == 'admin.topsellingproducts.edit' || $current_route_name == 'admin.topsellingproducts.view' ? 'open active': '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class='menu-icon tf-icons bx bxl-product-hunt'></i>
@@ -149,20 +169,7 @@ $headerLogo = SiteSetting::getSiteSettings('header_logo');
                 </li>
             </ul>
         </li>
-        <li class="menu-item {{ $current_route_name == 'admin.orderstatus.index' || $current_route_name == 'admin.orderstatus.create' || $current_route_name == 'admin.orderstatus.edit' || $current_route_name == 'admin.orderstatus.view'  ? 'open active' : '' }}">
-            <a href="{{ route('admin.orderstatus.index') }}" class="menu-link menu-toggle">
-                <i class='menu-icon tf-icons bx bxs-doughnut-chart'></i>
-                <div data-i18n="Layouts">Order Settings</div>
-            </a>
-            <ul class="menu-sub">
-                <li
-                    class="menu-item  {{ $current_route_name == 'admin.orderstatus.index' || $current_route_name == 'admin.orderstatus.create' || $current_route_name == 'admin.orderstatus.edit' || $current_route_name == 'admin.orderstatus.view' ? 'active' : '' }}">
-                    <a href="{{ route('admin.orderstatus.index') }}" class="menu-link">
-                        <div>Order Status</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
+
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Settings</span>
         </li>

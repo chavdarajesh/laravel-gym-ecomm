@@ -61,7 +61,9 @@
                     <strong>Status:</strong>
                     <span class="badge
                                 {{ $order->order_status == 'pending' ? 'badge-warning' : ($order->order_status == 'completed' ? 'badge-success' : 'badge-info') }}">
-                        {{ $order->order_status }}
+                        {{  $order->statuses()
+    ->orderBy('pivot_created_at', 'desc') // Use pivot table's `created_at` column
+    ->first()->name; }}
                     </span><br>
                     <strong>Order Date:</strong> {{ $order->created_at->format('d M Y') }}
                 </p>
