@@ -148,7 +148,7 @@
                             <p class="text-center text-muted font-weight-bold">{{ $minPrice }}</p>
                             <!-- Action Buttons -->
                             <div class="mt-auto d-flex justify-content-center align-items-center">
-                                <button onclick=addToCart({{$product->product->id}}) class="product-list-btn">Add to Cart</button>
+                                <button onclick=addToCart({{$product->id}}) class="product-list-btn">Add to Cart</button>
                                 <button class="product-list-btn">Buy Now</button>
                             </div>
                         </div>

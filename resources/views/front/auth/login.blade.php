@@ -46,8 +46,8 @@
                             @error('login_password') {{ $message }} @enderror
                         </div>
                         <a href="{{ route('front.forgotpassword') }}"> <small id="emailHelp" class="fa-1x form-text text-muted">
-                                                <small>Forgot Password?</small>
-                                            </small></a>
+                                <small>Forgot Password?</small>
+                            </small></a>
                     </div>
 
                     <button type="submit" class="button boxed-btn">Login</button>

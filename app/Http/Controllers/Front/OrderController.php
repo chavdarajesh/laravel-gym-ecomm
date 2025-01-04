@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\OrderAddress;
 use App\Models\OrderStatus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -14,6 +16,20 @@ class OrderController extends Controller
 
     public function checkout(Request $request)
     {
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|max:15',
+            'email' => 'required|email',
+            'address_line_1' => 'required|string',
+            'address_line_2' => 'string',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'postal_code' => 'required|string|max:10',
+            'country' => 'required|string|max:255',
+            'payment_type' => 'required|string',
+        ]);
+
 
         $cartItems = Cart::where('user_id', auth()->id())->with('product')->get();
 
@@ -25,6 +41,20 @@ class OrderController extends Controller
         $shippingCharge = env('SHIPPING_CHARGE', 100);
         $total_order = $subTotal + $shippingCharge; // Add delivery charge
         // Create an order
+        // Store Address
+        $address = OrderAddress::create([
+            'user_id' => Auth::id(),
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'address_line_1' => $request->address_line_1,
+            'address_line_2' => $request->address_line_2,
+            'city' => $request->city,
+            'state' => $request->state,
+            'postal_code' => $request->postal_code,
+            'country' => $request->country,
+        ]);
+
         $order = Order::create([
             'user_id' => auth()->id(),
             'total_order' => $total_order,
@@ -33,7 +63,9 @@ class OrderController extends Controller
             'payment_type' => $request->payment_type,
             'payment_status' => 'pending',
             'order_status' => 'pending',
+            'order_address_id' => $address->id,
         ]);
+
 
         // Attach products to the order
 
@@ -47,6 +79,7 @@ class OrderController extends Controller
                 'flavor_id' => $product['flavor_id'],
             ]);
         }
+
         $cartItems->each->delete();
 
         if ($request->payment_type == 'cod') {
@@ -75,10 +108,10 @@ class OrderController extends Controller
     public function ordersDetails($id)
     {
         $order = Order::where('user_id', auth()->id())->findOrFail($id);
-        if(!$order){
+        if (!$order) {
             return redirect()->route('front.orders')->with('error', 'Order not found.');
         }
-        if($order->user_id != auth()->id()){
+        if ($order->user_id != auth()->id()) {
             return redirect()->route('front.orders')->with('error', 'You are not authorized to view this order.');
         }
         return view('front.orders.details', compact('order'));
@@ -88,7 +121,7 @@ class OrderController extends Controller
     {
         $order = Order::where('user_id', auth()->id())->findOrFail($id);
 
-        if(!$order){
+        if (!$order) {
             return redirect()->route('front.orders')->with('error', 'Order not found.');
         }
         if ($order->order_status === 'pending') {

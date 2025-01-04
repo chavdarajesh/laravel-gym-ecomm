@@ -151,14 +151,34 @@
                     <p>
                         <strong>Status:</strong>
                         <span class="badge
-                            {{ $order->order_status == 'pending' ? 'badge-warning' : ($order->order_status == 'completed' ? 'badge-success' : 'badge-info') }}">
-                            {{ ucfirst($order->order_status) }}
+                        {{ $order->status == 'pending' ? 'badge-warning' : ($order->status == 'completed' ? 'badge-success' : 'badge-info') }}">
+                            {{ ucfirst($order->status) }}
                         </span>
                     </p>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Address Section -->
+    <div class="card shadow-lg mb-4">
+        <div class="card-header bg-warning text-white">
+            <h5 class="mb-0">Shipping Address</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Name:</strong> {{ $order->address->name }}</p>
+            <p><strong>Phone:</strong> {{ $order->address->phone }}</p>
+            <p><strong>Email:</strong> {{ $order->address->email ?? 'N/A' }}</p>
+            <p><strong>Address:</strong></p>
+            <p>
+                {{ $order->address->address_line_1 }} <br>
+                {!! $order->address->address_line_2 ? $order->address->address_line_2 . '<br>' : '' !!}
+                {{ $order->address->city }}, {{ $order->address->state }} - {{ $order->address->postal_code }}<br>
+                {{ $order->address->country }}
+            </p>
+        </div>
+    </div>
+
 
     <!-- Status History Timeline Section -->
     <div class="card shadow-lg mb-4">
@@ -195,17 +215,19 @@
             <div class="row">
                 @foreach ($order->products as $product)
                 <div class="col-12 col-md-4 mb-4">
-                    <div class="card shadow-sm">
-                        <img src="{{ asset($product->cover_image) }}" alt="{{ $product->name }}" class="card-img-top">
-                        <div class="card-body">
-                            <h6 class="card-title font-weight-bold">{{ $product->name }}</h6>
-                            <p class="text-muted mb-2">Quantity: <strong>{{ $product->pivot->quantity }}</strong></p>
-                            <p class="text-muted mb-2">Price: ${{ number_format($product->pivot->price, 2) }}</p>
-                            <p class="font-weight-bold">
-                                <span>Total:</span> ${{ number_format($product->pivot->quantity * $product->pivot->price, 2) }}
-                            </p>
+                    <a href="{{ route('front.products-details',$product->id) }}">
+                        <div class="card shadow-sm">
+                            <img src="{{ asset($product->cover_image) }}" alt="{{ $product->name }}" class="card-img-top">
+                            <div class="card-body">
+                                <h6 class="card-title font-weight-bold">{{ $product->name }}</h6>
+                                <p class="text-muted mb-2">Quantity: <strong>{{ $product->pivot->quantity }}</strong></p>
+                                <p class="text-muted mb-2">Price: ${{ number_format($product->pivot->price, 2) }}</p>
+                                <p class="font-weight-bold">
+                                    <span>Total:</span> ${{ number_format($product->pivot->quantity * $product->pivot->price, 2) }}
+                                </p>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 @endforeach
             </div>

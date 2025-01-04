@@ -24,6 +24,7 @@ class Order extends Model
         'sub_total',
         'shipping_charge',
         'payment_type',
+        'order_address_id'
     ];
 
 
@@ -50,5 +51,10 @@ class Order extends Model
     public function payment()
     {
         return $this->belongsTo(Payment::class);
+    }
+
+    public function address()
+    {
+        return $this->belongsTo(OrderAddress::class, 'order_address_id');
     }
 }

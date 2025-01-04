@@ -239,76 +239,122 @@
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="javascript:void(0);">2. Billing Information</a></li>
                     <li class="nav-item"><a class="nav-link disabled" href="javascript:void(0);">3. Completed</a></li>
                 </ul>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <form action="from-action" method="post">
+                <form action="{{route('front.products-checkout.post')}}" method="post" id="checkout-form">
+                    @csrf
+                    <div class="row">
+                        <div class="col-lg-6">
                             <div class="row">
+                                <!-- Full Name -->
                                 <div class="form-group col-12 mb-3">
-                                    <label class="form-label small text-uppercase">Full name</label>
-                                    <input class="form-control" type="text" name="name" placeholder="Enter your full name" value="{{ $user->name }}">
+                                    <label for="name" class="form-label small text-uppercase">Full name</label>
+                                    <input id="name" class="form-control @error('name') border border-danger @enderror" type="text" name="name" placeholder="Enter your full name" value="{{ old('name', $user->name) }}">
+                                    <div id="name_error" class="text-danger">
+                                        @error('name') {{ $message }} @enderror
+                                    </div>
                                 </div>
-                                <div class="form-group col-12 mb-3">
-                                    <label class="form-label small text-uppercase">Email address</label>
-                                    <input class="form-control" type="email" name="email" placeholder="Enter your email address" value="{{ $user->email }}">
-                                </div>
-                                <div class="form-group col-12 mb-3">
-                                    <label class="form-label small text-uppercase">Adress 1</label>
-                                    <input class="form-control" type="text" name="address1" placeholder="Enter your main address">
-                                </div>
-                                <div class="form-group col-12 mb-3">
-                                    <label class="form-label small text-uppercase">Address 2</label>
-                                    <input class="form-control" type="text" name="address2" placeholder="Enter your alternative address">
-                                </div>
-                                <div class="form-group col-12 mb-3">
-                                    <label class="form-label small text-uppercase">City</label>
-                                    <input class="form-control" type="text" name="city" placeholder="Enter your city">
-                                </div>
-                                <div class="form-group col-lg-6 mb-3">
-                                    <label class="form-label small text-uppercase">State</label>
-                                    <select class="form-control js-choice" name="state">
-                                        <option value="">Choose your state</option>
-                                        <option value="Option 1">Demo state</option>
-                                        <option value="Option 1">Demo state</option>
-                                        <option value="Option 1">Demo state</option>
-                                        <option value="Option 1">Demo state</option>
-                                        <option value="Option 1">Demo state</option>
-                                    </select>
-                                </div>
-                                <div class="form-group col-lg-6 mb-3">
-                                    <label class="form-label small text-uppercase">Full name</label>
-                                    <input class="form-control" type="text" name="zipcode" placeholder="Enter city postal colde">
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="col-lg-6 mx-auto">
-                        <!-- Payment Details -->
-                        <div class="bg-light px-3 py-2 mb-3">
-                            <h6 class="mb-0 py-1">Order Summary</h6>
-                        </div>
-                        <div class="bg-light p-3 mb-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <p class="text-muted mb-0">Subtotal</p>
-                                <p class="font-weight-bold mb-0">${{$subTotal}}</p>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <p class="text-muted mb-0">Shipping</p>
-                                <p class="font-weight-bold mb-0">${{$shippingCharge}}</p>
-                            </div>
-                            <hr>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <p class="font-weight-bold h5 mb-0">Total</p>
-                                <p class="font-weight-bold h5 mb-0">${{$totalOrder}}</p>
-                            </div>
-                        </div>
 
-                        <!-- Payment Method -->
-                        <div class="bg-light px-3 py-2 mb-3">
-                            <h6 class="mb-0 py-1">Payment Method</h6>
+                                <!-- Email Address -->
+                                <div class="form-group col-6 mb-3">
+                                    <label for="email" class="form-label small text-uppercase">Email address</label>
+                                    <input id="email" class="form-control @error('email') border border-danger @enderror" type="email" name="email" placeholder="Enter your email address" value="{{ old('email', $user->email) }}">
+                                    <div id="email_error" class="text-danger">
+                                        @error('email') {{ $message }} @enderror
+                                    </div>
+                                </div>
+
+                                 <!-- Email Address -->
+                                 <div class="form-group col-6 mb-3">
+                                    <label for="phone" class="form-label small text-uppercase">Phone</label>
+                                    <input id="phone" class="form-control @error('phone') border border-danger @enderror" type="tel" name="phone" placeholder="Enter your phone address" value="{{ old('phone', $user->phone) }}">
+                                    <div id="phone_error" class="text-danger">
+                                        @error('phone') {{ $message }} @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Address 1 -->
+                                <div class="form-group col-12 mb-3">
+                                    <label for="address_line_1" class="form-label small text-uppercase">Address 1</label>
+                                    <input id="address_line_1" class="form-control @error('address_line_1') border border-danger @enderror" type="text" name="address_line_1" placeholder="Enter your address line 1" value="{{ old('address_line_1') }}">
+                                    <div id="address_line_1_error" class="text-danger">
+                                        @error('address_line_1') {{ $message }} @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Address 2 -->
+                                <div class="form-group col-12 mb-3">
+                                    <label for="address_line_2" class="form-label small text-uppercase">Address 2</label>
+                                    <input id="address_line_2" class="form-control @error('address_line_2') border border-danger @enderror" type="text" name="address_line_2" placeholder="Enter your alternative address" value="{{ old('address_line_2') }}">
+                                    <div id="address_line_2_error" class="text-danger">
+                                        @error('address_line_2') {{ $message }} @enderror
+                                    </div>
+                                </div>
+
+                                <!-- City -->
+                                <div class="form-group col-6 mb-3">
+                                    <label for="city" class="form-label small text-uppercase">City</label>
+                                    <input id="city" class="form-control @error('city') border border-danger @enderror" type="text" name="city" placeholder="Enter your city" value="{{ old('city') }}">
+                                    <div id="city_error" class="text-danger">
+                                        @error('city') {{ $message }} @enderror
+                                    </div>
+                                </div>
+
+                                <!-- State -->
+                                <div class="form-group col-lg-6 mb-3">
+                                    <label for="state" class="form-label small text-uppercase">State</label>
+                                    <input id="state" class="form-control @error('state') border border-danger @enderror" type="text" name="state" placeholder="Enter your state" value="{{ old('state') }}">
+                                    <div id="state_error" class="text-danger">
+                                        @error('state') {{ $message }} @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Zip Code -->
+                                <div class="form-group col-lg-6 mb-3">
+                                    <label for="postal_code" class="form-label small text-uppercase">Zip Code</label>
+                                    <input id="postal_code" class="form-control @error('postal_code') border border-danger @enderror" type="text" name="postal_code" placeholder="Enter your postal code" value="{{ old('postal_code') }}">
+                                    <div id="postal_code_error" class="text-danger">
+                                        @error('postal_code') {{ $message }} @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Country -->
+                                <div class="form-group col-lg-6 mb-3">
+                                    <label for="country" class="form-label small text-uppercase">Country</label>
+                                    <input id="country" class="form-control @error('country') border border-danger @enderror" type="text" name="country" placeholder="Enter your country" value="{{ old('country') }}">
+                                    <div id="country_error" class="text-danger">
+                                        @error('country') {{ $message }} @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </div>
-                        <div class="bg-light p-3">
-                            <form action="{{route('front.products-checkout.post')}}" method="post">
-                                @csrf
+                        <div class="col-lg-6 mx-auto">
+                            <!-- Payment Details -->
+                            <div class="bg-light px-3 py-2 mb-3">
+                                <h6 class="mb-0 py-1">Order Summary</h6>
+                            </div>
+                            <div class="bg-light p-3 mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="text-muted mb-0">Subtotal</p>
+                                    <p class="font-weight-bold mb-0">${{$subTotal}}</p>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="text-muted mb-0">Shipping</p>
+                                    <p class="font-weight-bold mb-0">${{$shippingCharge}}</p>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="font-weight-bold h5 mb-0">Total</p>
+                                    <p class="font-weight-bold h5 mb-0">${{$totalOrder}}</p>
+                                </div>
+                            </div>
+
+                            <!-- Payment Method -->
+                            <div class="bg-light px-3 py-2 mb-3">
+                                <h6 class="mb-0 py-1">Payment Method</h6>
+                            </div>
+                            <div class="bg-light p-3">
+
                                 <div class="form-check mb-2">
                                     <input class="form-check-input" type="radio" name="payment_type" id="paypal" value="paypal" checked>
                                     <label class="form-check-label" for="paypal">PayPal</label>
@@ -318,6 +364,10 @@
                                     <label class="form-check-label" for="cod">Cash On Delivery</label>
                                 </div>
 
+                                <div id="payment_type_error" class="text-danger">
+                                        @error('payment_type') {{ $message }} @enderror
+                                    </div>
+
                                 <div class="d-flex justify-content-between">
                                     <a class="btn btn-outline-warning" href="{{route('front.products-cart')}}">
                                         <i class="fas fa-shopping-cart mr-2"></i> Back to cart
@@ -326,11 +376,10 @@
                                         <i class="far fa-credit-card mr-2"></i> Place Order
                                     </button>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
-
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -353,5 +402,62 @@
             inputVal.value--;
         }
     }
+</script>
+
+
+<script>
+    $(document).ready(function() {
+        $('#checkout-form').validate({
+            rules: {
+                name: {
+                    required: true,
+                    minlength: 3
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                phone: {
+                    required: true,
+                    digits: true,
+                },
+                address_line_1: {
+                    required: true
+                },
+                city: {
+                    required: true
+                },
+                state: {
+                    required: true
+                },
+                postal_code: {
+                    required: true,
+                    digits: true,
+                    minlength: 5,
+                    maxlength: 6
+                },
+                country: {
+                    required: true
+                },
+                payment_type: {
+                    required: true
+                }
+            },
+
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                $('#' + element.attr('name') + '_error').html(error)
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('border border-danger');
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('border border-danger');
+            },
+            submitHandler: function(form) {
+                form.submit();
+            }
+        });
+    });
 </script>
 @stop

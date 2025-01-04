@@ -24,9 +24,11 @@ class CreateOrdersTable extends Migration
             $table->string('payment_type')->nullable()->default('paypal');
             $table->string('payment_status')->nullable()->default('pending');
             $table->string('order_status')->nullable()->default('pending');
+            $table->unsignedBigInteger('order_address_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('order_address_id')->references('id')->on('order_addresses')->onDelete('cascade');
         });
     }
 
