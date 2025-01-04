@@ -151,7 +151,7 @@ $headerLogo = SiteSetting::getSiteSettings('header_logo');
         </li>
         <li class="menu-item {{ $current_route_name == 'admin.orderstatus.index' || $current_route_name == 'admin.orderstatus.create' || $current_route_name == 'admin.orderstatus.edit' || $current_route_name == 'admin.orderstatus.view'  ? 'open active' : '' }}">
             <a href="{{ route('admin.orderstatus.index') }}" class="menu-link menu-toggle">
-                <i class='menu-icon tf-icons bx bxs-envelope'></i>
+                <i class='menu-icon tf-icons bx bxs-doughnut-chart'></i>
                 <div data-i18n="Layouts">Order Settings</div>
             </a>
             <ul class="menu-sub">
