@@ -148,8 +148,8 @@
                             <p class="text-center text-muted font-weight-bold">{{ $minPrice }}</p>
                             <!-- Action Buttons -->
                             <div class="mt-auto d-flex justify-content-center align-items-center">
-                                <button onclick=addToCart({{$product->id}}) class="product-list-btn">Add to Cart</button>
-                                <button class="product-list-btn">Buy Now</button>
+                                <button onclick="addToCart({{$product->id}})" class="product-list-btn">Add to Cart</button>
+                                <button onclick="addToCart({{$product->id}},true)" class="product-list-btn">Buy Now</button>
                             </div>
                         </div>
                         @endforeach
@@ -205,7 +205,7 @@
 
 
 <script>
-    function addToCart(product) {
+    function addToCart(product,redirectTocart = false) {
         const isUserLoggedIn = @json(auth()->check());
         if (isUserLoggedIn) {
             console.log('1111');
@@ -225,6 +225,9 @@
                             "preventDuplicates": true
                         }
                         toastr.success(response.success);
+                        if(redirectTocart){
+                            window.location.href = '{{route("front.products-cart")}}';
+                        }
                     }
                     if (response.error) {
                         toastr.error(response.error);
@@ -260,8 +263,6 @@
                             });
 
                         }
-                            console.log('ccccccccccc', cart);
-
                             localStorage.setItem('guestCart', JSON.stringify(cart));
                             toastr.options = {
                                 "closeButton": true,
@@ -269,6 +270,9 @@
                                 "preventDuplicates": true
                             }
                             toastr.success('Item added to cart successfully!');
+                            if(redirectTocart){
+                            window.location.href = '{{route("front.products-cart")}}';
+                        }
                     }
                     if (response.error) {
                         toastr.error(response.error);

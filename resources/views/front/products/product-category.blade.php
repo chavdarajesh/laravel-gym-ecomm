@@ -384,8 +384,8 @@
                                 </h6>
                                 <p class="text-center text-muted font-weight-bold">Price: $${price}</p>
                                 <div class="mt-auto d-flex justify-content-center align-items-center">
-                                    <button onclick=addToCart(${product.id}) class="product-list-btn" data-product-id="${product.id}">Add to Cart</button>
-                                    <button class="product-list-btn" data-product-id="${product.id}">Buy Now</button>
+                                    <button onclick="addToCart(${product.id})" class="product-list-btn" data-product-id="${product.id}">Add to Cart</button>
+                                    <button onclick="addToCart(${product.id},true)" class="product-list-btn" data-product-id="${product.id}">Buy Now</button>
                                 </div>
                             </div>
                         </div>
@@ -466,7 +466,7 @@
 
 
 <script>
-    function addToCart(product) {
+    function addToCart(product, redirectTocart = false) {
         const isUserLoggedIn = @json(auth()->check());
         if (isUserLoggedIn) {
             $.ajax({
@@ -489,6 +489,9 @@
                     if (response.error) {
                         toastr.error(response.error);
                     }
+                    if(redirectTocart){
+                            window.location.href = '{{route("front.products-cart")}}';
+                        }
                 },
                 error: function() {
                     toastr.error('Somthing Went Wrong..!');
@@ -528,6 +531,9 @@
                                 "preventDuplicates": true
                             }
                             toastr.success('Item added to cart successfully!');
+                            if(redirectTocart){
+                            window.location.href = '{{route("front.products-cart")}}';
+                        }
                     }
                     if (response.error) {
                         toastr.error(response.error);
