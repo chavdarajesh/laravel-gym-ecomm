@@ -15,12 +15,30 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->string('transaction_id')->nullable();
-            $table->string('amount')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('order_id')->nullable();
+            $table->string('status')->nullable();
+            $table->string('payment_id')->nullable();
             $table->string('payment_method')->nullable();
-            $table->string('payment_status')->nullable();
+            $table->text('payment_token')->nullable();
+            $table->string('payer_email')->nullable();
+            $table->string('payer_name')->nullable();
+            $table->string('payer_id')->nullable();
+            $table->string('business_name')->nullable();
+            $table->string('account_id')->nullable();
+            $table->string('shipping_name')->nullable();
+            $table->text('shipping_address')->nullable();
+            $table->string('currency_code')->nullable();
+            $table->string('total_order')->nullable();
+            $table->string('sub_total')->nullable();
+            $table->string('shipping_charge')->nullable();
+            $table->decimal('paypal_fee', 10, 2)->nullable();
+            $table->decimal('net_amount', 10, 2)->nullable();
+            $table->string('exchange_rate')->nullable();
             $table->timestamps();
             $table->softDeletes();
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

@@ -95,12 +95,16 @@ class OrderController extends Controller
             return redirect()->route('front.products-completed', ['id' => $order->id])->with('success', 'Order placed successfully!');
         }
         // Redirect to payment
+        // $statusId = OrderStatus::where('name', 'Payment Pending')->first()->id;
+        // $order->statuses()->attach($statusId, [
+        //     'description' => 'Payment is pending.',
+        // ]);
         return redirect()->route('payment.process', ['id' => $order->id]);
     }
 
     public function orders()
     {
-        $orders = Order::orderBy('created_at', 'desc')
+        $orders = Order::where('user_id', auth()->id())->orderBy('created_at', 'desc')
             ->get();
         return view('front.orders.index', compact('orders'));
     }
@@ -111,9 +115,8 @@ class OrderController extends Controller
         if (!$order) {
             return redirect()->route('front.orders')->with('error', 'Order not found.');
         }
-        if ($order->user_id != auth()->id()) {
-            return redirect()->route('front.orders')->with('error', 'You are not authorized to view this order.');
-        }
+        $latestStatus = $order->latestStatus()->first();
+
         return view('front.orders.details', compact('order'));
     }
 

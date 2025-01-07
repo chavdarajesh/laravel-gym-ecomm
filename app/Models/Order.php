@@ -16,6 +16,7 @@ class Order extends Model
         'price',
         'user_id',
         'payment_id',
+        'payment_token',
         'status',
         'created_at',
         'updated_at',
@@ -24,7 +25,10 @@ class Order extends Model
         'sub_total',
         'shipping_charge',
         'payment_type',
-        'order_address_id'
+        'order_address_id',
+        'payment_status',
+        'order_status',
+        'order_address_id',
     ];
 
 
@@ -45,7 +49,7 @@ class Order extends Model
     public function statuses()
     {
         return $this->belongsToMany(OrderStatus::class, 'order_status_pivots', 'order_id', 'status_id')
-            ->withPivot('description')->withTimestamps();;
+            ->withPivot('description','created_at')->withTimestamps();;
     }
 
     public function payment()
@@ -57,4 +61,10 @@ class Order extends Model
     {
         return $this->belongsTo(OrderAddress::class, 'order_address_id');
     }
+
+    public function latestStatus()
+{
+    return $this->statuses()->orderBy('order_status_pivots.created_at', 'desc')->limit(1);
+}
+
 }

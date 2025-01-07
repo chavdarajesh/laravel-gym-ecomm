@@ -151,9 +151,16 @@
                     <p>
                         <strong>Status:</strong>
                         <span class="">
-                            {{ $order->statuses()
-    ->orderBy('pivot_created_at', 'desc') // Use pivot table's `created_at` column
-    ->first()->name; }}
+                        @php
+                        $latestStatus = $order->latestStatus()->first();
+
+                        if ($latestStatus) {
+                        $statusName = $latestStatus->name;
+                        echo $statusName; // Output the latest status name
+                        } else {
+                        echo 'No status available';
+                        }
+                        @endphp
                         </span>
                     </p>
                 </div>
@@ -262,7 +269,10 @@
     <div class="d-flex justify-content-center">
         <form action="{{ route('front.orders-cancel', $order->id) }}" method="POST">
             @csrf
-            <button type="submit" class="btn btn-danger btn-lg">Cancel Order</button>
+            <button type="submit" class="btn btn-danger mx-2 btn-lg">Cancel Order</button>
+            @if($order->payment_status == 'pending' || $order->payment_status == 'failed')
+            <a href="{{ route('payment.process',$order->id) }}" class="btn btn-warning mx-2 btn-lg" >Pay Now</a>
+            @endif
         </form>
     </div>
     @endif

@@ -60,9 +60,15 @@
                     <strong>Total Amount:</strong> ${{ number_format($order->total_order, 2) }}<br>
                     <strong>Status:</strong>
                     <span class="">
-                        {{  $order->statuses()
-    ->orderBy('pivot_created_at', 'desc') // Use pivot table's `created_at` column
-    ->first()->name; }}
+                        @php
+                        $latestStatus = $order->latestStatus()->first();
+                        if ($latestStatus) {
+                        $statusName = $latestStatus->name;
+                        echo $statusName; // Output the latest status name
+                        } else {
+                        echo 'No status available';
+                        }
+                        @endphp
                     </span><br>
                     <strong>Order Date:</strong> {{ $order->created_at->format('d M Y') }}
                 </p>
