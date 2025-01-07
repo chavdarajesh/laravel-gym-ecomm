@@ -41,10 +41,10 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|max:40',
             'email' => 'required|email',
-            // 'phone' => 'required |unique:users,phone,NULL,id,deleted_at,NULL',
-            // 'address' => 'required',
+            'phone' => 'required |unique:users,phone,NULL,id,deleted_at,NULL',
+            'address' => 'required',
             // 'dateofbirth' => 'required',
-            'password' => 'required',
+            'password' => 'required|min:6',
             // 'accept_t_c' => 'required',
         ]);
         // if ($request['referral_code']) {
@@ -78,8 +78,8 @@ class AuthController extends Controller
         $user = new User();
         $user->name = $request['name'];
         $user->email = $request['email'];
-        // $user->phone = $request['phone'];
-        // $user->address = $request['address'];
+        $user->phone = $request['phone'];
+        $user->address = $request['address'];
         // $user->dateofbirth = $request['dateofbirth'];
         // $user->referral_code = Str::slug($request['name'], "-").Str::slug($request['email'], "-");
         // $user->other_referral_code = $request['referral_code'] ? $request['referral_code'] : '';
@@ -138,7 +138,7 @@ class AuthController extends Controller
     {
         $ValidatedData = Validator::make($request->all(), [
             'login_email' => 'required',
-            'login_password' => 'required',
+            'login_password' => 'required|min:6',
             // 'accept_t_c' => 'required',
         ]);
         if ($ValidatedData->fails()) {

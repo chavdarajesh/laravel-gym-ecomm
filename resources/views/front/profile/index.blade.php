@@ -46,6 +46,21 @@
                             @error('email') {{ $message }} @enderror
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input class="form-control @error('phone') border border-danger @enderror" name="phone" id="phone" type="tel" placeholder="Enter Phone" value="{{ $user->phone }}">
+                        <div id="phone_error" class="text-danger">
+                            @error('phone') {{ $message }} @enderror
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <textarea name="address" class="form-control @error('address') border border-danger @enderror" name="address" id="address"
+                            rows="2" placeholder="Enter Address" required>{{ $user->address }}</textarea>
+                        <div id="address_error" class="text-danger">
+                            @error('address') {{ $message }} @enderror
+                        </div>
+                    </div>
                     <button type="submit" class="button boxed-btn">Save</button>
                 </form>
             </div>
@@ -61,25 +76,25 @@
             <!-- Register Section -->
             <div class="col-md-5">
                 <h5 class="text-center">Password Setting</h5>
-                <form id="register-form" class="form-contact" action="{{ route('front.post.profile.changepassword') }}" method="POST">
+                <form id="password-form" class="form-contact" action="{{ route('front.post.profile.changepassword') }}" method="POST">
                     @csrf
                     <div class="form-group">
                         <label for="oldpassword">Current Password</label>
-                        <input class="form-control @error('oldpassword') border border-danger @enderror" name="oldpassword" id="oldpassword" type="oldpassword" placeholder="Enter Password">
+                        <input class="form-control @error('oldpassword') border border-danger @enderror" name="oldpassword" id="oldpassword" type="password" placeholder="Enter Password">
                         <div id="oldpassword_error" class="text-danger">
                             @error('oldpassword') {{ $message }} @enderror
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="newpassword">New Password</label>
-                        <input class="form-control @error('newpassword') border border-danger @enderror" name="newpassword" id="newpassword" type="newpassword" placeholder="Enter Password" value="{{ old('newpassword') }}">
+                        <input class="form-control @error('newpassword') border border-danger @enderror" name="newpassword" id="newpassword" type="password" placeholder="Enter Password" value="{{ old('newpassword') }}">
                         <div id="newpassword_error" class="text-danger">
                             @error('newpassword') {{ $message }} @enderror
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="confirmnewpasswod">New Conform Password</label>
-                        <input class="form-control @error('confirmnewpasswod') border border-danger @enderror" name="confirmnewpasswod" id="confirmnewpasswod" type="confirmnewpasswod" placeholder="Enter Password" value="{{ old('confirmnewpasswod') }}">
+                        <input class="form-control @error('confirmnewpasswod') border border-danger @enderror" name="confirmnewpasswod" id="confirmnewpasswod" type="text" placeholder="Enter Password" value="{{ old('confirmnewpasswod') }}">
                         <div id="confirmnewpasswod_error" class="text-danger">
                             @error('confirmnewpasswod') {{ $message }} @enderror
                         </div>
@@ -97,15 +112,55 @@
 @section('js')
 <script>
     $(document).ready(function() {
-        $('#login-form').validate({
+        $('#register-form').validate({
             rules: {
                 email: {
                     required: true,
                     email: true
                 },
-                login_password: {
+                name: {
                     required: true,
+                },
+                address: {
+                    required: true,
+                },
+                phone: {
+                    required: true,
+                    digits: true,
+                    minlength: 10,
                 }
+            },
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                $('#' + element.attr('name') + '_error').html(error)
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('border border-danger');
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('border border-danger');
+            },
+            submitHandler: function(form) {
+                form.submit();
+            }
+        });
+    });
+
+    $(document).ready(function() {
+        $('#password-form').validate({
+            rules: {
+                oldpassword: {
+                    required: true,
+                    minlength: 6,
+                },
+                confirmnewpasswod: {
+                    required: true,
+                    minlength: 6,
+                },
+                newpassword: {
+                    required: true,
+                    minlength: 6,
+                },
             },
             errorPlacement: function(error, element) {
                 error.addClass('invalid-feedback');

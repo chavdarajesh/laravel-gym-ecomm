@@ -21,18 +21,18 @@ class ProfileController extends Controller
     {
         $request->validate([
             'name' => 'required|max:40',
-            'email' => 'required',
-            // 'phone' => 'required ',
+            'email' => 'required|email|unique:users,email,' . Auth::user()->id,
+            'phone' => 'required|unique:users,phone,' . Auth::user()->id,
             // 'username' => 'required ',
-            // 'address' => 'required',
+            'address' => 'required',
             // 'dateofbirth' => 'required',
         ]);
         $User = User::find(Auth::user()->id);
         $User->name = $request['name'];
         // $User->username = $request['username'];
         $User->email = $request['email'];
-        // $User->phone = $request['phone'];
-        // $User->address = $request['address'];
+        $User->phone = $request['phone'];
+        $User->address = $request['address'];
         // $User->dateofbirth = $request['dateofbirth'];
         // if ($request->profilephoto) {
         //     $folderPath = public_path('assets/users/profilephoto/' . Auth::user()->id . '/');
@@ -57,7 +57,7 @@ class ProfileController extends Controller
     public function postprofilechangepassword(Request $request)
     {
         $request->validate([
-            'oldpassword' => 'required',
+            'oldpassword' => 'required|min:6',
             'newpassword' => 'min:6',
             'confirmnewpasswod' => 'required_with:newpassword|same:newpassword|min:6'
         ]);

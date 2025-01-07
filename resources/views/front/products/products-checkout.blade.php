@@ -274,7 +274,7 @@
                                 <!-- Address 1 -->
                                 <div class="form-group col-12 mb-3">
                                     <label for="address_line_1" class="form-label small text-uppercase">Address 1</label>
-                                    <input id="address_line_1" class="form-control @error('address_line_1') border border-danger @enderror" type="text" name="address_line_1" placeholder="Enter your address line 1" value="{{ old('address_line_1') }}">
+                                    <input id="address_line_1" class="form-control @error('address_line_1') border border-danger @enderror" type="text" name="address_line_1" placeholder="Enter your address line 1" value="{{ old('address_line_1',$user->address) }}">
                                     <div id="address_line_1_error" class="text-danger">
                                         @error('address_line_1') {{ $message }} @enderror
                                     </div>

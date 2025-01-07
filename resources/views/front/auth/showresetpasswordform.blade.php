@@ -64,9 +64,11 @@
             rules: {
                 newpassword: {
                     required: true,
+                    minlength: 6,
                 },
                 confirmnewpasswod: {
                     required: true,
+                    minlength: 6,
                 }
             },
             errorPlacement: function(error, element) {

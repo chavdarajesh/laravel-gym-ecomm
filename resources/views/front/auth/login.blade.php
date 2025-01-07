@@ -82,6 +82,21 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input class="form-control @error('phone') border border-danger @enderror" name="phone" id="phone" type="tel" placeholder="Enter Phone" value="{{ old('phone') }}">
+                        <div id="phone_error" class="text-danger">
+                            @error('phone') {{ $message }} @enderror
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <textarea name="address" class="form-control @error('address') border border-danger @enderror" name="address" id="address"
+                            rows="2" placeholder="Enter Address" required>{{ old('address') }}</textarea>
+                        <div id="address_error" class="text-danger">
+                            @error('address') {{ $message }} @enderror
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="password">Password</label>
                         <input class="form-control @error('password') border border-danger @enderror" name="password" id="password" type="password" placeholder="Enter Password">
                         <div id="password_error" class="text-danger">
@@ -108,11 +123,51 @@
                 },
                 login_password: {
                     required: true,
+                    minlength: 6,
                 }
             },
             errorPlacement: function(error, element) {
                 error.addClass('invalid-feedback');
                 $('#' + element.attr('name') + '_error').html(error)
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('border border-danger');
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('border border-danger');
+            },
+            submitHandler: function(form) {
+                form.submit();
+            }
+        });
+    });
+
+    $(document).ready(function() {
+        $('#register-form').validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true
+                },
+                password: {
+                    required: true,
+                    minlength: 6,
+                },
+                name: {
+                    required: true,
+                },
+                address: {
+                    required: true,
+                },
+                phone: {
+                    required: true,
+                    digits: true,
+                    minlength: 10,
+                }
+            },
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                $('#' + element.attr('name') + '_error').html(error);
             },
             highlight: function(element, errorClass, validClass) {
                 $(element).addClass('border border-danger');
