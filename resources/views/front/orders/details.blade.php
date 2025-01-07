@@ -150,8 +150,7 @@
                 <div class="col-md-6 text-md-right">
                     <p>
                         <strong>Status:</strong>
-                        <span class="badge
-                        {{ $order->status == 'pending' ? 'badge-warning' : ($order->status == 'completed' ? 'badge-success' : 'badge-info') }}">
+                        <span class="">
                             {{ $order->statuses()
     ->orderBy('pivot_created_at', 'desc') // Use pivot table's `created_at` column
     ->first()->name; }}

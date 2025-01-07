@@ -59,8 +59,7 @@
                     <strong>User:</strong> {{ $order->user->name }}<br>
                     <strong>Total Amount:</strong> ${{ number_format($order->total_order, 2) }}<br>
                     <strong>Status:</strong>
-                    <span class="badge
-                                {{ $order->order_status == 'pending' ? 'badge-warning' : ($order->order_status == 'completed' ? 'badge-success' : 'badge-info') }}">
+                    <span class="">
                         {{  $order->statuses()
     ->orderBy('pivot_created_at', 'desc') // Use pivot table's `created_at` column
     ->first()->name; }}
