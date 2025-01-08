@@ -1,8 +1,8 @@
 @extends('admin.layouts.main')
-@section('title', 'View Conatct Message')
+@section('title', 'View Order')
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Users /</span> Conatct Message / View Conatct Message
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Orders /</span> View Order
     </h4>
 
     <div class="row">
@@ -10,8 +10,17 @@
 
             <div class="card mb-4">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="card-header">Conatct Message View</h5>
+                    <h5 class="card-header">Order View</h5>
                     <div class="mx-2">
+                        Current : @php
+                        $latestStatus = $Order->latestStatus()->first();
+                        if ($latestStatus) {
+                        $statusName = $latestStatus->name;
+                        echo $statusName; // Output the latest status name
+                        } else {
+                        echo 'No status available';
+                        }
+                        @endphp
                         <button type="button" class="btn  btn-outline-primary" data-bs-toggle="modal"
                             data-bs-target="#delete-modal-{{ $Order->id }}">
                             Update Status
@@ -99,6 +108,116 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <h3>Payment Details</h3>
+                        @if($Order->payments->isNotEmpty())
+                        @foreach($Order->payments as $payment)
+                        <div class="mb-3 col-md-12">
+                            <label for="user-id-{{ $payment->id }}" class="form-label">User ID</label>
+                            <input class="form-control" type="text" id="user-id-{{ $payment->id }}" value="{{ $payment->user_id ?? 'N/A' }}" disabled />
+                        </div>
+
+                        <div class="mb-3 col-md-12">
+                            <label for="order-id-{{ $payment->id }}" class="form-label">Order ID</label>
+                            <input class="form-control" type="text" id="order-id-{{ $payment->id }}" value="{{ $payment->order_id ?? 'N/A' }}" disabled />
+                        </div>
+
+                        <div class="mb-3 col-md-12">
+                            <label for="payment-status-{{ $payment->id }}" class="form-label">Payment Status</label>
+                            <input class="form-control" type="text" id="payment-status-{{ $payment->id }}" value="{{ $payment->status ?? 'N/A' }}" disabled />
+                        </div>
+
+                        <div class="mb-3 col-md-12">
+                            <label for="payment-id-{{ $payment->id }}" class="form-label">Payment ID</label>
+                            <input class="form-control" type="text" id="payment-id-{{ $payment->id }}" value="{{ $payment->payment_id ?? 'N/A' }}" disabled />
+                        </div>
+
+                        <div class="mb-3 col-md-12">
+                            <label for="payment-method-{{ $payment->id }}" class="form-label">Payment Method</label>
+                            <input class="form-control" type="text" id="payment-method-{{ $payment->id }}" value="{{ $payment->payment_method ?? 'N/A' }}" disabled />
+                        </div>
+
+                        <div class="mb-3 col-md-12">
+                            <label for="payment-token-{{ $payment->id }}" class="form-label">Payment Token</label>
+                            <textarea class="form-control" id="payment-token-{{ $payment->id }}" disabled>{{ $payment->payment_token ?? 'N/A' }}</textarea>
+                        </div>
+
+                        <div class="mb-3 col-md-12">
+                            <label for="payer-email-{{ $payment->id }}" class="form-label">Payer Email</label>
+                            <input class="form-control" type="text" id="payer-email-{{ $payment->id }}" value="{{ $payment->payer_email ?? 'N/A' }}" disabled />
+                        </div>
+
+                        <div class="mb-3 col-md-12">
+                            <label for="payer-name-{{ $payment->id }}" class="form-label">Payer Name</label>
+                            <input class="form-control" type="text" id="payer-name-{{ $payment->id }}" value="{{ $payment->payer_name ?? 'N/A' }}" disabled />
+                        </div>
+
+                        <div class="mb-3 col-md-12">
+                            <label for="payer-id-{{ $payment->id }}" class="form-label">Payer ID</label>
+                            <input class="form-control" type="text" id="payer-id-{{ $payment->id }}" value="{{ $payment->payer_id ?? 'N/A' }}" disabled />
+                        </div>
+
+                        <div class="mb-3 col-md-12">
+                            <label for="business-name-{{ $payment->id }}" class="form-label">Business Name</label>
+                            <input class="form-control" type="text" id="business-name-{{ $payment->id }}" value="{{ $payment->business_name ?? 'N/A' }}" disabled />
+                        </div>
+
+                        <div class="mb-3 col-md-12">
+                            <label for="account-id-{{ $payment->id }}" class="form-label">Account ID</label>
+                            <input class="form-control" type="text" id="account-id-{{ $payment->id }}" value="{{ $payment->account_id ?? 'N/A' }}" disabled />
+                        </div>
+
+                        <div class="mb-3 col-md-12">
+                            <label for="shipping-name-{{ $payment->id }}" class="form-label">Shipping Name</label>
+                            <input class="form-control" type="text" id="shipping-name-{{ $payment->id }}" value="{{ $payment->shipping_name ?? 'N/A' }}" disabled />
+                        </div>
+
+                        <div class="mb-3 col-md-12">
+                            <label for="shipping-address-{{ $payment->id }}" class="form-label">Shipping Address</label>
+                            <textarea class="form-control" id="shipping-address-{{ $payment->id }}" disabled>{{ $payment->shipping_address ?? 'N/A' }}</textarea>
+                        </div>
+
+                        <div class="mb-3 col-md-12">
+                            <label for="currency-code-{{ $payment->id }}" class="form-label">Currency Code</label>
+                            <input class="form-control" type="text" id="currency-code-{{ $payment->id }}" value="{{ $payment->currency_code ?? 'N/A' }}" disabled />
+                        </div>
+
+                        <div class="mb-3 col-md-12">
+                            <label for="total-order-{{ $payment->id }}" class="form-label">Total Order</label>
+                            <input class="form-control" type="text" id="total-order-{{ $payment->id }}" value="{{ $payment->total_order ?? 'N/A' }}" disabled />
+                        </div>
+
+                        <div class="mb-3 col-md-12">
+                            <label for="sub-total-{{ $payment->id }}" class="form-label">Sub Total</label>
+                            <input class="form-control" type="text" id="sub-total-{{ $payment->id }}" value="{{ $payment->sub_total ?? 'N/A' }}" disabled />
+                        </div>
+
+                        <div class="mb-3 col-md-12">
+                            <label for="shipping-charge-{{ $payment->id }}" class="form-label">Shipping Charge</label>
+                            <input class="form-control" type="text" id="shipping-charge-{{ $payment->id }}" value="{{ $payment->shipping_charge ?? 'N/A' }}" disabled />
+                        </div>
+
+                        <div class="mb-3 col-md-12">
+                            <label for="paypal-fee-{{ $payment->id }}" class="form-label">PayPal Fee</label>
+                            <input class="form-control" type="text" id="paypal-fee-{{ $payment->id }}" value="{{ $payment->paypal_fee ?? 'N/A' }}" disabled />
+                        </div>
+
+                        <div class="mb-3 col-md-12">
+                            <label for="net-amount-{{ $payment->id }}" class="form-label">Net Amount</label>
+                            <input class="form-control" type="text" id="net-amount-{{ $payment->id }}" value="{{ $payment->net_amount ?? 'N/A' }}" disabled />
+                        </div>
+
+                        <div class="mb-3 col-md-12">
+                            <label for="exchange-rate-{{ $payment->id }}" class="form-label">Exchange Rate</label>
+                            <input class="form-control" type="text" id="exchange-rate-{{ $payment->id }}" value="{{ $payment->exchange_rate ?? 'N/A' }}" disabled />
+                        </div>
+
+                        <hr />
+                        @endforeach
+                        @else
+                        <p>No payment details available for this order.</p>
+                        @endif
+
                     </div>
 
                     <div class="mt-2">
@@ -137,6 +256,14 @@
                             @enderror
                         </div>
                     </div>
+                    <!-- <input type="hidden" name="mark_as_completed" value="off"> -->
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" value="on" id="mark_as_completed" name="mark_as_completed">
+                        <label class="form-check-label" for="mark_as_completed">
+                            Mark as Completed
+                        </label>
+                    </div>
+
                     <div class="mb-3">
                         <label for="description" class="form-label">Description</label>
                         <textarea class="form-control  @error('description') is-invalid @enderror" id="description" name="description" id="description" rows="3"></textarea>

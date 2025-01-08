@@ -31,10 +31,6 @@ class Order extends Model
         'order_address_id',
     ];
 
-
-
-
-
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -52,9 +48,9 @@ class Order extends Model
             ->withPivot('description','created_at')->withTimestamps();;
     }
 
-    public function payment()
+    public function payments()
     {
-        return $this->belongsTo(Payment::class);
+        return $this->hasMany(Payment::class, 'order_id');
     }
 
     public function address()

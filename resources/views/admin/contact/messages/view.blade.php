@@ -2,7 +2,7 @@
 @section('title', 'View Conatct Message')
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Users /</span> Conatct Message / View Conatct Message
+        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Conatct /</span> Conatct Message / View Conatct Message
         </h4>
 
         <div class="row">

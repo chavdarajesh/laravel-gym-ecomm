@@ -81,6 +81,11 @@ class OrderController extends Controller
             $Order->statuses()->attach($request->status, [
                 'description' => $request->description,
             ]);
+            $markAsCompleted = $request->input('mark_as_completed');
+            if ($markAsCompleted) {
+                $Order->order_status = 'completed';
+                $Order->save();
+            }
             if ($Order) {
                 return redirect()->back()->with('message', 'Status Updated Sucssesfully..');
             } else {

@@ -32,4 +32,11 @@ class Payment extends Model
         'net_amount',
         'exchange_rate',
     ];
+
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id');
+    }
+
 }
