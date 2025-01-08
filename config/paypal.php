@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PayPal Setting & API Credentials
  * Created by Raza Mehdi <srmk@outlook.com>.
@@ -9,12 +10,12 @@ return [
     'sandbox' => [
         'client_id'         => env('PAYPAL_SANDBOX_CLIENT_ID', ''),
         'client_secret'     => env('PAYPAL_SANDBOX_CLIENT_SECRET', ''),
-        'app_id'            => 'APP-4833402645411703744',
+        'app_id'            => 'APP-80W284485P519543T',
     ],
     'live' => [
         'client_id'         => env('PAYPAL_LIVE_CLIENT_ID', ''),
         'client_secret'     => env('PAYPAL_LIVE_CLIENT_SECRET', ''),
-        'app_id'            => env('PAYPAL_LIVE_APP_ID', ''),
+        'app_id'            => '',
     ],
 
     'payment_action' => env('PAYPAL_PAYMENT_ACTION', 'Sale'), // Can only be 'Sale', 'Authorization' or 'Order'

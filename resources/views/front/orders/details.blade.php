@@ -265,7 +265,7 @@
         </div>
     </div>
 
-    @if ($order->order_status != 'completed' && $order->order_status != 'canceled')
+    @if ($order->order_status != 'completed' && $order->order_status != 'canceled' && $order->order_status != 'refund')
     <div class="d-flex justify-content-center">
         <form action="{{ route('front.orders-cancel', $order->id) }}" method="POST">
             @csrf

@@ -136,7 +136,8 @@ class OrderController extends Controller
                 'description' => 'Order has been canceled by the user.',
             ]);
 
-            return redirect()->route('front.orders-details', $id)->with('success', 'Order has been canceled.');
+            // return redirect()->route('front.orders-details', $id)->with('success', 'Order has been canceled.');
+            return redirect()->route('front.products-refund', $id)->with('success', 'Order has been canceled.');
         }
 
         return redirect()->route('front.orders-details', $id)->with('error', 'Only pending orders can be canceled.');
