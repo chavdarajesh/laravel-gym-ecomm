@@ -34,7 +34,7 @@
                     @csrf
                     <div class="form-group">
                         <label for="email">Email address</label>
-                        <input class="form-control @error('email') border border-danger @enderror" name="email" id="email" type="text" placeholder="Enter Email" value="{{ old('email') }}">
+                        <input class="form-control @error('email') border border-danger @enderror" name="email" id="email" type="email" placeholder="Enter Email" value="{{ old('email') }}">
                         <div id="email_error" class="text-danger">
                             @error('email') {{ $message }} @enderror
                         </div>

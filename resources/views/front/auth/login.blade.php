@@ -34,14 +34,14 @@
                     @csrf
                     <div class="form-group">
                         <label for="login_email">Email address</label>
-                        <input class="form-control @error('login_email') border border-danger @enderror" name="login_email" id="login_email" type="text" placeholder="Enter Email" value="{{ old('login_email') }}">
+                        <input class="form-control @error('login_email') border border-danger @enderror" name="login_email" id="login_email" type="email" placeholder="Enter Email" value="{{ old('login_email') }}">
                         <div id="login_email_error" class="text-danger">
                             @error('login_email') {{ $message }} @enderror
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="login_password">Password</label>
-                        <input class="form-control @error('login_password') border border-danger @enderror" name="login_password" id="login_password" type="login_password" placeholder="Enter Password" value="{{ old('login_password') }}">
+                        <input class="form-control @error('login_password') border border-danger @enderror" name="login_password" id="login_password" type="password" placeholder="Enter Password" value="{{ old('login_password') }}">
                         <div id="login_password_error" class="text-danger">
                             @error('login_password') {{ $message }} @enderror
                         </div>

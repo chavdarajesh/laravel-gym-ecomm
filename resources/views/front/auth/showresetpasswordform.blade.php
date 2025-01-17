@@ -35,14 +35,14 @@
                     <input type="hidden" name="token" value="{{ $token }}">
                     <div class="form-group">
                         <label for="newpassword">New Password</label>
-                        <input class="form-control @error('newpassword') border border-danger @enderror" name="newpassword" id="newpassword" type="newpassword" placeholder="Enter Password" value="{{ old('newpassword') }}">
+                        <input class="form-control @error('newpassword') border border-danger @enderror" name="newpassword" id="newpassword" type="password" placeholder="Enter Password" value="{{ old('newpassword') }}">
                         <div id="newpassword_error" class="text-danger">
                             @error('newpassword') {{ $message }} @enderror
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="confirmnewpasswod">New Conform Password</label>
-                        <input class="form-control @error('confirmnewpasswod') border border-danger @enderror" name="confirmnewpasswod" id="confirmnewpasswod" type="confirmnewpasswod" placeholder="Enter Password" value="{{ old('confirmnewpasswod') }}">
+                        <input class="form-control @error('confirmnewpasswod') border border-danger @enderror" name="confirmnewpasswod" id="confirmnewpasswod" type="text" placeholder="Enter Password" value="{{ old('confirmnewpasswod') }}">
                         <div id="confirmnewpasswod_error" class="text-danger">
                             @error('confirmnewpasswod') {{ $message }} @enderror
                         </div>

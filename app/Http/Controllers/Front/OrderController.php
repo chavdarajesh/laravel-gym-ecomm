@@ -7,6 +7,7 @@ use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderAddress;
 use App\Models\OrderStatus;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -117,7 +118,9 @@ class OrderController extends Controller
         }
         $latestStatus = $order->latestStatus()->first();
 
-        return view('front.orders.details', compact('order'));
+        $refundPayments = Payment::where('order_id', $id)->where('payment_from', 'store')->where('user_id', auth()->id())->get();
+
+        return view('front.orders.details', compact('order','latestStatus','refundPayments'));
     }
 
     public function ordersCancel($id)
@@ -127,19 +130,10 @@ class OrderController extends Controller
         if (!$order) {
             return redirect()->route('front.orders')->with('error', 'Order not found.');
         }
-        if ($order->order_status === 'pending') {
-            $order->order_status = 'canceled';
-            $order->save();
-
-            $statusId = OrderStatus::where('name', 'Cancelled By User')->first()->id;
-            $order->statuses()->attach($statusId, [
-                'description' => 'Order has been canceled by the user.',
-            ]);
-
-            // return redirect()->route('front.orders-details', $id)->with('success', 'Order has been canceled.');
-            return redirect()->route('front.products-refund', $id)->with('success', 'Order has been canceled.');
+        if ($order->order_status != 'pending') {
+            return redirect()->route('front.orders-details', $id)->with('error', 'Only pending orders can be canceled.');
         }
-
-        return redirect()->route('front.orders-details', $id)->with('error', 'Only pending orders can be canceled.');
+        // return redirect()->route('front.orders-details', $id)->with('success', 'Order has been canceled.');
+        return redirect()->route('front.products-refund', $id)->with('success', 'Order has been canceled.');
     }
 }

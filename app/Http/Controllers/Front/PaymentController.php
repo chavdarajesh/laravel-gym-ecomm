@@ -31,27 +31,6 @@ class PaymentController extends Controller
             'order_status' => 'pending',
         ]);
 
-        // $provider = new PayPalClient;
-        // $provider->setApiCredentials(config('paypal'));
-        // $provider->getAccessToken();
-
-        // $response = $provider->createOrder([
-        //     "intent" => "CAPTURE",
-        //     "purchase_units" => [
-        //         [
-        //             "amount" => [
-        //                 "currency_code" => "USD",
-        //                 "value" => $order->total_order,
-        //             ],
-        //         ],
-        //     ],
-        // ]);
-
-        // if (isset($response['id'])) {
-        //     $order->update(['payment_id' => $response['id']]);
-        //     return redirect($response['links'][1]['href']);
-        // }
-
         $provider = new PayPalClient;
         $provider->setApiCredentials(config('paypal'));
         $paypalToken = $provider->getAccessToken();
@@ -70,8 +49,6 @@ class PaymentController extends Controller
                 ]
             ]
         ]);
-        // print_r($response);
-        // exit;
         if (isset($response['id']) && $response['id'] != null) {
             // redirect to approve href
             $order->update(['payment_id' => $response['id']]);
@@ -91,7 +68,7 @@ class PaymentController extends Controller
             $order->statuses()->attach($statusId, [
                 'description' => 'Payment has failed.',
             ]);
-            return redirect()->route('payment.failed',)->with('error', 'Payment failed.');
+            return redirect()->route('payment.failed')->with('error', 'Payment failed.');
         } else {
             $order->update([
                 'status' => 'failed',
@@ -102,7 +79,7 @@ class PaymentController extends Controller
             $order->statuses()->attach($statusId, [
                 'description' => 'Payment has failed.',
             ]);
-            return redirect()->route('payment.failed',)->with('error', 'Payment failed.');
+            return redirect()->route('payment.failed')->with('error', 'Payment failed.');
         }
 
         $order->update([
@@ -114,7 +91,7 @@ class PaymentController extends Controller
         $order->statuses()->attach($statusId, [
             'description' => 'Payment has failed.',
         ]);
-        return redirect()->route('payment.failed',)->with('error', 'Payment failed.');
+        return redirect()->route('payment.failed')->with('error', 'Payment failed.');
     }
 
     public function successRedirect(Request $request)
@@ -126,11 +103,11 @@ class PaymentController extends Controller
         $response = $provider->capturePaymentOrder($request->query('token'));
 
         if (!isset($response['id'])) {
-            return redirect()->route('payment.failed',)->with('error', 'Payment failed.');
+            return redirect()->route('payment.failed')->with('error', 'Payment failed.');
         }
         $order = Order::where('payment_id', $response['id'])->where('user_id', auth()->id())->first();
         if (!$order) {
-            return redirect()->route('payment.failed',)->with('error', 'Payment failed.');
+            return redirect()->route('payment.failed')->with('error', 'Payment failed.');
         }
         if ($response && $response['status'] === 'COMPLETED') {
 
@@ -152,6 +129,7 @@ class PaymentController extends Controller
             $paymentData = [
                 'order_id' => $order->id,
                 'status' => $response['status'],
+                'payment_from' => 'user',
                 'payer_email' => $response['payer']['email_address'],
                 'payer_name' => $response['payer']['name']['given_name'] . ' ' . $response['payer']['name']['surname'],
                 'payer_id' => $response['payer']['payer_id'],
@@ -179,6 +157,7 @@ class PaymentController extends Controller
                 'total_order' => $order->total_order,
                 'sub_total' => $order->sub_total,
                 'shipping_charge' => $order->shipping_charge,
+                'capture_id' => $response['purchase_units'][0]['payments']['captures'][0]['id'] ?? ''
             ];
 
             Payment::create($paymentData);
@@ -193,8 +172,6 @@ class PaymentController extends Controller
         return redirect()->route('payment.cancel')->with('error', 'Payment cancelled.');
     }
 
-
-
     public function cancelGet()
     {
         return view('front.products.products-completed');
@@ -208,90 +185,79 @@ class PaymentController extends Controller
 
     public function refundPayment($id)
     {
-        //     // Initialize PayPal client
         $order = Order::where('id', $id)->where('user_id', auth()->id())->first();
         if (!$order) {
             return redirect()->back()->with('error', 'Order not found.');
+        }
+
+        if ($order->order_status == 'completed' || $order->order_status == 'canceled' || $order->order_status == 'refund') {
+            return redirect()->back()->with('error', '"Something went wrong!.');
+        }
+
+
+        $Payment = Payment::where('order_id', $id)->where('payment_from', 'user')->where('status', 'COMPLETED')->where('user_id', auth()->id())->first();
+        if (!$Payment) {
+            return redirect()->back()->with('error', 'Payment not found.');
         }
         $provider = new PayPalClient;
         $provider->setApiCredentials(config('paypal'));
         $provider->getAccessToken();
 
-        //     try {
-        //         // Prepare refund data
-        //         // $refundData = [
-        //         //     'amount' => [
-        //         //         'value' => $amount,
-        //         //         'currency_code' => $currency,
-        //         //     ],
-        //         //     'invoice_id' => 'INVOICE_' . $transactionId, // Optional, replace with your invoice ID
-        //         // ];
-        //         $transactionId = $order->payment_id;
-        //         $amount = $order->total_order;
-        //         $invoiceId = 'INVOICE_' . $transactionId;
-        //         $resone = 'Defective product';
 
-        //         // Make refund request
-        //         $response = $provider->refundCapturedPayment($transactionId, $invoiceId, $amount, $resone);
-
-        //         // Check response
-        //         print_r($response);
-        //         exit;
-        //         if (isset($response['status']) && $response['status'] === 'COMPLETED') {
-
-        //             $order->update([
-        //                 'status' => 'completed',
-        //                 'payment_status' => 'refund',
-        //                 'order_status' => 'refund',
-        //             ]);
-        //             $statusId = OrderStatus::where('name', 'Refunded')->first()->id;
-        //             $order->statuses()->attach($statusId, [
-        //                 'description' => 'Order has been refunded..',
-        //             ]);
-        //             return redirect()->route('front.orders')->with('message', 'Refund successful.');
-        //         } else {
-        //             return redirect()->back()->with('error', 'Refund failed.');
-        //         }
-        //     } catch (\Exception $e) {
-        //         return response()->json(['message' => $e->getMessage()], 500);
-        //     }
 
         try {
-            $transactionId = $order->payment_id;
-            // Retrieve payment details
-            $paymentDetails = $provider->showCapturedPaymentDetails($transactionId);
+            $transactionId = $Payment->capture_id;
+            $amount = $order->sub_total;
+            $invoiceId = 'INVOICE_' . $id;
+            $resone = 'Cancelled By User';
 
-            if (!isset($paymentDetails['id'])) {
-                throw new \Exception('Invalid capture ID.');
-            }
-
-            // Proceed with refund
-            $amount = $order->total_order;
-            $invoiceId = 'INVOICE_' . $transactionId;
-            $resone = 'Defective product';
-
-            //         // Make refund request
             $response = $provider->refundCapturedPayment($transactionId, $invoiceId, $amount, $resone);
-
             if (isset($response['status']) && $response['status'] === 'COMPLETED') {
-                // Update order details
+                $order = Order::where('id', $id)->where('user_id', auth()->id())->first();
+
                 $order->update([
                     'status' => 'completed',
                     'payment_status' => 'refund',
                     'order_status' => 'refund',
                 ]);
 
+                $statusId = OrderStatus::where('name', 'Cancelled By User')->first()->id;
+                $order->statuses()->attach($statusId, [
+                    'description' => 'Order has been canceled by the user.',
+                ]);
+
+
                 $statusId = OrderStatus::where('name', 'Refunded')->first()->id;
                 $order->statuses()->attach($statusId, [
                     'description' => 'Order has been refunded.',
                 ]);
+
+
+                $paymentData = [
+                    'order_id' => $order->id,
+                    'status' => $response['status'],
+                    'payment_from' => 'store',
+                    'total_order' => $amount,
+                    'sub_total' => $amount,
+                    'shipping_charge' => 0,
+                    'paypal_fee' => 0,
+                    'net_amount' => $amount,
+                    'payment_id' => $response['id'],
+                    'user_id' => auth()->id(),
+                    'payment_method' => 'PayPal',
+                    'payment_status' => 'completed',
+                    'capture_id' => $transactionId ?? ''
+                ];
+
+                Payment::create($paymentData);
 
                 return redirect()->route('front.orders')->with('message', 'Refund successful.');
             } else {
                 return redirect()->back()->with('error', 'Refund failed.');
             }
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+            // return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->back()->with('error', '"Something went wrong!.');
         }
     }
 }

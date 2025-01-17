@@ -151,16 +151,14 @@
                     <p>
                         <strong>Status:</strong>
                         <span class="">
-                        @php
-                        $latestStatus = $order->latestStatus()->first();
-
-                        if ($latestStatus) {
-                        $statusName = $latestStatus->name;
-                        echo $statusName; // Output the latest status name
-                        } else {
-                        echo 'No status available';
-                        }
-                        @endphp
+                            @php
+                            if ($latestStatus) {
+                            $statusName = $latestStatus->name;
+                            echo $statusName; // Output the latest status name
+                            } else {
+                            echo 'No status available';
+                            }
+                            @endphp
                         </span>
                     </p>
                 </div>
@@ -264,6 +262,23 @@
             </ul>
         </div>
     </div>
+    @if($order->order_status == 'refund')
+    <div class="card shadow-lg mb-4">
+        <div class="card-header bg-warning text-white">
+            <h5 class="mb-0">Refund</h5>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                @foreach($refundPayments as $refundPayment)
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong>Amount:</strong> ${{ number_format($refundPayment->net_amount, 2) }}
+                    <strong>Status:</strong> {{$refundPayment->status}}
+                </li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
+    @endif
 
     @if ($order->order_status != 'completed' && $order->order_status != 'canceled' && $order->order_status != 'refund')
     <div class="d-flex justify-content-center">
@@ -271,7 +286,7 @@
             @csrf
             <button type="submit" class="btn btn-danger mx-2 btn-lg">Cancel Order</button>
             @if($order->payment_status == 'pending' || $order->payment_status == 'failed')
-            <a href="{{ route('payment.process',$order->id) }}" class="btn btn-warning mx-2 btn-lg" >Pay Now</a>
+            <a href="{{ route('payment.process',$order->id) }}" class="btn btn-warning mx-2 btn-lg">Pay Now</a>
             @endif
         </form>
     </div>

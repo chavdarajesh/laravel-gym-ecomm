@@ -1,7 +1,7 @@
 @extends('front.layouts.main')
 @section('title', 'Profile')
 @section('css')
-</style>
+
 @stop
 
 @section('content')

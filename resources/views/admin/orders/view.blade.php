@@ -21,9 +21,16 @@
                         echo 'No status available';
                         }
                         @endphp
+                        @if($Order->order_status != 'completed')
                         <button type="button" class="btn  btn-outline-primary" data-bs-toggle="modal"
                             data-bs-target="#delete-modal-{{ $Order->id }}">
                             Update Status
+                        </button>
+                        @endif
+
+                        <button type="button" class="btn  btn-outline-danger" data-bs-toggle="modal"
+                            data-bs-target="#refund-modal-{{ $Order->id }}">
+                            Refund
                         </button>
                     </div>
                 </div>
@@ -123,6 +130,11 @@
                         </div>
 
                         <div class="mb-3 col-md-12">
+                            <label for="payment_from-{{ $payment->id }}" class="form-label">Payment From</label>
+                            <input class="form-control" type="text" id="payment_from-{{ $payment->id }}" value="{{ $payment->payment_from ?? 'N/A' }}" disabled />
+                        </div>
+
+                        <div class="mb-3 col-md-12">
                             <label for="payment-status-{{ $payment->id }}" class="form-label">Payment Status</label>
                             <input class="form-control" type="text" id="payment-status-{{ $payment->id }}" value="{{ $payment->status ?? 'N/A' }}" disabled />
                         </div>
@@ -206,7 +218,10 @@
                             <label for="net-amount-{{ $payment->id }}" class="form-label">Net Amount</label>
                             <input class="form-control" type="text" id="net-amount-{{ $payment->id }}" value="{{ $payment->net_amount ?? 'N/A' }}" disabled />
                         </div>
-
+                        <div class="mb-3 col-md-12">
+                            <label for="capture_id-{{ $payment->id }}" class="form-label">Capture Id</label>
+                            <input class="form-control" type="text" id="capture_id-{{ $payment->id }}" value="{{ $payment->capture_id ?? 'N/A' }}" disabled />
+                        </div>
                         <div class="mb-3 col-md-12">
                             <label for="exchange-rate-{{ $payment->id }}" class="form-label">Exchange Rate</label>
                             <input class="form-control" type="text" id="exchange-rate-{{ $payment->id }}" value="{{ $payment->exchange_rate ?? 'N/A' }}" disabled />
@@ -236,7 +251,7 @@
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <form action="{{ route('admin.orders.updateStatus', ['id' => $Order->id]) }}" method="post">
+            <form action="{{ route('admin.orders.updateStatus', ['id' => $Order->id]) }}" method="post" id="status-form">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalCenterTitle">Update Status
                     </h5>
@@ -283,6 +298,36 @@
     </div>
 </div>
 
+<div class="modal fade" id="refund-modal-{{ $Order->id }}" tabindex="-1" style="display: none;"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <form action="{{ route('admin.orders.refund', ['id' => $Order->id]) }}" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCenterTitle">Refund
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="refund" class="form-label">Refund Amount</label>
+                        <input class="form-control  @error('refund') is-invalid @enderror" id="refund" name="refund" value="{{$Order->sub_total}}">
+                        <div id="refund_error" class="text-danger"> @error('refund')
+                            {{ $message }}
+                            @enderror
+                        </div>
+                    </div>
+                    Are you sure you want to perform this action?
+                    @csrf
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Make Refund</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 
 @stop
@@ -293,7 +338,7 @@
 <script>
     $(document).ready(function() {
         // Apply validation to forms inside modals dynamically
-        $('.modal form').each(function() {
+        $('#status-form').each(function() {
             $(this).validate({
                 rules: {
                     status: {
@@ -324,7 +369,7 @@
         });
 
         // Prevent form submission if invalid
-        $('.modal form').on('submit', function(e) {
+        $('#status-form').on('submit', function(e) {
             if (!$(this).valid()) {
                 e.preventDefault();
             }

@@ -31,6 +31,8 @@ class Payment extends Model
         'paypal_fee',
         'net_amount',
         'exchange_rate',
+        'capture_id',
+        'payment_from',
     ];
 
 

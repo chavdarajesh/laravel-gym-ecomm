@@ -251,6 +251,8 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['is_
     Route::get('/orders/view/{id}', [AdminOrderController::class, 'view'])->name('admin.orders.view');
     Route::post('/orders/delete/{id}', [AdminOrderController::class, 'delete'])->name('admin.orders.delete');
     Route::post('/orders/updateStatus/{id}', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
+    Route::post('/orders/refundPayment/{id}', [AdminOrderController::class, 'refundPayment'])->name('admin.orders.refund');
+
     // contact us msg Modlue end
 });
 // Admin route end
@@ -391,8 +393,9 @@ Route::group(['namespace' => 'User', 'middleware' => ['is_auth', 'is_user_active
     Route::get('/orders/details/{id}', [FrontOrderController::class, 'ordersDetails'])->name('front.orders-details');
     Route::post('/orders/cancel/{id}', [FrontOrderController::class, 'ordersCancel'])->name('front.orders-cancel');
 
-    // Route::get('create-transaction', [FrontPayPalController::class, 'createTransaction'])->name('createTransaction');
-    // Route::get('process-transaction', [FrontPayPalController::class, 'processTransaction'])->name('processTransaction');
-    // Route::get('success-transaction', [FrontPayPalController::class, 'successTransaction'])->name('successTransaction');
-    // Route::get('cancel-transaction', [FrontPayPalController::class, 'cancelTransaction'])->name('cancelTransaction');
+
 });
+Route::get('paywithpaypal', [FrontPayPalController::class, 'payWithPaypal'])->name('addmoney.paywithpaypal');
+Route::post('paypal', [FrontPayPalController::class, 'postPaymentWithpaypal'])->name('addmoney.paypal');
+Route::get('paypal', [FrontPayPalController::class, 'getPaymentStatus'])->name('payment.status');
+Route::get('refund/{trns_id}', [FrontPayPalController::class, 'refund'])->name('payment.refund');

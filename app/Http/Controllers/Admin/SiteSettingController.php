@@ -21,7 +21,6 @@ class SiteSettingController extends Controller
     {
         $isSave = false;
         $settingObj = "";
-        // echo "<pre>"; print_r($request->setting);die;
         if (isset($request->setting) &&  count($request->setting) > 0) {
             foreach ($request->setting as $key => $fieldValue) {
                 $settingObj = SiteSetting::find($key);
