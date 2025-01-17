@@ -83,18 +83,18 @@ class OrderController extends Controller
 
         $cartItems->each->delete();
 
-        if ($request->payment_type == 'cod') {
-            $order->update([
-                'status' => 'completed',
-                'payment_status' => 'pending',
-                'order_status' => 'pending',
-            ]);
-            $statusId = OrderStatus::where('name', 'Pending')->first()->id;
-            $order->statuses()->attach($statusId, [
-                'description' => 'Order has been placed but not yet processed.',
-            ]);
-            return redirect()->route('front.products-completed', ['id' => $order->id])->with('success', 'Order placed successfully!');
-        }
+        // if ($request->payment_type == 'cod') {
+        //     $order->update([
+        //         'status' => 'completed',
+        //         'payment_status' => 'pending',
+        //         'order_status' => 'pending',
+        //     ]);
+        //     $statusId = OrderStatus::where('name', 'Pending')->first()->id;
+        //     $order->statuses()->attach($statusId, [
+        //         'description' => 'Order has been placed but not yet processed.',
+        //     ]);
+        //     return redirect()->route('front.products-completed', ['id' => $order->id])->with('success', 'Order placed successfully!');
+        // }
         // Redirect to payment
         // $statusId = OrderStatus::where('name', 'Payment Pending')->first()->id;
         // $order->statuses()->attach($statusId, [
