@@ -254,7 +254,7 @@
                                 </div>
 
                                 <!-- Email Address -->
-                                <div class="form-group col-6 mb-3">
+                                <div class="form-group col-lg-6 mb-3">
                                     <label for="email" class="form-label small text-uppercase">Email address</label>
                                     <input id="email" class="form-control @error('email') border border-danger @enderror" type="email" name="email" placeholder="Enter your email address" value="{{ old('email', $user->email) }}">
                                     <div id="email_error" class="text-danger">
@@ -263,7 +263,7 @@
                                 </div>
 
                                  <!-- Email Address -->
-                                 <div class="form-group col-6 mb-3">
+                                 <div class="form-group col-lg-6 mb-3">
                                     <label for="phone" class="form-label small text-uppercase">Phone</label>
                                     <input id="phone" class="form-control @error('phone') border border-danger @enderror" type="tel" name="phone" placeholder="Enter your phone address" value="{{ old('phone', $user->phone) }}">
                                     <div id="phone_error" class="text-danger">
@@ -290,7 +290,7 @@
                                 </div>
 
                                 <!-- City -->
-                                <div class="form-group col-6 mb-3">
+                                <div class="form-group col-lg-6 mb-3">
                                     <label for="city" class="form-label small text-uppercase">City</label>
                                     <input id="city" class="form-control @error('city') border border-danger @enderror" type="text" name="city" placeholder="Enter your city" value="{{ old('city') }}">
                                     <div id="city_error" class="text-danger">
@@ -350,31 +350,39 @@
                             </div>
 
                             <!-- Payment Method -->
-                            <div class="bg-light px-3 py-2 mb-3">
+                            <!-- <div class="bg-light px-3 py-2 mb-3">
                                 <h6 class="mb-0 py-1">Payment Method</h6>
-                            </div>
+                            </div> -->
                             <div class="bg-light p-3">
+                                <input class="form-check-input" type="hidden" name="payment_type" id="paypal" value="paypal">
 
-                                <div class="form-check mb-2">
+                                <!-- <div class="form-check mb-2">
                                     <input class="form-check-input" type="radio" name="payment_type" id="paypal" value="paypal" checked>
                                     <label class="form-check-label" for="paypal">PayPal</label>
-                                </div>
-                                <div class="form-check mb-4">
+                                </div> -->
+                                <!-- <div class="form-check mb-4">
                                     <input class="form-check-input" type="radio" name="payment_type" id="cod" value="cod">
                                     <label class="form-check-label" for="cod">Cash On Delivery</label>
-                                </div>
+                                </div> -->
 
                                 <div id="payment_type_error" class="text-danger">
                                         @error('payment_type') {{ $message }} @enderror
                                     </div>
 
-                                <div class="d-flex justify-content-between">
-                                    <a class="btn btn-outline-warning" href="{{route('front.products-cart')}}">
-                                        <i class="fas fa-shopping-cart mr-2"></i> Back to cart
-                                    </a>
-                                    <button class="btn btn-warning">
-                                        <i class="far fa-credit-card mr-2"></i> Place Order
-                                    </button>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+
+                                        <a class="btn btn-outline-warning" href="{{route('front.products-cart')}}">
+                                            <i class="fas fa-shopping-cart mr-2"></i> Back to cart
+                                        </a>
+                                    </div>
+                                    <div>
+
+                                        <button type="submit" class="" style="border: none;cursor: pointer;background: unset;">
+                                            <!-- <i class="far fa-credit-card mr-2"></i> Place Order -->
+                                            <img  height="50px" src="{{asset('assets/front/img/product/pay-withpayple.png')}}" alt="">
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
