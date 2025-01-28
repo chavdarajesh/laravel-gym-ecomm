@@ -1,5 +1,9 @@
 @extends('front.layouts.main')
 @section('title', 'Order Details')
+@php
+    use App\Models\Size;
+    use App\Models\Flavor;
+@endphp
 @section('css')
 <style>
     .card {
@@ -230,6 +234,8 @@
                                 <h6 class="card-title font-weight-bold">{{ $product->name }}</h6>
                                 <p class="text-muted mb-2">Quantity: <strong>{{ $product->pivot->quantity }}</strong></p>
                                 <p class="text-muted mb-2">Price: ${{ number_format($product->pivot->price, 2) }}</p>
+                                <p class="text-muted mb-2">Size: {{ Size::get_size_by_id($product->pivot->size_id)->name ? Size::get_size_by_id($product->pivot->size_id)->name : 'N/A'}}</p>
+                                <p class="text-muted mb-2">Flavor: {{ Flavor::get_flavor_by_id($product->pivot->flavor_id)->name ? Flavor::get_flavor_by_id($product->pivot->flavor_id)->name : 'N/A'}}</p>
                                 <p class="font-weight-bold">
                                     <span>Total:</span> ${{ number_format($product->pivot->quantity * $product->pivot->price, 2) }}
                                 </p>
