@@ -23,6 +23,9 @@ class OrderController extends Controller
                 ->addColumn('id', function ($row) {
                     return '<strong>' . $row->id . '</strong>';
                 })
+                ->addColumn('user', function ($row) {
+                    return '<a href="' . route("admin.users.view", $row->user_id) . '">' . $row->user->name . '</a>';
+                })
                 ->addColumn('payment_id', function ($row) {
                     return $row->payment_id;
                 })
@@ -36,7 +39,7 @@ class OrderController extends Controller
                     $data['id'] = $row->id;
                     return View::make('admin.orders.actions', ['data' => $data])->render();
                 })
-                ->rawColumns(['id', 'actions', 'payment_id', 'total_order', 'status'])
+                ->rawColumns(['id', 'actions', 'payment_id', 'total_order', 'status','user'])
                 ->make(true);
         } else {
             return view('admin.orders.index');

@@ -1,5 +1,9 @@
 @extends('admin.layouts.main')
 @section('title', 'View Order')
+@php
+    use App\Models\Size;
+    use App\Models\Flavor;
+@endphp
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Orders /</span> View Order
@@ -10,7 +14,9 @@
 
             <div class="card mb-4">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="card-header">Order View</h5>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-header">Order View</h5>
+                    </div>
                     <div class="mx-2">
                         Current : @php
                         $latestStatus = $Order->latestStatus()->first();
@@ -40,6 +46,10 @@
 
                     <div class="row">
                         <!-- Order Details -->
+                        <div class="mb-3 col-md-12">
+                            <label for="user-details" class="form-label">User Details</label>
+                            <a href="{{ route("admin.users.view", $Order->user_id)}}" class="form-control" id="user-details" >{{ $Order->user->name ?? 'N/A' }}</a>
+                        </div>
                         <div class="mb-3 col-md-12">
                             <label for="order-id" class="form-label">Order ID</label>
                             <input class="form-control" type="text" id="order-id" name="order_id" value="{{ $Order->id ?? '' }}" disabled />
@@ -104,10 +114,10 @@
                                 <tbody>
                                     @foreach($Order->products ?? [] as $product)
                                     <tr>
-                                        <td>{{ $product->name ?? 'N/A' }}</td>
+                                        <td> <a href="{{ route("admin.products.view", $product->id)}}">{{ $product->name ?? 'N/A' }}</a> </td>
                                         <td>{{ $product->pivot->quantity  ?? 'N/A' }}</td>
-                                        <td>{{ $product->pivot->size->name ?? 'N/A' }}</td>
-                                        <td>{{ $product->pivot->flavor->name ?? 'N/A' }}</td>
+                                        <td>{{ Size::get_size_by_id($product->pivot->size_id)->name ? Size::get_size_by_id($product->pivot->size_id)->name : 'N/A'}}</td>
+                                        <td>{{ Flavor::get_flavor_by_id($product->pivot->flavor_id)->name ? Flavor::get_flavor_by_id($product->pivot->flavor_id)->name : 'N/A'}}</td>
                                         <td>${{ $product->pivot->price ?? 'N/A' }}</td>
                                         <td>${{ $product->pivot->total_price ?? 'N/A' }}</td>
                                     </tr>
@@ -121,7 +131,7 @@
                         @foreach($Order->payments as $payment)
                         <div class="mb-3 col-md-12">
                             <label for="user-id-{{ $payment->id }}" class="form-label">User ID</label>
-                            <input class="form-control" type="text" id="user-id-{{ $payment->id }}" value="{{ $payment->user_id ?? 'N/A' }}" disabled />
+                            <a href="{{ route("admin.users.view", $payment->user_id)}}" class="form-control" id="user-id-{{ $payment->id }}" >{{ $payment->user->name ?? 'N/A' }}</a>
                         </div>
 
                         <div class="mb-3 col-md-12">

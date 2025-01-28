@@ -15,4 +15,16 @@ class Flavor extends Model
     {
         return $this->belongsToMany(Product::class, 'product_flavors');
     }
+
+    static public function get_flavor_by_id($id)
+    {
+        $Flavor = [];
+        $flavor = Flavor::find($id);
+        if ($flavor) {
+            $Flavor = $flavor;
+        } else {
+            $Flavor['name'] = 'Flavor Deleted';
+        }
+        return $Flavor;
+    }
 }

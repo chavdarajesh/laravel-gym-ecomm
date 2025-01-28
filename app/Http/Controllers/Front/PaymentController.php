@@ -22,7 +22,7 @@ class PaymentController extends Controller
         }
 
         if ($order->status === 'completed') {
-            return redirect()->route('front.products-completed', $order->id)->with('success', 'Payment successful!');
+            return redirect()->route('front.orders-details', $order->id)->with('success', 'Payment successful!');
         }
 
         $order->update([
@@ -68,7 +68,7 @@ class PaymentController extends Controller
             $order->statuses()->attach($statusId, [
                 'description' => 'Payment has failed.',
             ]);
-            return redirect()->route('payment.failed')->with('error', 'Payment failed.');
+            return redirect()->route('payment.failed',['id'=>$order->id])->with('error', 'Payment failed.');
         } else {
             $order->update([
                 'status' => 'failed',
@@ -79,7 +79,7 @@ class PaymentController extends Controller
             $order->statuses()->attach($statusId, [
                 'description' => 'Payment has failed.',
             ]);
-            return redirect()->route('payment.failed')->with('error', 'Payment failed.');
+            return redirect()->route('payment.failed',['id'=>$order->id])->with('error', 'Payment failed.');
         }
 
         $order->update([
@@ -91,7 +91,7 @@ class PaymentController extends Controller
         $order->statuses()->attach($statusId, [
             'description' => 'Payment has failed.',
         ]);
-        return redirect()->route('payment.failed')->with('error', 'Payment failed.');
+        return redirect()->route('payment.failed',['id'=>$order->id])->with('error', 'Payment failed.');
     }
 
     public function successRedirect(Request $request)
@@ -103,11 +103,11 @@ class PaymentController extends Controller
         $response = $provider->capturePaymentOrder($request->query('token'));
 
         if (!isset($response['id'])) {
-            return redirect()->route('payment.failed')->with('error', 'Payment failed.');
+            return redirect()->route('payment.cancel')->with('error', 'Payment failed.');
         }
         $order = Order::where('payment_id', $response['id'])->where('user_id', auth()->id())->first();
         if (!$order) {
-            return redirect()->route('payment.failed')->with('error', 'Payment failed.');
+            return redirect()->route('payment.cancel')->with('error', 'Payment failed.');
         }
         if ($response && $response['status'] === 'COMPLETED') {
 
@@ -164,7 +164,7 @@ class PaymentController extends Controller
 
             return redirect()->route('front.products-completed', $order->id)->with('success', 'Payment successful!');
         }
-        return redirect()->route('payment.failed')->with('error', 'Payment failed.');
+        return redirect()->route('payment.failed',$order->id)->with('error', 'Payment failed.');
     }
 
     public function cancelRedirect(Request $request)
@@ -174,12 +174,12 @@ class PaymentController extends Controller
 
     public function cancelGet()
     {
-        return view('front.products.products-completed');
+        return redirect()->route('front.orders')->with('error', 'Payment cancelled.');
     }
 
-    public function failedGet()
+    public function failedGet($id)
     {
-        return view('front.products.products-completed');
+        return redirect()->route('front.orders-details',$id)->with('error', 'Payment failed.');
     }
 
 

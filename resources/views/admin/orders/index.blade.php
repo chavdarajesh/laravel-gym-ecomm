@@ -16,6 +16,7 @@
                         <thead>
                             <tr>
                                 <th class="text-center">ID</th>
+                                <th class="text-center">User</th>
                                 <th class="text-center">Payment ID</th>
                                 <th class="text-center">Order Status </th>
                                 <th class="text-center">Status </th>
@@ -50,6 +51,9 @@
             columns: [{
                     data: 'id',
                     className: "text-center",
+                },
+                {
+                    data: 'user'
                 },
                 {
                     data: 'payment_id'

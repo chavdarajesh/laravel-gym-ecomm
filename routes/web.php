@@ -384,7 +384,7 @@ Route::group(['namespace' => 'User', 'middleware' => ['is_auth', 'is_user_active
 
 
     Route::get('/products/completed/{id}', [FrontProductController::class, 'productsCompleted'])->name('front.products-completed');
-    Route::get('/payment/failed', [FrontPaymentController::class, 'failedGet'])->name('payment.failed');
+    Route::get('/payment/failed/{id}', [FrontPaymentController::class, 'failedGet'])->name('payment.failed');
     Route::get('/payment/cancel', [FrontPaymentController::class, 'cancelGet'])->name('payment.cancel');
 
     Route::get('/products/refundPayment/{id}', [FrontPaymentController::class, 'refundPayment'])->name('front.products-refund');

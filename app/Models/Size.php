@@ -17,4 +17,17 @@ class Size extends Model
         ->withPivot('price','id')
         ->withTimestamps();
     }
+
+
+    static public function get_size_by_id($id)
+    {
+        $Size = [];
+        $size = Size::find($id);
+        if ($size) {
+            $Size = $size;
+        } else {
+            $Size['name'] = 'Size Deleted';
+        }
+        return $Size;
+    }
 }

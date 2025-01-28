@@ -16,8 +16,8 @@
                         enctype="multipart/form-data">
                         @csrf @method('PUT')
                         <input type="hidden" name="id" value="{{ $User->id }}">
-                        <input type="hidden" name="old_image" value="{{ $User->image }}">
-                        <div class="row mb-3">
+                        <!-- <input type="hidden" name="old_image" value="{{ $User->image }}"> -->
+                        <!-- <div class="row mb-3">
                             <div class="d-flex align-items-start align-items-sm-center gap-4">
                                 <img src="{{ $User->image ? asset($User->image) : asset('assets/admin/img/avatars/1.png') }}"
                                     alt="user-avatar" class="d-block rounded" height="100" width="100"
@@ -38,7 +38,7 @@
                                 {{ $message }}
                                 @enderror
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="row">
                             <div class="mb-3 col-md-12">
@@ -82,7 +82,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="mb-3 col-md-12">
+                            <!-- <div class="mb-3 col-md-12">
                                 <label for="dateofbirth" class="form-label">Date OF Birth</label>
                                 <input class="form-control @error('dateofbirth') is-invalid @enderror" type="date"
                                     id="dateofbirth" name="dateofbirth"
@@ -91,7 +91,7 @@
                                     {{ $message }}
                                     @enderror
                                 </div>
-                            </div>
+                            </div> -->
                             <hr>
                             <label for="optional" class="form-label"> Optional</label>
 
@@ -125,7 +125,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="mb-3 col-md-12">
+                            <!-- <div class="mb-3 col-md-12">
                                 <label for="referral_code" class="form-label">Used Referral Code</label>
                                 <input class="form-control @error('referral_code') is-invalid @enderror"
                                     type="text" id="referral_code" name="referral_code"
@@ -134,7 +134,7 @@
                                     {{ $message }}
                                     @enderror
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="mt-2">
                             <button type="submit" class="btn btn-primary me-2">Save changes</button>
@@ -152,21 +152,21 @@
 @section('js')
 <script src="{{ asset('assets/admin/js/jquery.validate.min.js') }}"></script>
 <script>
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            if (input.files[0].type.startsWith('image/')) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    document.querySelector("#uploadedAvatar").setAttribute("src", e.target.result);
-                };
-                reader.readAsDataURL(input.files[0]);
-            } else {
-                $('#image_error').html('Allowed JPG, GIF or PNG.')
-                $('#upload').val('');
-            }
-        }
-    }
-    dateofbirth.max = new Date().toISOString().split("T")[0];
+    // function readURL(input) {
+    //     if (input.files && input.files[0]) {
+    //         if (input.files[0].type.startsWith('image/')) {
+    //             var reader = new FileReader();
+    //             reader.onload = function(e) {
+    //                 document.querySelector("#uploadedAvatar").setAttribute("src", e.target.result);
+    //             };
+    //             reader.readAsDataURL(input.files[0]);
+    //         } else {
+    //             $('#image_error').html('Allowed JPG, GIF or PNG.')
+    //             $('#upload').val('');
+    //         }
+    //     }
+    // }
+    // dateofbirth.max = new Date().toISOString().split("T")[0];
 </script>
 
 <script>
@@ -187,9 +187,9 @@
                 address: {
                     required: true,
                 },
-                dateofbirth: {
-                    required: true,
-                },
+                // dateofbirth: {
+                //     required: true,
+                // },
                 password: {
                     minlength: 6,
                 },
@@ -213,9 +213,9 @@
                 address: {
                     required: 'This field is required',
                 },
-                dateofbirth: {
-                    required: 'This field is required',
-                },
+                // dateofbirth: {
+                //     required: 'This field is required',
+                // },
                 password: {
                     minlength: 'Password must be at least 6 characters long'
                 },

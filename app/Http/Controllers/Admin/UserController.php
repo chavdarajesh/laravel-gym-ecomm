@@ -26,9 +26,9 @@ class UserController extends Controller
                 ->addColumn('id', function ($row) {
                     return '<strong>' . $row->id . '</strong>';
                 })
-                ->addColumn('referCount', function ($row) {
-                    return '<a href="' . route("admin.users.referrals", $row->id) . '"><span class="badge badge-center bg-success">' . User::get_total_use_referral_user_by_id($row->id) . '</span></a>';
-                })
+                // ->addColumn('referCount', function ($row) {
+                //     return '<a href="' . route("admin.users.referrals", $row->id) . '"><span class="badge badge-center bg-success">' . User::get_total_use_referral_user_by_id($row->id) . '</span></a>';
+                // })
                 ->addColumn('name', function ($row) {
                     return '<a href="' . route("admin.users.view", $row->id) . '">' . $row->name . '</a>';
                 })
@@ -49,7 +49,7 @@ class UserController extends Controller
                     $data['id'] = $row->id;
                     return View::make('admin.users.actions', ['data' => $data])->render();
                 })
-                ->rawColumns(['id', 'actions', 'status', 'created_at', 'referCount', 'name', 'verify'])
+                ->rawColumns(['id', 'actions', 'status', 'created_at', 'name', 'verify'])
                 ->make(true);
         } else {
             return view('admin.users.index');
@@ -68,11 +68,11 @@ class UserController extends Controller
             'email' => 'required|unique:users,email,NULL,id,deleted_at,NULL',
             'phone' => 'required |unique:users,phone,NULL,id,deleted_at,NULL',
             'address' => 'required',
-            'dateofbirth' => 'required',
+            // 'dateofbirth' => 'required',
             'password' => 'required|min:6',
             'confirmpassword' => 'required_with:password|same:password|min:6',
-            'image' => 'file|image|mimes:jpeg,png,jpg,gif|max:5000',
-            'referral_code' => 'nullable|exists:users,referral_code',
+            // 'image' => 'file|image|mimes:jpeg,png,jpg,gif|max:5000',
+            // 'referral_code' => 'nullable|exists:users,referral_code',
         ]);
 
         $User = new User();
@@ -80,7 +80,7 @@ class UserController extends Controller
         $User->email = $request['email'];
         $User->phone = $request['phone'];
         $User->address = $request['address'];
-        $User->dateofbirth = $request['dateofbirth'];
+        // $User->dateofbirth = $request['dateofbirth'];
         $User->status = 1;
         $User->is_verified = 1;
         $User->is_user = 1;
@@ -92,25 +92,25 @@ class UserController extends Controller
         $User->password = Hash::make($request->password);
         $User->referral_code = Str::slug($request['email'], "-");
 
-        if($request['referral_code']){
-            $reffredUser = User::where('referral_code', $request['referral_code'])->first();
-            $User->other_referral_user_id = $reffredUser ? $reffredUser->id : null;
-        }
+        // if($request['referral_code']){
+        //     $reffredUser = User::where('referral_code', $request['referral_code'])->first();
+        //     $User->other_referral_user_id = $reffredUser ? $reffredUser->id : null;
+        // }
 
-        if ($request->image) {
-            $folderPath = public_path('custom-assets/upload/admin/images/users/image/');
-            if (!file_exists($folderPath)) {
-                mkdir($folderPath, 0777, true);
-            }
-            $file = $request->file('image');
-            $imageoriginalname = str_replace(" ", "-", $file->getClientOriginalName());
-            $imageName = rand(1000, 9999) . time() . $imageoriginalname;
-            $file->move($folderPath, $imageName);
-            $User->image = 'custom-assets/upload/admin/images/users/image/' . $imageName;
-            if ($request->old_image && file_exists(public_path($request->old_image))) {
-                unlink(public_path($request->old_image));
-            }
-        }
+        // if ($request->image) {
+        //     $folderPath = public_path('custom-assets/upload/admin/images/users/image/');
+        //     if (!file_exists($folderPath)) {
+        //         mkdir($folderPath, 0777, true);
+        //     }
+        //     $file = $request->file('image');
+        //     $imageoriginalname = str_replace(" ", "-", $file->getClientOriginalName());
+        //     $imageName = rand(1000, 9999) . time() . $imageoriginalname;
+        //     $file->move($folderPath, $imageName);
+        //     $User->image = 'custom-assets/upload/admin/images/users/image/' . $imageName;
+        //     if ($request->old_image && file_exists(public_path($request->old_image))) {
+        //         unlink(public_path($request->old_image));
+        //     }
+        // }
         $User->save();
         if ($User) {
             return redirect()->route('admin.users.index')->with('message', 'User Added Sucssesfully..');
@@ -146,12 +146,11 @@ class UserController extends Controller
                 'email' => 'required|email|unique:users,email,' . $request->id,
                 'phone' => 'required|unique:users,phone,' . $request->id,
                 'address' => 'required',
-                'dateofbirth' => 'required',
+                // 'dateofbirth' => 'required',
                 'password' => 'nullable|min:6',
                 'confirmpassword' => 'nullable|same:password|min:6',
-                'image' => 'file|image|mimes:jpeg,png,jpg,gif|max:5000',
-                'referral_code' => 'nullable|exists:users',
-                'roles' => 'required',
+                // 'image' => 'file|image|mimes:jpeg,png,jpg,gif|max:5000',
+                // 'referral_code' => 'nullable|exists:users',
             ]);
 
             $User = User::find($request->id);
@@ -159,28 +158,28 @@ class UserController extends Controller
             $User->email = $request['email'];
             $User->phone = $request['phone'];
             $User->address = $request['address'];
-            $User->dateofbirth = $request['dateofbirth'];
-            if ($request->image) {
-                $folderPath = public_path('custom-assets/upload/admin/images/users/image/');
-                if (!file_exists($folderPath)) {
-                    mkdir($folderPath, 0777, true);
-                }
-                $file = $request->file('image');
-                $imageoriginalname = str_replace(" ", "-", $file->getClientOriginalName());
-                $imageName = rand(1000, 9999) . time() . $imageoriginalname;
-                $file->move($folderPath, $imageName);
-                $User->image = 'custom-assets/upload/admin/images/users/image/' . $imageName;
-                if ($request->old_image && file_exists(public_path($request->old_image))) {
-                    unlink(public_path($request->old_image));
-                }
-            }
+            // $User->dateofbirth = $request['dateofbirth'];
+            // if ($request->image) {
+            //     $folderPath = public_path('custom-assets/upload/admin/images/users/image/');
+            //     if (!file_exists($folderPath)) {
+            //         mkdir($folderPath, 0777, true);
+            //     }
+            //     $file = $request->file('image');
+            //     $imageoriginalname = str_replace(" ", "-", $file->getClientOriginalName());
+            //     $imageName = rand(1000, 9999) . time() . $imageoriginalname;
+            //     $file->move($folderPath, $imageName);
+            //     $User->image = 'custom-assets/upload/admin/images/users/image/' . $imageName;
+            //     if ($request->old_image && file_exists(public_path($request->old_image))) {
+            //         unlink(public_path($request->old_image));
+            //     }
+            // }
             if ($request->password) {
                 $User->password = Hash::make($request->password);
             }
-            if($request['referral_code']){
-                $reffredUser = User::where('referral_code', $request['referral_code'])->first()->id;
-                $User->other_referral_user_id = $reffredUser ? $reffredUser->id : null;
-            }
+            // if($request['referral_code']){
+            //     $reffredUser = User::where('referral_code', $request['referral_code'])->first()->id;
+            //     $User->other_referral_user_id = $reffredUser ? $reffredUser->id : null;
+            // }
             $User->save();
             if ($User) {
                 return redirect()->route('admin.users.index')->with('message', 'User Update Sucssesfully..');

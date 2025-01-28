@@ -25,7 +25,7 @@ use App\Models\User;
                         <thead>
                             <tr>
                                 <th class="text-center">ID</th>
-                                <th class="text-center">Refer Count </th>
+                                <!-- <th class="text-center">Refer Count </th> -->
                                 <th class="text-center">Name</th>
                                 <th class="text-center">Email </th>
                                 <th class="text-center">Status</th>
@@ -62,10 +62,10 @@ use App\Models\User;
                     data: 'id',
                     className: "text-center",
                 },
-                {
-                    data: 'referCount',
-                    className: "text-center",
-                },
+                // {
+                //     data: 'referCount',
+                //     className: "text-center",
+                // },
                 {
                     data: 'name'
                 },
