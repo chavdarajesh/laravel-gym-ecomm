@@ -21,7 +21,7 @@ class UserController extends Controller
     {
         if ($request->ajax()) {
 
-            $data = User::where('role','user')->where('is_admin',0)->get();
+            $data = User::where('is_admin',0)->get();
             return DataTables::of($data)
                 ->addColumn('id', function ($row) {
                     return '<strong>' . $row->id . '</strong>';

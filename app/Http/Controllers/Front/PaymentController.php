@@ -177,7 +177,7 @@ class PaymentController extends Controller
         return view('front.products.products-completed');
     }
 
-    public function failedGet($id)
+    public function failedGet()
     {
         return view('front.products.products-completed');
     }

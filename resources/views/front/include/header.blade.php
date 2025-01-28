@@ -68,7 +68,7 @@ $loader = SiteSetting::getSiteSettings('loader');
                     </div>
                     <!-- Header-btn -->
                     <div class="header-btns d-none d-lg-flex f-right align-items-center">
-                        <a class="mx-2 fa-2x text-warning" href="{{ route('front.products-cart') }}"><i  class="fas fa-cart-plus"></i></a>
+                        <a class="mx-2 fa-2x text-warning" href="{{ route('front.products-cart') }}"><i  class="text-white fas fa-cart-plus"></i></a>
                         <a href="{{ route('front.contact') }}" class="btn">Contact Us</a>
                     </div>
                     <!-- Mobile Menu -->

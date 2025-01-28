@@ -99,7 +99,7 @@
                             @error('confirmnewpasswod') {{ $message }} @enderror
                         </div>
                     </div>
-                    <button type="submit" class="button boxed-btn">Register</button>
+                    <button type="submit" class="button boxed-btn">Save</button>
                 </form>
             </div>
 
