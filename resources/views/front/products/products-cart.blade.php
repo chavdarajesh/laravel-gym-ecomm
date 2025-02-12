@@ -214,6 +214,15 @@
     input.quantity-result[type=number] {
         -moz-appearance: textfield;
     }
+    .price-text-related{
+        color: red;
+        font-weight: bold;
+        font-size: 24px;
+    }
+    .price-labale-related{
+        font-weight: bold;
+        font-size: 24px;
+    }
 
 </style>
 @stop
@@ -306,8 +315,8 @@
                   </div>
                   @if($cartItems->count())
                   <div class="align-items-md-end align-items-start col-md-6 d-flex flex-column text-md-end text-start">
-                    <p class="text-muted mb-1">Cart total</p>
-                    <h6 class="h4 mb-0">$ <span id="total-order"> {{$cartItems->sum('total_price')}}</span></h6>
+                    <p class="text-muted mb-1 price-labale-related">Cart total</p>
+                    <h6 class="h4 mb-0 price-text-related">$ <span id="total-order"> {{$cartItems->sum('total_price')}}</span></h6>
                   </div>
                   @endif
                 </div>

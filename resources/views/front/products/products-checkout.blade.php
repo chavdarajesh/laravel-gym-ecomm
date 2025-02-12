@@ -207,6 +207,16 @@
         outline: 0;
         box-shadow: none;
     }
+
+    .price-text-related{
+        color: red;
+        font-weight: bold;
+        font-size: 24px;
+    }
+    .price-labale-related{
+        font-weight: bold;
+        font-size: 24px;
+    }
 </style>
 @stop
 
@@ -340,12 +350,12 @@
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <p class="text-muted mb-0">Shipping</p>
-                                    <p class="font-weight-bold mb-0">${{$shippingCharge}}</p>
+                                    <p class="font-weight-bold mb-0">{{ $shippingCharge !== null && $shippingCharge == 0 ? 'Free' : '$' .$shippingCharge }}</p>
                                 </div>
                                 <hr>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <p class="font-weight-bold h5 mb-0">Total</p>
-                                    <p class="font-weight-bold h5 mb-0">${{$totalOrder}}</p>
+                                    <p class="font-weight-bold h5 mb-0 price-labale-related">Total</p>
+                                    <p class="font-weight-bold h5 mb-0 price-text-related">${{$totalOrder}}</p>
                                 </div>
                             </div>
 
@@ -380,7 +390,7 @@
 
                                         <button type="submit" class="" style="border: none;cursor: pointer;background: unset;">
                                             <!-- <i class="far fa-credit-card mr-2"></i> Place Order -->
-                                            <img  height="50px" src="{{asset('assets/front/img/product/pay-withpayple.png')}}" alt="">
+                                            <img  height="40px" src="{{asset('assets/front/img/product/pay-withpayple.png')}}" alt="">
                                         </button>
                                     </div>
                                 </div>

@@ -105,6 +105,16 @@
     input.quantity-result[type=number] {
         -moz-appearance: textfield;
     }
+
+    .price-text{
+        color: red;
+        font-weight: bold;
+        font-size: 30px;
+    }
+    .price-labale{
+        font-weight: bold;
+        font-size: 30px;
+    }
 </style>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;700&amp;display=swap">
@@ -182,7 +192,7 @@
                 @php
                 if ($Product && $Product->sizes && $Product->sizes->isNotEmpty()) {
                 $minPriceSize = $Product->sizes->sortBy('pivot.price')->first(); // Sort and get the first size
-                $minPrice = 'Price: $' . $minPriceSize->pivot->price;
+                $minPrice = '<span class="price-labale">Price : </span> <span class="price-text"> $'.$minPriceSize->pivot->price.'</span>';
                 $selectedSize = $minPriceSize->id; // Assuming 'name' is a column for the size name
                 } else {
                 $minPrice = 'N/A';
@@ -192,7 +202,7 @@
                 @endphp
                 <form action="{{route('front.products-cart.post')}}" method="post">
                     @csrf
-                    <p class="h4" id="product-price">{{$minPrice}}</p>
+                    <p class="h4" id="product-price"> {!!$minPrice!!}</p>
                     <!-- <p class="text-small mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ut ullamcorper leo, eget euismod orci. Cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus. Vestibulum ultricies aliquam convallis.</p> -->
                     <div class="d-flex flex-wrap align-items-center mb-3">
                         <p class="mb-0 mr-3">Select Flavor:</p>
@@ -357,7 +367,7 @@
         $('#size-select').on('change', function() {
             var selectedOption = $(this).find(':selected');
             var price = selectedOption.data('price');
-            $('#product-price').text('Price : $' + price);
+            $('#product-price').html('<span class="price-labale">Price : </span> <span class="price-text"> $'+price+'</span> ');
         });
     });
 

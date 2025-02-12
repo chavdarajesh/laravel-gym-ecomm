@@ -125,6 +125,24 @@ class SiteSettingSeeder extends Seeder
                 'status' => 1,
                 'order' => 8,
                 'created_at' => Carbon::now('Asia/Kolkata')
+            ],
+            [
+                'key' => 'shipping_charges',
+                'value' => '25',
+                'title' => 'Shipping Charges',
+                'description' => null,
+                'status' => 1,
+                'order' => 9,
+                'created_at' => Carbon::now('Asia/Kolkata')
+            ],
+            [
+                'key' => 'shipping_free_amount',
+                'value' => '500',
+                'title' => 'Shipping Free Amount',
+                'description' => null,
+                'status' => 1,
+                'order' => 10,
+                'created_at' => Carbon::now('Asia/Kolkata')
             ]
 
         ];

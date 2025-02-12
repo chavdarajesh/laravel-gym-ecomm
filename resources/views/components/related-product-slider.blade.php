@@ -116,6 +116,15 @@
         outline: 0;
         box-shadow: none;
     }
+    .price-text-related{
+        color: red;
+        font-weight: bold;
+        font-size: 24px;
+    }
+    .price-labale-related{
+        font-weight: bold;
+        font-size: 24px;
+    }
 </style>
 @if (!$relatedProducts->isEmpty())
 <section class="pb-5">
@@ -142,10 +151,10 @@
                             <!-- Product Price -->
                             @php
                             $minPrice = $product && $product && $product->sizes && $product->sizes->isNotEmpty()
-                            ? 'Price : $' . $product->sizes->min('pivot.price')
+                            ? '<span class="price-labale-related">Price : </span> <span class="price-text-related"> $'.$product->sizes->min('pivot.price').'</span>'
                             : 'N/A';
                             @endphp
-                            <p class="text-center text-muted font-weight-bold">{{ $minPrice }}</p>
+                            <p class="text-center text-muted font-weight-bold">{!! $minPrice !!}</p>
                             <!-- Action Buttons -->
                             <div class="mt-auto d-flex justify-content-center align-items-center">
                                 <button onclick="addToCart({{$product->id}})" class="product-list-btn">Add to Cart</button>
@@ -208,7 +217,6 @@
     function addToCart(product,redirectTocart = false) {
         const isUserLoggedIn = @json(auth()->check());
         if (isUserLoggedIn) {
-            console.log('1111');
             $.ajax({
                 url: '{{route("front.products-cart.ajax.other")}}',
                 method: 'POST',

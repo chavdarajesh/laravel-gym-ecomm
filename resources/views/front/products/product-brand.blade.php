@@ -137,6 +137,15 @@
             max-width: 1480px;
         }
     }
+    .price-text-related{
+        color: red;
+        font-weight: bold;
+        font-size: 24px;
+    }
+    .price-labale-related{
+        font-weight: bold;
+        font-size: 24px;
+    }
 </style>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;700&amp;display=swap">
@@ -381,7 +390,7 @@
                                 <h6 class="text-center">
                                     <a class="reset-anchor" href="${detailsUrl.replace(':id', product.id)}">${product.name}</a>
                                 </h6>
-                                <p class="text-center text-muted font-weight-bold">Price: $${price}</p>
+                                <p class="text-center text-muted font-weight-bold"><span class="price-labale-related">Price : </span> <span class="price-text-related"> $${price}</span></p>
                                 <div class="mt-auto d-flex justify-content-center align-items-center">
                                     <button onclick="addToCart(${product.id})" class="product-list-btn" data-product-id="${product.id}">Add to Cart</button>
                                     <button onclick="addToCart(${product.id},true)"  class="product-list-btn" data-product-id="${product.id}">Buy Now</button>

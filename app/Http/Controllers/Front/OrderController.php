@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\OrderAddress;
 use App\Models\OrderStatus;
 use App\Models\Payment;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,7 +40,19 @@ class OrderController extends Controller
         }
 
         $subTotal = Cart::where('user_id', auth()->id())->sum('total_price');
-        $shippingCharge = env('SHIPPING_CHARGE', 100);
+
+        $shippingChargeValue = SiteSetting::getSiteSettings('shipping_charges');
+        if(isset($shippingChargeValue) && isset($shippingChargeValue->value) && $shippingChargeValue != null && $shippingChargeValue->value != ''){
+            $shippingCharge = $shippingChargeValue->value;
+        }else{
+            $shippingCharge = 0;
+        }
+
+        $shipping_free_amount = SiteSetting::getSiteSettings('shipping_free_amount');
+        if(isset($shipping_free_amount) && isset($shipping_free_amount->value) && $shipping_free_amount != null && $shipping_free_amount->value != '' && $subTotal >= $shipping_free_amount->value){
+            $shippingCharge = 0;
+        }
+
         $total_order = $subTotal + $shippingCharge; // Add delivery charge
         // Create an order
         // Store Address

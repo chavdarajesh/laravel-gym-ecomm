@@ -182,7 +182,6 @@ class PaymentController extends Controller
         return redirect()->route('front.orders-details',$id)->with('error', 'Payment failed.');
     }
 
-
     public function refundPayment($id)
     {
         $order = Order::where('id', $id)->where('user_id', auth()->id())->first();

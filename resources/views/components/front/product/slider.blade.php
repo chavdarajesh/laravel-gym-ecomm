@@ -116,6 +116,15 @@
         outline: 0;
         box-shadow: none;
     }
+    .price-text-related{
+        color: red;
+        font-weight: bold;
+        font-size: 24px;
+    }
+    .price-labale-related{
+        font-weight: bold;
+        font-size: 24px;
+    }
 </style>
 @if (!$topSellingProducts->isEmpty())
 <section class="py-5">
@@ -140,10 +149,10 @@
                     <!-- Product Price -->
                     @php
                     $minPrice = $product && $product->product && $product->product->sizes && $product->product->sizes->isNotEmpty()
-                    ? 'Price : $' . $product->product->sizes->min('pivot.price')
+                    ? '<span class="price-labale-related">Price : </span> <span class="price-text-related"> $'.$product->product->sizes->min('pivot.price').'</span>'
                     : 'N/A';
                     @endphp
-                    <p class="text-center text-muted font-weight-bold">{{ $minPrice }}</p>
+                    <p class="text-center text-muted font-weight-bold">{!! $minPrice !!}</p>
                     <!-- Action Buttons -->
                     <div class="mt-auto d-flex justify-content-center align-items-center">
                         <button onclick="addToCart({{$product->product->id}})"  class="product-list-btn">Add to Cart</button>

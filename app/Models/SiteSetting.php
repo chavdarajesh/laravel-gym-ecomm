@@ -21,7 +21,7 @@ class SiteSetting extends Model
         'deleted_at',
     ];
 
-    public function getSiteSettings($key = null)
+   static public function getSiteSettings($key = null)
     {
         if ($key) {
             return SiteSetting::where('key', $key)->where('status', 1)->first();
