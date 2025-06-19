@@ -252,9 +252,10 @@
         <div class="row">
           <div class="col-lg-10 mx-auto">
             <ul class="nav nav-tabs nav-fill border-bottom mb-5 flex-column flex-md-row">
-              <li class="nav-item"><a class="nav-link active" aria-current="page" href="javascript:void(0);">1. Shopping cart</a></li>
-              <li class="nav-item"><a id="nav-item-billing-information" class="nav-link  {{ $cartItems->count() ? 'text-dark': 'disabled'}}" href="{{route('front.products-checkout')}}">2. Billing Information</a></li>
-              <li class="nav-item"><a class="nav-link disabled" href="javascript:void(0);">3. Completed</a></li>
+              <li class="nav-item"><a class="nav-link active" aria-current="page" href="javascript:void(0);">Shopping cart</a></li>
+              <li class="nav-item"><a id="nav-item-billing-information" class="nav-link  {{ $cartItems->count() ? 'text-dark': 'disabled'}}" href="{{route('front.orders.checkout')}}">Billing Information</a></li>
+               <li class="nav-item"><a class="nav-link disabled" href="javascript:void(0);">Payment</a></li>
+              <li class="nav-item"><a class="nav-link disabled" href="javascript:void(0);">Completed</a></li>
             </ul>
             <!-- Shopping cart-->
             <div class="table-responsive mb-4">
@@ -309,7 +310,7 @@
                     <ul class="list-inline mb-0">
                       <li class="list-inline-item py-1 m-0"><a class="btn btn-outline-warning product-list-btn" href="{{route('front.products')}}"> <i class="fas fa-shopping-bag mr-2"></i>Continue shopping</a></li>
                       @if($cartItems->count())
-                      <li class="list-inline-item py-1 m-0"><a class="btn btn-warning product-list-btn" href="{{route('front.products-checkout')}}"> <i class="far fa-credit-card mr-2"></i>Process checkout</a></li>
+                      <li class="list-inline-item py-1 m-0"><a class="btn btn-warning product-list-btn" href="{{route('front.orders.checkout')}}"> <i class="far fa-credit-card mr-2"></i>Process checkout</a></li>
                         @endif
                     </ul>
                   </div>

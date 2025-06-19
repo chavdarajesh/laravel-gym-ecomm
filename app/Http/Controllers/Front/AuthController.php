@@ -52,6 +52,9 @@ class AuthController extends Controller
         //         'referral_code' => 'exists:users',
         //     ]);
         // }
+        if(env('MAIL_FROM_ADDRESS') == '') {
+           return redirect()->back()->with('error', 'Somthing Went Wrong..!');
+       }
 
         $user_email_check_is_verified  = User::where([['email',$request->email],['is_verified','0']])->first();
         if ($user_email_check_is_verified) {
@@ -175,6 +178,9 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required|email|exists:users'
         ]);
+        if(env('MAIL_FROM_ADDRESS') == '') {
+           return redirect()->back()->with('error', 'Somthing Went Wrong..!');
+       }
         $user = User::where('email', $request->email)->where('status', 1)->where('is_verified', 1)->first();
         if ($user) {
             $token = Str::random(64);

@@ -86,4 +86,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(User::class, 'other_referral_user_id');
     }
+
+    public function paymentUploads()
+{
+    return $this->hasMany(PaymentUpload::class);
+}
+
 }

@@ -19,15 +19,17 @@ $excludedRoutes = [
     'front.products-search',
     'front.products-details',
     'front.products-cart',
-    'front.products-checkout',
-    'front.products-completed',
+    'front.orders.checkout',
+    'front.orders.completed',
     'front.login',
     'front.otp_verification.get',
     'front.forgotpassword',
     'front.reset.password.get',
     'front.profilepage',
     'front.orders',
-    'front.orders-details',
+    'front.orders.details',
+    'front.orders.payment-upload.get',
+    
 ];
 @endphp
 

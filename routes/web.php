@@ -1,40 +1,36 @@
 <?php
 
-
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Admin\BlogController as AdminBlogController;
+use App\Http\Controllers\Admin\BrandController as AdminBrandController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
-use App\Http\Controllers\Admin\SiteSettingController as AdminSiteSettingController;
-use App\Http\Controllers\Admin\UserController as AdminUserController;
-use App\Http\Controllers\Admin\BlogController as AdminBlogController;
+use App\Http\Controllers\Admin\FlavorController as AdminFlavorController;
 use App\Http\Controllers\Admin\NewsletterController as AdminNewsletterController;
 use App\Http\Controllers\Admin\NewsletterMailController as AdminNewsletterMailController;
-use App\Http\Controllers\Admin\SubCategoryController as AdminSubCategoryController;
-use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
-use App\Http\Controllers\Admin\BrandController as AdminBrandController;
-use App\Http\Controllers\Admin\SizeController as AdminSizeController;
-use App\Http\Controllers\Admin\FlavorController as AdminFlavorController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\OrderStatusController as AdminOrderStatusController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductSliderController as AdminProductSliderController;
+use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
+use App\Http\Controllers\Admin\SiteSettingController as AdminSiteSettingController;
+use App\Http\Controllers\Admin\SizeController as AdminSizeController;
+use App\Http\Controllers\Admin\SubCategoryController as AdminSubCategoryController;
 use App\Http\Controllers\Admin\TopSellingProductController as AdminTopSellingProductController;
-use App\Http\Controllers\Admin\OrderStatusController as AdminOrderStatusController;
-use App\Http\Controllers\Admin\OrderController as AdminOrderController;
-
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Front\AuthController as FrontAuthController;
+use App\Http\Controllers\Front\ContactController as FrontContactController;
+use App\Http\Controllers\Front\OrderController as FrontOrderController;
+use App\Http\Controllers\Front\PagesController as FrontPagesController;
+use App\Http\Controllers\Front\PayPalController as FrontPayPalController;
+use App\Http\Controllers\Front\ProductController as FrontProductController;
+use App\Http\Controllers\Front\ProfileController as FrontProfileController;
+use App\Http\Controllers\Front\ReturnRequestController as FrontReturnRequestController;
+use App\Http\Controllers\Front\StaticPaymentController as FrontStaticPaymentController;
 use App\Http\Controllers\User\AuthController as UserAuthController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\User\ProfileController as UserProfileController;
-
-use App\Http\Controllers\Front\ContactController as FrontContactController;
-use App\Http\Controllers\Front\PagesController as FrontPagesController;
-use App\Http\Controllers\Front\ProductController as FrontProductController;
-use App\Http\Controllers\Front\AuthController as FrontAuthController;
-use App\Http\Controllers\Front\ProfileController as FrontProfileController;
-use App\Http\Controllers\Front\PayPalController as FrontPayPalController;
-use App\Http\Controllers\Front\PaymentController as FrontPaymentController;
-use App\Http\Controllers\Front\OrderController as FrontOrderController;
-
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -52,8 +48,7 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // })->name('front.home');
 
-Auth::routes();
-
+// Auth::routes();
 
 // Admin Auth Route start
 Route::get('/admin/login', [AdminAuthController::class, 'loginGet'])->name('admin.login.get');
@@ -124,7 +119,6 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['is_
     Route::post('/blogs/status/toggle', [AdminBlogController::class, 'statusToggle'])->name('admin.blogs.status.toggle');
     Route::post('/blogs/delete/{id}', [AdminBlogController::class, 'delete'])->name('admin.blogs.delete');
     Route::post('/blogs/delete-tag', [AdminBlogController::class, 'deleteTag'])->name('admin.blogs.delete.tag');
-
 
     // contact us msg Modlue start
     Route::get('/newsletters', [AdminNewsletterController::class, 'index'])->name('admin.newsletters.index');
@@ -209,7 +203,6 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['is_
     Route::post('/products/subcategories', [AdminProductController::class, 'subcategories'])->name('admin.products.subcategories');
     Route::post('/products/images/delete', [AdminProductController::class, 'imagesDelete'])->name('admin.products.images.delete');
 
-
     // productsliders Modlue start
     Route::any('/productsliders', [AdminProductSliderController::class, 'index'])->name('admin.productsliders.index');
     Route::get('/productsliders/create', [AdminProductSliderController::class, 'create'])->name('admin.productsliders.create');
@@ -245,13 +238,16 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['is_
     Route::post('/orderstatus/delete/{id}', [AdminOrderStatusController::class, 'delete'])->name('admin.orderstatus.delete');
     Route::post('/orderstatus/subcategories', [AdminOrderStatusController::class, 'subcategories'])->name('admin.orderstatus.subcategories');
 
-
     // contact us msg Modlue start
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
     Route::get('/orders/view/{id}', [AdminOrderController::class, 'view'])->name('admin.orders.view');
     Route::post('/orders/delete/{id}', [AdminOrderController::class, 'delete'])->name('admin.orders.delete');
-    Route::post('/orders/updateStatus/{id}', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
-    Route::post('/orders/refundPayment/{id}', [AdminOrderController::class, 'refundPayment'])->name('admin.orders.refund');
+    Route::post('/orders/updateStatus/{id}', [AdminOrderController::class, 'orderUpdateStatus'])->name('admin.orders.updateStatus');
+    // Route::post('/orders/refundPayment/{id}', [AdminOrderController::class, 'refundPayment'])->name('admin.orders.refund');
+    Route::post('/orders/payment/update-status', [AdminOrderController::class, 'paymentUpdateStatus'])->name('admin.orders.payment.update.status');
+    Route::post('/orders/return-requests/update-status', [AdminOrderController::class, 'returnUpdateStatus'])->name('admin.orders.return-requests.update.status');
+    Route::post('/orders/update-refund-status/{id}', [AdminOrderController::class, 'updateRefundStatus'])->name('admin.orders.update.refund.status');
+
 
     // contact us msg Modlue end
 });
@@ -291,7 +287,6 @@ Route::group(['namespace' => 'User', 'prefix' => 'user', 'middleware' => ['is_au
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-
 Route::get('/', [FrontPagesController::class, 'home'])->name('front.home');
 Route::get('/about', [FrontPagesController::class, 'about'])->name('front.about');
 Route::get('/services', [FrontPagesController::class, 'services'])->name('front.services');
@@ -314,7 +309,6 @@ Route::get('/return_and_refund', [FrontPagesController::class, 'return_and_refun
 
 Route::get('/products', [FrontPagesController::class, 'products'])->name('front.products');
 
-
 Route::get('/products', [FrontProductController::class, 'products'])->name('front.products');
 Route::get('/products-sidebar', [FrontProductController::class, 'productsSidebar'])->name('front.products-sidebar');
 Route::get('/products/category/{id}', [FrontProductController::class, 'productsCategory'])->name('front.products-category');
@@ -329,7 +323,6 @@ Route::post('/products/top-selling/filters', [FrontProductController::class, 'ge
 
 Route::get('/products/search', [FrontProductController::class, 'productsSearch'])->name('front.products-search');
 Route::post('/products/search/filters', [FrontProductController::class, 'getFilterSearchProducts'])->name('front.products-search-filters');
-
 
 Route::get('/products/details/{id}', [FrontProductController::class, 'productsDetails'])->name('front.products-details');
 Route::post('/products/details', [FrontProductController::class, 'productsDetailsAjax'])->name('front.products-details.ajax');
@@ -349,21 +342,17 @@ Route::post('/products/cart/delete-item', [FrontProductController::class, 'produ
 Route::post('/products/cart/ajax/other', [FrontProductController::class, 'productsCartAjaxOther'])->name('front.products-cart.ajax.other');
 Route::post('/products/cart/sync/other', [FrontProductController::class, 'productsCartSyncOther'])->name('front.products-cart.sync.other');
 
-
-
 Route::get('/login', [FrontAuthController::class, 'login'])->name('front.login');
 // Route::get('/register', [FrontAuthController::class, 'register'])->name('front.register');
 Route::get('/forgotpassword', [FrontAuthController::class, 'forgotpasswordget'])->name('front.forgotpassword');
 Route::get('/reset-password/{token}', [FrontAuthController::class, 'showResetPasswordFormget'])->name('front.reset.password.get');
 Route::get('/otp_verification/{id}', [FrontAuthController::class, 'showotp_verificationFormget'])->name('front.otp_verification.get');
 
-
 Route::post('/login', [FrontAuthController::class, 'postlogin'])->name('front.post.login');
 Route::post('/register', [FrontAuthController::class, 'postregister'])->name('front.post.register');
 Route::post('/otp_verification', [FrontAuthController::class, 'postotp_verification'])->name('front.post.otp_verification');
 Route::post('/forgotpassword', [FrontAuthController::class, 'postforgotpassword'])->name('front.post.forgotpassword');
 Route::post('/reset-password', [FrontAuthController::class, 'submitResetPasswordFormpost'])->name('front.reset.password.post');
-
 
 Route::group(['namespace' => 'User', 'middleware' => ['is_auth', 'is_user_active', 'is_user_verified']], function () {
 
@@ -373,26 +362,29 @@ Route::group(['namespace' => 'User', 'middleware' => ['is_auth', 'is_user_active
     Route::post('/profile', [FrontProfileController::class, 'postprofilepage'])->name('front.post.profilepage');
     Route::post('/profile/changepassword', [FrontProfileController::class, 'postprofilechangepassword'])->name('front.post.profile.changepassword');
 
+    Route::get('/orders/checkout', [FrontProductController::class, 'productsCheckout'])->name('front.orders.checkout');
+    Route::post('/orders/checkout/post', [FrontOrderController::class, 'checkout'])->name('front.orders.checkout.post');
 
-    Route::get('/products/checkout', [FrontProductController::class, 'productsCheckout'])->name('front.products-checkout');
-    Route::post('/products/checkout/post', [FrontOrderController::class, 'checkout'])->name('front.products-checkout.post');
+    // Route::get('/payment/process/{id}', [FrontPaymentController::class, 'process'])->name('payment.process');
 
-    Route::get('/payment/process/{id}', [FrontPaymentController::class, 'process'])->name('payment.process');
+    // Route::get('/payment/success/redirect', [FrontPaymentController::class, 'successRedirect'])->name('payment.success.redirect');
+    // Route::get('/payment/cancel/redirect', [FrontPaymentController::class, 'cancelRedirect'])->name('payment.cancel.redirect');
 
-    Route::get('/payment/success/redirect', [FrontPaymentController::class, 'successRedirect'])->name('payment.success.redirect');
-    Route::get('/payment/cancel/redirect', [FrontPaymentController::class, 'cancelRedirect'])->name('payment.cancel.redirect');
+    Route::get('/orders/completed/{id}', [FrontProductController::class, 'productsCompleted'])->name('front.orders.completed');
+    // Route::get('/payment/failed/{id}', [FrontPaymentController::class, 'failedGet'])->name('payment.failed');
+    // Route::get('/payment/cancel', [FrontPaymentController::class, 'cancelGet'])->name('payment.cancel');
 
-
-    Route::get('/products/completed/{id}', [FrontProductController::class, 'productsCompleted'])->name('front.products-completed');
-    Route::get('/payment/failed/{id}', [FrontPaymentController::class, 'failedGet'])->name('payment.failed');
-    Route::get('/payment/cancel', [FrontPaymentController::class, 'cancelGet'])->name('payment.cancel');
-
-    Route::get('/products/refundPayment/{id}', [FrontPaymentController::class, 'refundPayment'])->name('front.products-refund');
+    // Route::get('/products/refundPayment/{id}', [FrontPaymentController::class, 'refundPayment'])->name('front.products-refund');
 
     Route::get('/orders', [FrontOrderController::class, 'orders'])->name('front.orders');
-    Route::get('/orders/details/{id}', [FrontOrderController::class, 'ordersDetails'])->name('front.orders-details');
-    Route::post('/orders/cancel/{id}', [FrontOrderController::class, 'ordersCancel'])->name('front.orders-cancel');
+    Route::get('/orders/details/{id}', [FrontOrderController::class, 'ordersDetails'])->name('front.orders.details');
+    Route::get('/orders/cancel/{id}', [FrontOrderController::class, 'ordersCancel'])->name('front.orders.cancel');
 
+    Route::get('/orders/payment-upload/{id}', [FrontStaticPaymentController::class, 'paymentUploadGet'])->name('front.orders.payment-upload.get');
+    Route::post('/orders/payment-upload/{id}', [FrontStaticPaymentController::class, 'paymentUploadPost'])->name('front.orders.payment-upload.post');
+
+    Route::get('/orders/return-request/{id}', [FrontReturnRequestController::class, 'returnRequestGet'])->name('front.orders.return-request.get');
+    Route::post('/orders/return-request/{id}', [FrontReturnRequestController::class, 'returnRequestPost'])->name('front.orders.return-request.post');
 
 });
 Route::get('paywithpaypal', [FrontPayPalController::class, 'payWithPaypal'])->name('addmoney.paywithpaypal');

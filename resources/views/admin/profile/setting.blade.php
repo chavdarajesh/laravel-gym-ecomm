@@ -99,11 +99,11 @@ use App\Models\User;
                                 </div>
 
                             </div>
-                            <div class="mb-3 col-md-12">
+                            {{-- <div class="mb-3 col-md-12">
                                 <label for="referral_code" class="form-label">Referral Code</label>
                                 <input class="form-control" type="text" id="referral_code" name="referral_code"
                                     value="{{ Auth::user()->referral_code }}" disabled />
-                            </div>
+                            </div> --}}
 
 
                         </div>

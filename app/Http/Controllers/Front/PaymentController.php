@@ -22,7 +22,7 @@ class PaymentController extends Controller
         }
 
         if ($order->status === 'completed') {
-            return redirect()->route('front.orders-details', $order->id)->with('success', 'Payment successful!');
+            return redirect()->route('front.orders.details', $order->id)->with('success', 'Payment successful!');
         }
 
         $order->update([
@@ -162,7 +162,7 @@ class PaymentController extends Controller
 
             Payment::create($paymentData);
 
-            return redirect()->route('front.products-completed', $order->id)->with('success', 'Payment successful!');
+            return redirect()->route('front.orders.completed', $order->id)->with('success', 'Payment successful!');
         }
         return redirect()->route('payment.failed',$order->id)->with('error', 'Payment failed.');
     }
@@ -179,7 +179,7 @@ class PaymentController extends Controller
 
     public function failedGet($id)
     {
-        return redirect()->route('front.orders-details',$id)->with('error', 'Payment failed.');
+        return redirect()->route('front.orders.details',$id)->with('error', 'Payment failed.');
     }
 
     public function refundPayment($id)

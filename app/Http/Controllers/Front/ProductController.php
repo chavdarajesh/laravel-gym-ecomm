@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
@@ -7,6 +6,7 @@ use App\Models\Blog;
 use App\Models\Brand;
 use App\Models\Cart;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductSlider;
 use App\Models\SiteSetting;
@@ -22,8 +22,8 @@ class ProductController extends Controller
     public function products()
     {
         $categories = Category::where('status', 1)->get();
-        $Blogs = Blog::where('status', 1)->get();
-        $brands = Brand::select('name', 'image', 'id')
+        $Blogs      = Blog::where('status', 1)->get();
+        $brands     = Brand::select('name', 'image', 'id')
             ->orderBy('name')
             ->get()
             ->groupBy(function ($brand) {
@@ -39,7 +39,7 @@ class ProductController extends Controller
     public function productsSidebar()
     {
         $categories = Category::where('status', 1)->get();
-        $brands = Brand::select('name', 'image')
+        $brands     = Brand::select('name', 'image')
             ->orderBy('name')
             ->get()
             ->groupBy(function ($brand) {
@@ -54,14 +54,14 @@ class ProductController extends Controller
 
         if ($Category) {
             $categories = Category::where('status', 1)->get();
-            $brands = Brand::select('name', 'image', 'id')
+            $brands     = Brand::select('name', 'image', 'id')
                 ->orderBy('name')
                 ->get()
                 ->groupBy(function ($brand) {
                     return strtoupper(substr($brand->name, 0, 1));
                 });
 
-            $otherCategorys = Category::where('status', 1)->where('id', '!=', $id)->limit(7)->get();
+            $otherCategorys   = Category::where('status', 1)->where('id', '!=', $id)->limit(7)->get();
             $categoryProducts = $Category->products()
                 ->where('status', 1)
                 ->with('sizes', 'flavors') // Eager load sizes
@@ -70,8 +70,8 @@ class ProductController extends Controller
             $sizeArray = $categoryProducts->flatMap(function ($product) {
                 return $product->sizes->map(function ($size) use ($product) {
                     return [
-                        'size_id' => $size->id,
-                        'size_name' => $size->name, // Assuming 'name' is a column in sizes table
+                        'size_id'    => $size->id,
+                        'size_name'  => $size->name, // Assuming 'name' is a column in sizes table
                         'product_id' => $product->id,
                     ];
                 });
@@ -79,8 +79,8 @@ class ProductController extends Controller
                 ->groupBy('size_id') // Group by size ID
                 ->map(function ($items, $sizeId) {
                     return [
-                        'size_id' => $sizeId,
-                        'size_name' => $items[0]['size_name'], // All items have the same size name
+                        'size_id'       => $sizeId,
+                        'size_name'     => $items[0]['size_name'], // All items have the same size name
                         'product_count' => count($items),
                     ];
                 })
@@ -89,17 +89,17 @@ class ProductController extends Controller
             $flavorsArray = $categoryProducts->flatMap(function ($product) {
                 return $product->flavors->map(function ($flavor) use ($product) {
                     return [
-                        'flavor_id' => $flavor->id,
+                        'flavor_id'   => $flavor->id,
                         'flavor_name' => $flavor->name, // Assuming 'name' is a column in sizes table
-                        'product_id' => $product->id,
+                        'product_id'  => $product->id,
                     ];
                 });
             })
                 ->groupBy('flavor_id') // Group by size ID
                 ->map(function ($items, $sizeId) {
                     return [
-                        'flavor_id' => $sizeId,
-                        'flavor_name' => $items[0]['flavor_name'], // All items have the same size name
+                        'flavor_id'     => $sizeId,
+                        'flavor_name'   => $items[0]['flavor_name'], // All items have the same size name
                         'product_count' => count($items),
                     ];
                 })
@@ -110,8 +110,8 @@ class ProductController extends Controller
                 return $minSize ? $minSize : null;
             })->filter();
 
-            $minPrice = $prices->min();
-            $maxPrice = $prices->max();
+            $minPrice       = $prices->min();
+            $maxPrice       = $prices->max();
             $categoryBrands = Brand::whereHas('products', function ($query) use ($Category) {
                 $query->where('category_id', $Category->id); // Adjust column name if needed
             })->where('status', 1)->get();
@@ -125,13 +125,13 @@ class ProductController extends Controller
 
     public function getFilterCategoryProducts(Request $request, $id)
     {
-        $perPage = $request->get('perPage', 1);
-        $sort = $request->get('sort', 'latest');
+        $perPage  = $request->get('perPage', 1);
+        $sort     = $request->get('sort', 'latest');
         $minPrice = $request->get('minPrice', 0);
         $maxPrice = $request->get('maxPrice', 999999);
-        $brands = $request->get('brands');
-        $sizes = $request->get('sizes');
-        $flavors = $request->get('flavors');
+        $brands   = $request->get('brands');
+        $sizes    = $request->get('sizes');
+        $flavors  = $request->get('flavors');
 
         $Category = Category::where('status', 1)->findOrFail($id);
 
@@ -177,7 +177,7 @@ class ProductController extends Controller
         $categoryProducts = $categoryProducts->paginate($perPage);
 
         return response()->json([
-            'products' => $categoryProducts->items(),
+            'products'   => $categoryProducts->items(),
             'pagination' => view('vendor.pagination.default', ['paginator' => $categoryProducts])->render(),
         ]);
     }
@@ -188,7 +188,7 @@ class ProductController extends Controller
 
         if ($Subcategory) {
             $categories = Category::where('status', 1)->get();
-            $brands = Brand::select('name', 'image', 'id')
+            $brands     = Brand::select('name', 'image', 'id')
                 ->orderBy('name')
                 ->get()
                 ->groupBy(function ($brand) {
@@ -205,8 +205,8 @@ class ProductController extends Controller
             $sizeArray = $subCategoryProducts->flatMap(function ($product) {
                 return $product->sizes->map(function ($size) use ($product) {
                     return [
-                        'size_id' => $size->id,
-                        'size_name' => $size->name, // Assuming 'name' is a column in sizes table
+                        'size_id'    => $size->id,
+                        'size_name'  => $size->name, // Assuming 'name' is a column in sizes table
                         'product_id' => $product->id,
                     ];
                 });
@@ -214,8 +214,8 @@ class ProductController extends Controller
                 ->groupBy('size_id') // Group by size ID
                 ->map(function ($items, $sizeId) {
                     return [
-                        'size_id' => $sizeId,
-                        'size_name' => $items[0]['size_name'], // All items have the same size name
+                        'size_id'       => $sizeId,
+                        'size_name'     => $items[0]['size_name'], // All items have the same size name
                         'product_count' => count($items),
                     ];
                 })
@@ -224,17 +224,17 @@ class ProductController extends Controller
             $flavorsArray = $subCategoryProducts->flatMap(function ($product) {
                 return $product->flavors->map(function ($flavor) use ($product) {
                     return [
-                        'flavor_id' => $flavor->id,
+                        'flavor_id'   => $flavor->id,
                         'flavor_name' => $flavor->name, // Assuming 'name' is a column in sizes table
-                        'product_id' => $product->id,
+                        'product_id'  => $product->id,
                     ];
                 });
             })
                 ->groupBy('flavor_id') // Group by size ID
                 ->map(function ($items, $sizeId) {
                     return [
-                        'flavor_id' => $sizeId,
-                        'flavor_name' => $items[0]['flavor_name'], // All items have the same size name
+                        'flavor_id'     => $sizeId,
+                        'flavor_name'   => $items[0]['flavor_name'], // All items have the same size name
                         'product_count' => count($items),
                     ];
                 })
@@ -245,8 +245,8 @@ class ProductController extends Controller
                 return $minSize ? $minSize : null;
             })->filter();
 
-            $minPrice = $prices->min();
-            $maxPrice = $prices->max();
+            $minPrice          = $prices->min();
+            $maxPrice          = $prices->max();
             $subCategoryBrands = Brand::whereHas('products', function ($query) use ($Subcategory) {
                 $query->where('subcategory_id', $Subcategory->id); // Adjust column name if needed
             })->where('status', 1)->get();
@@ -260,13 +260,13 @@ class ProductController extends Controller
 
     public function getFilterSubCategoryProducts(Request $request, $id)
     {
-        $perPage = $request->get('perPage', 1);
-        $sort = $request->get('sort', 'latest');
+        $perPage  = $request->get('perPage', 1);
+        $sort     = $request->get('sort', 'latest');
         $minPrice = $request->get('minPrice', 0);
         $maxPrice = $request->get('maxPrice', 999999);
-        $brands = $request->get('brands');
-        $sizes = $request->get('sizes');
-        $flavors = $request->get('flavors');
+        $brands   = $request->get('brands');
+        $sizes    = $request->get('sizes');
+        $flavors  = $request->get('flavors');
 
         $Subcategory = Subcategory::where('status', 1)->findOrFail($id);
 
@@ -312,7 +312,7 @@ class ProductController extends Controller
         $subCategoryProducts = $subCategoryProducts->paginate($perPage);
 
         return response()->json([
-            'products' => $subCategoryProducts->items(),
+            'products'   => $subCategoryProducts->items(),
             'pagination' => view('vendor.pagination.default', ['paginator' => $subCategoryProducts])->render(),
         ]);
     }
@@ -323,7 +323,7 @@ class ProductController extends Controller
 
         if ($Brand) {
             $categories = Category::where('status', 1)->get();
-            $brands = Brand::select('name', 'image', 'id')
+            $brands     = Brand::select('name', 'image', 'id')
                 ->orderBy('name')
                 ->get()
                 ->groupBy(function ($brand) {
@@ -332,15 +332,15 @@ class ProductController extends Controller
 
             $categoriesWithProducts = Category::whereHas('products', function ($query) use ($Brand) {
                 $query->where('brand_id', $Brand->id) // Filter products belonging to the brand
-                    ->where('status', 1); // Ensure the product is active
+                    ->where('status', 1);                 // Ensure the product is active
             })
                 ->with(['products' => function ($query) use ($Brand) {
                     $query->where('brand_id', $Brand->id) // Include products with the specific brand
-                        ->where('status', 1) // Ensure product is active
-                        ->with('sizes', 'flavors'); // Eager load related sizes and flavors
+                        ->where('status', 1)                  // Ensure product is active
+                        ->with('sizes', 'flavors');           // Eager load related sizes and flavors
                 }])
                 ->where('status', 1) // Ensure the category is active
-                ->take(7) // Limit the result to 7 categories
+                ->take(7)            // Limit the result to 7 categories
                 ->get();
 
             $barndProducts = $Brand->products()
@@ -351,8 +351,8 @@ class ProductController extends Controller
             $sizeArray = $barndProducts->flatMap(function ($product) {
                 return $product->sizes->map(function ($size) use ($product) {
                     return [
-                        'size_id' => $size->id,
-                        'size_name' => $size->name, // Assuming 'name' is a column in sizes table
+                        'size_id'    => $size->id,
+                        'size_name'  => $size->name, // Assuming 'name' is a column in sizes table
                         'product_id' => $product->id,
                     ];
                 });
@@ -360,8 +360,8 @@ class ProductController extends Controller
                 ->groupBy('size_id') // Group by size ID
                 ->map(function ($items, $sizeId) {
                     return [
-                        'size_id' => $sizeId,
-                        'size_name' => $items[0]['size_name'], // All items have the same size name
+                        'size_id'       => $sizeId,
+                        'size_name'     => $items[0]['size_name'], // All items have the same size name
                         'product_count' => count($items),
                     ];
                 })
@@ -370,17 +370,17 @@ class ProductController extends Controller
             $flavorsArray = $barndProducts->flatMap(function ($product) {
                 return $product->flavors->map(function ($flavor) use ($product) {
                     return [
-                        'flavor_id' => $flavor->id,
+                        'flavor_id'   => $flavor->id,
                         'flavor_name' => $flavor->name, // Assuming 'name' is a column in sizes table
-                        'product_id' => $product->id,
+                        'product_id'  => $product->id,
                     ];
                 });
             })
                 ->groupBy('flavor_id') // Group by size ID
                 ->map(function ($items, $sizeId) {
                     return [
-                        'flavor_id' => $sizeId,
-                        'flavor_name' => $items[0]['flavor_name'], // All items have the same size name
+                        'flavor_id'     => $sizeId,
+                        'flavor_name'   => $items[0]['flavor_name'], // All items have the same size name
                         'product_count' => count($items),
                     ];
                 })
@@ -393,8 +393,8 @@ class ProductController extends Controller
 
             $brandslist = Brand::where('status', 1)->where('id', $id)->get();
 
-            $minPrice = $prices->min();
-            $maxPrice = $prices->max();
+            $minPrice     = $prices->min();
+            $maxPrice     = $prices->max();
             $totalRecords = $barndProducts->count();
 
             return view('front.products.product-brand', compact('Brand', 'categories', 'brands', 'flavorsArray', 'sizeArray', 'minPrice', 'maxPrice', 'totalRecords', 'categoriesWithProducts', 'brandslist'));
@@ -405,14 +405,14 @@ class ProductController extends Controller
 
     public function getFilterBrandProducts(Request $request, $id)
     {
-        $perPage = $request->get('perPage', 1);
-        $sort = $request->get('sort', 'latest');
-        $minPrice = $request->get('minPrice', 0);
-        $maxPrice = $request->get('maxPrice', 999999);
-        $brands = $request->get('brands');
+        $perPage   = $request->get('perPage', 1);
+        $sort      = $request->get('sort', 'latest');
+        $minPrice  = $request->get('minPrice', 0);
+        $maxPrice  = $request->get('maxPrice', 999999);
+        $brands    = $request->get('brands');
         $categorys = $request->get('categorys');
-        $sizes = $request->get('sizes');
-        $flavors = $request->get('flavors');
+        $sizes     = $request->get('sizes');
+        $flavors   = $request->get('flavors');
 
         $Brand = Brand::where('status', 1)->findOrFail($id);
 
@@ -465,7 +465,7 @@ class ProductController extends Controller
         $brandProducts = $brandProducts->paginate($perPage);
 
         return response()->json([
-            'products' => $brandProducts->items(),
+            'products'   => $brandProducts->items(),
             'pagination' => view('vendor.pagination.default', ['paginator' => $brandProducts])->render(),
         ]);
     }
@@ -473,7 +473,7 @@ class ProductController extends Controller
     public function productsTopSelling()
     {
         $categories = Category::where('status', 1)->get();
-        $brands = Brand::select('name', 'image', 'id')
+        $brands     = Brand::select('name', 'image', 'id')
             ->orderBy('name')
             ->get()
             ->groupBy(function ($brand) {
@@ -497,8 +497,8 @@ class ProductController extends Controller
         $sizeArray = $topSellingProducts->flatMap(function ($product) {
             return $product->product->sizes->map(function ($size) use ($product) {
                 return [
-                    'size_id' => $size->id,
-                    'size_name' => $size->name, // Assuming 'name' is a column in sizes table
+                    'size_id'    => $size->id,
+                    'size_name'  => $size->name, // Assuming 'name' is a column in sizes table
                     'product_id' => $product->product->id,
                 ];
             });
@@ -506,8 +506,8 @@ class ProductController extends Controller
             ->groupBy('size_id') // Group by size ID
             ->map(function ($items, $sizeId) {
                 return [
-                    'size_id' => $sizeId,
-                    'size_name' => $items[0]['size_name'], // All items have the same size name
+                    'size_id'       => $sizeId,
+                    'size_name'     => $items[0]['size_name'], // All items have the same size name
                     'product_count' => count($items),
                 ];
             })
@@ -517,17 +517,17 @@ class ProductController extends Controller
         $flavorsArray = $topSellingProducts->flatMap(function ($product) {
             return $product->product->flavors->map(function ($flavor) use ($product) {
                 return [
-                    'flavor_id' => $flavor->id,
+                    'flavor_id'   => $flavor->id,
                     'flavor_name' => $flavor->name, // Assuming 'name' is a column in flavors table
-                    'product_id' => $product->product->id,
+                    'product_id'  => $product->product->id,
                 ];
             });
         })
             ->groupBy('flavor_id') // Group by flavor ID
             ->map(function ($items, $flavorId) {
                 return [
-                    'flavor_id' => $flavorId,
-                    'flavor_name' => $items[0]['flavor_name'], // All items have the same flavor name
+                    'flavor_id'     => $flavorId,
+                    'flavor_name'   => $items[0]['flavor_name'], // All items have the same flavor name
                     'product_count' => count($items),
                 ];
             })
@@ -560,13 +560,13 @@ class ProductController extends Controller
 
     public function getFilterTopSellingProducts(Request $request)
     {
-        $perPage = $request->get('perPage', 1);
-        $sort = $request->get('sort', 'latest');
+        $perPage  = $request->get('perPage', 1);
+        $sort     = $request->get('sort', 'latest');
         $minPrice = $request->get('minPrice', 0);
         $maxPrice = $request->get('maxPrice', 999999);
-        $brands = $request->get('brands');
-        $sizes = $request->get('sizes');
-        $flavors = $request->get('flavors');
+        $brands   = $request->get('brands');
+        $sizes    = $request->get('sizes');
+        $flavors  = $request->get('flavors');
 
         $topSellingProducts = TopSellingProduct::whereHas('product', function ($query) use ($minPrice, $maxPrice) {
             $query->where('status', 1) // Ensure the product is active
@@ -579,7 +579,7 @@ class ProductController extends Controller
 
         // Apply Brand Filter
         if ($brands) {
-            $brandsArray = explode(',', $brands);
+            $brandsArray        = explode(',', $brands);
             $topSellingProducts = $topSellingProducts->whereHas('product', function ($query) use ($brandsArray) {
                 $query->whereIn('brand_id', $brandsArray);
             });
@@ -587,7 +587,7 @@ class ProductController extends Controller
 
         // Apply Size Filter
         if ($sizes) {
-            $sizesArray = explode(',', $sizes);
+            $sizesArray         = explode(',', $sizes);
             $topSellingProducts = $topSellingProducts->whereHas('product.sizes', function ($query) use ($sizesArray) {
                 $query->whereIn('size_id', $sizesArray);
             });
@@ -595,7 +595,7 @@ class ProductController extends Controller
 
         // Apply Flavor Filter
         if ($flavors) {
-            $flavorsArray = explode(',', $flavors);
+            $flavorsArray       = explode(',', $flavors);
             $topSellingProducts = $topSellingProducts->whereHas('product.flavors', function ($query) use ($flavorsArray) {
                 $query->whereIn('flavor_id', $flavorsArray);
             });
@@ -629,7 +629,7 @@ class ProductController extends Controller
         $topSellingProducts = $topSellingProducts->paginate($perPage);
 
         return response()->json([
-            'products' => $topSellingProducts->items(),
+            'products'   => $topSellingProducts->items(),
             'pagination' => view('vendor.pagination.default', ['paginator' => $topSellingProducts])->render(),
         ]);
     }
@@ -641,7 +641,7 @@ class ProductController extends Controller
             $Products = Product::where('name', 'like', "%$search%")->where('status', 1)->orderBy('id', 'DESC')
                 ->get();
             $categories = Category::where('status', 1)->get();
-            $brands = Brand::select('name', 'image', 'id')
+            $brands     = Brand::select('name', 'image', 'id')
                 ->orderBy('name')
                 ->get()
                 ->groupBy(function ($brand) {
@@ -653,7 +653,7 @@ class ProductController extends Controller
                 ->get()
                 ->map(function ($category) use ($Products) {
                     return [
-                        'category_id' => $category->id,
+                        'category_id'   => $category->id,
                         'category_name' => $category->name, // Assuming 'name' is a column in the categories table
                         'product_count' => $Products->where('category_id', $category->id)->count(),
                     ];
@@ -662,8 +662,8 @@ class ProductController extends Controller
             $sizeArray = $Products->flatMap(function ($product) {
                 return $product->sizes->map(function ($size) use ($product) {
                     return [
-                        'size_id' => $size->id,
-                        'size_name' => $size->name, // Assuming 'name' is a column in sizes table
+                        'size_id'    => $size->id,
+                        'size_name'  => $size->name, // Assuming 'name' is a column in sizes table
                         'product_id' => $product->id,
                     ];
                 });
@@ -671,8 +671,8 @@ class ProductController extends Controller
                 ->groupBy('size_id') // Group by size ID
                 ->map(function ($items, $sizeId) {
                     return [
-                        'size_id' => $sizeId,
-                        'size_name' => $items[0]['size_name'], // All items have the same size name
+                        'size_id'       => $sizeId,
+                        'size_name'     => $items[0]['size_name'], // All items have the same size name
                         'product_count' => count($items),
                     ];
                 })
@@ -681,17 +681,17 @@ class ProductController extends Controller
             $flavorsArray = $Products->flatMap(function ($product) {
                 return $product->flavors->map(function ($flavor) use ($product) {
                     return [
-                        'flavor_id' => $flavor->id,
+                        'flavor_id'   => $flavor->id,
                         'flavor_name' => $flavor->name, // Assuming 'name' is a column in sizes table
-                        'product_id' => $product->id,
+                        'product_id'  => $product->id,
                     ];
                 });
             })
                 ->groupBy('flavor_id') // Group by size ID
                 ->map(function ($items, $sizeId) {
                     return [
-                        'flavor_id' => $sizeId,
-                        'flavor_name' => $items[0]['flavor_name'], // All items have the same size name
+                        'flavor_id'     => $sizeId,
+                        'flavor_name'   => $items[0]['flavor_name'], // All items have the same size name
                         'product_count' => count($items),
                     ];
                 })
@@ -705,12 +705,12 @@ class ProductController extends Controller
             $minPrice = $prices->min();
             $maxPrice = $prices->max();
 
-            $totalRecords = $Products->count();
+            $totalRecords   = $Products->count();
             $productsBrands = $Products->groupBy('brand_id')->map(function ($groupedProducts, $brandId) {
                 $brand = $groupedProducts->first()->brand; // All products in the group share the same brand
                 return [
-                    'brand_id' => $brand->id,
-                    'brand_name' => $brand->name, // Assuming 'name' is a column in the brands table
+                    'brand_id'      => $brand->id,
+                    'brand_name'    => $brand->name,              // Assuming 'name' is a column in the brands table
                     'product_count' => $groupedProducts->count(), // Count of products for this brand
                 ];
             })->values();
@@ -727,15 +727,15 @@ class ProductController extends Controller
 
     public function getFilterSearchProducts(Request $request)
     {
-        $perPage = $request->get('perPage', 1);
-        $sort = $request->get('sort', 'latest');
-        $minPrice = $request->get('minPrice', 0);
-        $maxPrice = $request->get('maxPrice', 999999);
-        $brands = $request->get('brands');
+        $perPage   = $request->get('perPage', 1);
+        $sort      = $request->get('sort', 'latest');
+        $minPrice  = $request->get('minPrice', 0);
+        $maxPrice  = $request->get('maxPrice', 999999);
+        $brands    = $request->get('brands');
         $categorys = $request->get('categorys');
-        $sizes = $request->get('sizes');
-        $flavors = $request->get('flavors');
-        $search = $request->get('search');
+        $sizes     = $request->get('sizes');
+        $flavors   = $request->get('flavors');
+        $search    = $request->get('search');
 
         $Products = Product::where('name', 'like', "%$search%")->where('status', 1)
             ->with(['sizes', 'flavors'])
@@ -790,7 +790,7 @@ class ProductController extends Controller
         $Products = $Products->paginate($perPage);
 
         return response()->json([
-            'products' => $Products->items(),
+            'products'   => $Products->items(),
             'pagination' => view('vendor.pagination.default', ['paginator' => $Products])->render(),
         ]);
     }
@@ -813,8 +813,8 @@ class ProductController extends Controller
     public function productsDetailsAjax(Request $request)
     {
         $productId = $request->input('id');
-        $product = Product::where('id', $productId)->first();
-        if(!$product) {
+        $product   = Product::where('id', $productId)->first();
+        if (! $product) {
             return response()->json(['error' => 'Product not found']);
         }
         $size = $product->sizes()->where('size_id', $request->size)->first();
@@ -824,32 +824,31 @@ class ProductController extends Controller
             $price = 0;
         }
         $product->price = $price;
-        return response()->json(['success'=>true,'product'=>$product]);
+        return response()->json(['success' => true, 'product' => $product]);
     }
 
     public function productsSizeFloverAjax(Request $request)
     {
         $productId = $request->input('id');
-        $product = Product::where('id', $productId)->first();
-        if(!$product) {
+        $product   = Product::where('id', $productId)->first();
+        if (! $product) {
             return response()->json(['error' => 'Product not found']);
         }
         $minPriceSize = $product->sizes->sortBy('pivot.price')->first();
-        $size = $product->sizes()->where('size_id', $minPriceSize->id)->first();
-        $flavor = $product->flavors->first();
-        return response()->json(['success'=>true,'flavor'=>$flavor,'size'=>$size]);
+        $size         = $product->sizes()->where('size_id', $minPriceSize->id)->first();
+        $flavor       = $product->flavors->first();
+        return response()->json(['success' => true, 'flavor' => $flavor, 'size' => $size]);
     }
-
 
     public function productsCartPost(Request $request)
     {
         $request->validate([
             'product' => 'required|exists:products,id',
-            'size' => 'required',
-            'flavor' => 'required',
+            'size'    => 'required',
+            'flavor'  => 'required',
         ]);
 
-        $product = Product::where('status', 1)->findOrFail($request->product);
+        $product  = Product::where('status', 1)->findOrFail($request->product);
         $cartItem = Cart::where('user_id', auth()->id())
             ->where('product_id', $request->product)
             ->where('size_id', $request->size)
@@ -868,13 +867,13 @@ class ProductController extends Controller
                 $price = 0;
             }
             Cart::create([
-                'user_id' => auth()->id(),
-                'product_id' => $request->product,
-                'size_id' => $request->size,
-                'flavor_id' => $request->flavor,
-                'quantity' => $request->quantity,
+                'user_id'     => auth()->id(),
+                'product_id'  => $request->product,
+                'size_id'     => $request->size,
+                'flavor_id'   => $request->flavor,
+                'quantity'    => $request->quantity,
                 'total_price' => $request->quantity * $price,
-                'price' => $price, // Adjust as needed for size/flavor-specific pricing
+                'price'       => $price, // Adjust as needed for size/flavor-specific pricing
             ]);
         }
         return redirect()->route('front.products-cart')->with('message', 'Product added to cart successfully.');
@@ -884,12 +883,12 @@ class ProductController extends Controller
     {
         $request->validate([
             'product' => 'required|exists:products,id',
-            'size' => 'required',
-            'flavor' => 'required',
+            'size'    => 'required',
+            'flavor'  => 'required',
         ]);
 
         $product = Product::where('status', 1)->where('id', $request->product)->first();
-        if (!$product) {
+        if (! $product) {
             return response()->json(['error' => 'Somthing Went Wrong..!']);
         }
         $cartItem = Cart::where('user_id', auth()->id())
@@ -910,13 +909,13 @@ class ProductController extends Controller
                 $price = 0;
             }
             Cart::create([
-                'user_id' => auth()->id(),
-                'product_id' => $request->product,
-                'size_id' => $request->size,
-                'flavor_id' => $request->flavor,
-                'quantity' => $request->quantity,
+                'user_id'     => auth()->id(),
+                'product_id'  => $request->product,
+                'size_id'     => $request->size,
+                'flavor_id'   => $request->flavor,
+                'quantity'    => $request->quantity,
                 'total_price' => $request->quantity * $price,
-                'price' => $price, // Adjust as needed for size/flavor-specific pricing
+                'price'       => $price, // Adjust as needed for size/flavor-specific pricing
             ]);
         }
         return response()->json(['success' => 'Item added to cart successfully.']);
@@ -930,12 +929,12 @@ class ProductController extends Controller
         ]);
 
         $product = Product::where('status', 1)->where('id', $request->product)->first();
-        if (!$product) {
+        if (! $product) {
             return response()->json(['error' => 'Somthing Went Wrong..!']);
         }
         $minPriceSize = $product->sizes->sortBy('pivot.price')->first();
-        $flavor = $product->flavors->first();
-        $cartItem = Cart::where('user_id', auth()->id())
+        $flavor       = $product->flavors->first();
+        $cartItem     = Cart::where('user_id', auth()->id())
             ->where('product_id', $request->product)
             ->where('size_id', $minPriceSize->id)
             ->where('flavor_id', $flavor->id)
@@ -953,13 +952,13 @@ class ProductController extends Controller
                 $price = 0;
             }
             Cart::create([
-                'user_id' => auth()->id(),
-                'product_id' => $request->product,
-                'size_id' => $minPriceSize->id,
-                'flavor_id' => $flavor->id,
-                'quantity' => $request->quantity,
+                'user_id'     => auth()->id(),
+                'product_id'  => $request->product,
+                'size_id'     => $minPriceSize->id,
+                'flavor_id'   => $flavor->id,
+                'quantity'    => $request->quantity,
                 'total_price' => $request->quantity * $price,
-                'price' => $price, // Adjust as needed for size/flavor-specific pricing
+                'price'       => $price, // Adjust as needed for size/flavor-specific pricing
             ]);
         }
         return response()->json(['success' => 'Item added to cart successfully.']);
@@ -969,10 +968,10 @@ class ProductController extends Controller
     public function productsCartSync(Request $request)
     {
         $request->validate([
-            'cartItems' => 'required|array',
-            'cartItems.*.product' => 'required|exists:products,id',
-            'cartItems.*.size' => 'required|string',
-            'cartItems.*.flavor' => 'required|string',
+            'cartItems'            => 'required|array',
+            'cartItems.*.product'  => 'required|exists:products,id',
+            'cartItems.*.size'     => 'required|string',
+            'cartItems.*.flavor'   => 'required|string',
             'cartItems.*.quantity' => 'required|integer|min:1',
         ]);
 
@@ -1000,13 +999,13 @@ class ProductController extends Controller
                         $price = 0;
                     }
                     Cart::create([
-                        'user_id' => $userId,
-                        'product_id' => $item['product'],
-                        'size_id' => $item['size'],
-                        'flavor_id' => $item['flavor'],
-                        'quantity' => $item['quantity'],
+                        'user_id'     => $userId,
+                        'product_id'  => $item['product'],
+                        'size_id'     => $item['size'],
+                        'flavor_id'   => $item['flavor'],
+                        'quantity'    => $item['quantity'],
                         'total_price' => $item['quantity'] * $price,
-                        'price' => $price,
+                        'price'       => $price,
                     ]);
                 }
             }
@@ -1017,8 +1016,8 @@ class ProductController extends Controller
     public function productsCartSyncOther(Request $request)
     {
         $request->validate([
-            'cartItems' => 'required|array',
-            'cartItems.*.product' => 'required|exists:products,id',
+            'cartItems'            => 'required|array',
+            'cartItems.*.product'  => 'required|exists:products,id',
             'cartItems.*.quantity' => 'required|integer|min:1',
         ]);
 
@@ -1027,8 +1026,8 @@ class ProductController extends Controller
         foreach ($request->cartItems as $item) {
             $product = Product::where('status', 1)->findOrFail($item['product']);
             if ($product) {
-                $minPriceSize = $product->sizes->sortBy('pivot.price')->first();
-                $flavor = $product->flavors->first();
+                $minPriceSize     = $product->sizes->sortBy('pivot.price')->first();
+                $flavor           = $product->flavors->first();
                 $existingCartItem = Cart::where('user_id', auth()->id())
                     ->where('product_id', $item['product'])
                     ->where('size_id', $minPriceSize->id)
@@ -1047,13 +1046,13 @@ class ProductController extends Controller
                         $price = 0;
                     }
                     Cart::create([
-                        'user_id' => $userId,
-                        'product_id' => $item['product'],
-                        'size_id' => $minPriceSize->id,
-                        'flavor_id' => $flavor->id,
-                        'quantity' => $item['quantity'],
+                        'user_id'     => $userId,
+                        'product_id'  => $item['product'],
+                        'size_id'     => $minPriceSize->id,
+                        'flavor_id'   => $flavor->id,
+                        'quantity'    => $item['quantity'],
                         'total_price' => $item['quantity'] * $price,
-                        'price' => $price,
+                        'price'       => $price,
                     ]);
                 }
             }
@@ -1064,13 +1063,13 @@ class ProductController extends Controller
     public function productsCartUpdateQuantity(Request $request)
     {
         $request->validate([
-            'id' => 'required|exists:carts,id',
+            'id'       => 'required|exists:carts,id',
             'quantity' => 'required|integer|min:1',
         ]);
 
         $cartItem = Cart::where('id', $request->id)->where('user_id', auth()->id())->first();
         if ($cartItem) {
-            $cartItem->quantity = $request->quantity;
+            $cartItem->quantity    = $request->quantity;
             $cartItem->total_price = $cartItem->quantity * $cartItem->price;
             $cartItem->save();
             $totalOrder = Cart::where('user_id', auth()->id())->sum('total_price');
@@ -1112,23 +1111,33 @@ class ProductController extends Controller
         if ($subTotal == 0) {
             return redirect()->route('front.products')->with('error', 'Your Cart is Empty..!');
         }
-        $user = User::find(Auth::user()->id);
+        $user                = User::find(Auth::user()->id);
         $shippingChargeValue = SiteSetting::getSiteSettings('shipping_charges');
-        if(isset($shippingChargeValue) && isset($shippingChargeValue->value) && $shippingChargeValue != null && $shippingChargeValue->value != ''){
+        if (isset($shippingChargeValue) && isset($shippingChargeValue->value) && $shippingChargeValue != null && $shippingChargeValue->value != '') {
             $shippingCharge = $shippingChargeValue->value;
-        }else{
+        } else {
             $shippingCharge = 0;
         }
         $shipping_free_amount = SiteSetting::getSiteSettings('shipping_free_amount');
-        if(isset($shipping_free_amount) && isset($shipping_free_amount->value) && $shipping_free_amount != null && $shipping_free_amount->value != '' && $subTotal >= $shipping_free_amount->value){
+        if (isset($shipping_free_amount) && isset($shipping_free_amount->value) && $shipping_free_amount != null && $shipping_free_amount->value != '' && $subTotal >= $shipping_free_amount->value) {
             $shippingCharge = 0;
         }
         $totalOrder = $subTotal + $shippingCharge;
-        return view('front.products.products-checkout', ['subTotal' => $subTotal,'user'=>$user, 'shippingCharge' => $shippingCharge, 'totalOrder' => $totalOrder]);
+        return view('front.products.products-checkout', ['subTotal' => $subTotal, 'user' => $user, 'shippingCharge' => $shippingCharge, 'totalOrder' => $totalOrder]);
     }
 
     public function productsCompleted($id)
     {
-        return view('front.products.products-completed',['id'=>$id]);
+        $order = Order::where('id', $id)->where('user_id', auth()->id())->first();
+        if (! $order) {
+            return redirect()->back()->with('error', 'Order not found.');
+        }
+        if ($order->payment_status == 'pending' || $order->payment_status == 'failed') {
+            return redirect()->route('front.orders.payment-upload.get', ['id' => $id])->with('error', 'Please upload your payment proof to complete the order.');
+        }
+         if ($order->order_status != 'pending') {
+            return redirect()->route('front.orders.details', ['id' => $id]);
+        }
+        return view('front.products.products-completed', ['id' => $id, 'order' => $order]);
     }
 }

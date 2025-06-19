@@ -23,9 +23,9 @@
                                     <th class="text-center">ID</th>
                                     <th class="text-center">Name</th>
                                     <th class="text-center">Descriptions</th>
-                                    <th class="text-center">Status</th>
+                                    {{-- <th class="text-center">Status</th> --}}
                                     <th class="text-center">Created At</th>
-                                    <th class="text-center">Actions</th>
+                                    {{-- <th class="text-center">Actions</th> --}}
                                 </tr>
                             </thead>
                         </table>
@@ -66,20 +66,20 @@
                     {
                         data: 'description'
                     },
-                    {
-                        data: 'status',
-                        className: "text-center",
-                    },
+                    // {
+                    //     data: 'status',
+                    //     className: "text-center",
+                    // },
                     {
                         data: 'created_at',
                         className: "text-center",
                     },
-                    {
-                        data: 'actions',
-                        className: "text-center",
-                        orderable: false,
-                        searchable: false
-                    },
+                    // {
+                    //     data: 'actions',
+                    //     className: "text-center",
+                    //     orderable: false,
+                    //     searchable: false
+                    // },
                 ]
             });
 

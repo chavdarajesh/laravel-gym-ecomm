@@ -122,6 +122,9 @@ class NewsletterMailController extends Controller
 
     public function  sendMail($id)
     {
+        if(env('MAIL_FROM_ADDRESS') == '') {
+           return redirect()->back()->with('error', 'Somthing Went Wrong..!');
+       }
         $NewsletterContent = NewsletterContent::find($id);
         if ($NewsletterContent) {
             $emailAddresses = Newsletter::where('status', 1)->whereNotNull('email')->get();

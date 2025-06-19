@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,13 +10,11 @@ class Order extends Model
     use HasFactory;
     use SoftDeletes;
 
-
     protected $fillable = [
         'price',
+        'order_id',
         'user_id',
         'payment_id',
-        'payment_token',
-        'status',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -28,7 +25,7 @@ class Order extends Model
         'order_address_id',
         'payment_status',
         'order_status',
-        'order_address_id',
+        'return_status',
     ];
 
     public function user()
@@ -45,13 +42,13 @@ class Order extends Model
     public function statuses()
     {
         return $this->belongsToMany(OrderStatus::class, 'order_status_pivots', 'order_id', 'status_id')
-            ->withPivot('description','created_at')->withTimestamps();;
+            ->withPivot('description', 'created_at')->withTimestamps();
     }
 
-    public function payments()
-    {
-        return $this->hasMany(Payment::class, 'order_id');
-    }
+    // public function payments()
+    // {
+    //     return $this->hasMany(Payment::class, 'order_id');
+    // }
 
     public function address()
     {
@@ -59,8 +56,18 @@ class Order extends Model
     }
 
     public function latestStatus()
-{
-    return $this->statuses()->orderBy('order_status_pivots.created_at', 'desc')->limit(1);
-}
+    {
+        return $this->statuses()->orderBy('order_status_pivots.updated_at', 'desc')->limit(1);
+    }
+
+    public function paymentUploads()
+    {
+        return $this->hasMany(PaymentUpload::class);
+    }
+
+    public function returnRequests()
+    {
+        return $this->hasMany(ReturnRequest::class);
+    }
 
 }

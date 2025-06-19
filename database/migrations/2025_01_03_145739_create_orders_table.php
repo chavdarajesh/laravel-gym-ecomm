@@ -16,15 +16,17 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('order_id')->nullable();
             $table->string('payment_id')->nullable();
-            $table->text('payment_token')->nullable();
             $table->string('total_order')->nullable();
             $table->string('sub_total')->nullable();
             $table->string('shipping_charge')->nullable();
-            $table->string('status')->nullable()->default('pending');
-            $table->string('payment_type')->nullable()->default('paypal');
+            $table->string('payment_type')->nullable()->default('online');
             $table->string('payment_status')->nullable()->default('pending');
             $table->string('order_status')->nullable()->default('pending');
+            $table->string('return_status')->nullable()->default('none');
+            $table->string('refund_id')->nullable();
+
             $table->unsignedBigInteger('order_address_id')->nullable();
             $table->timestamps();
             $table->softDeletes();

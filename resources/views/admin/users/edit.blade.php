@@ -125,16 +125,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <!-- <div class="mb-3 col-md-12">
-                                <label for="referral_code" class="form-label">Used Referral Code</label>
-                                <input class="form-control @error('referral_code') is-invalid @enderror"
-                                    type="text" id="referral_code" name="referral_code"
-                                    value="{{ old('referral_code') ? old('referral_code') : $User->referredByUser->name }}" />
-                                <div id="referral_code_error" class="text-danger"> @error('referral_code')
-                                    {{ $message }}
-                                    @enderror
-                                </div>
-                            </div> -->
+                            
                         </div>
                         <div class="mt-2">
                             <button type="submit" class="btn btn-primary me-2">Save changes</button>

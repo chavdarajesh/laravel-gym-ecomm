@@ -72,7 +72,7 @@
                     </span><br>
                     <strong>Order Date:</strong> {{ $order->created_at->format('d M Y') }}
                 </p>
-                <a href="{{ route('front.orders-details', $order->id) }}" class="btn btn-warning btn-block">View Details</a>
+                <a href="{{ route('front.orders.details', $order->id) }}" class="btn btn-warning btn-block">View Details</a>
             </div>
         </div>
     </div>

@@ -90,7 +90,7 @@ class UserController extends Controller
         $User->email_verified_at = Carbon::now('Asia/Kolkata');
         $User->otp = null;
         $User->password = Hash::make($request->password);
-        $User->referral_code = Str::slug($request['email'], "-");
+        // $User->referral_code = Str::slug($request['email'], "-");
 
         // if($request['referral_code']){
         //     $reffredUser = User::where('referral_code', $request['referral_code'])->first();

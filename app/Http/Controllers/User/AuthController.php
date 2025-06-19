@@ -77,6 +77,9 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required|email|exists:users,email,status,1,is_verified,1',
         ]);
+        if(env('MAIL_FROM_ADDRESS') == '') {
+           return redirect()->back()->with('error', 'Somthing Went Wrong..!');
+       }
         $token = Str::random(64);
         DB::table('password_resets')->insert([
             'email' => $request->email,

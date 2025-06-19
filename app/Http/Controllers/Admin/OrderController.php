@@ -1,15 +1,15 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderStatus;
-use App\Models\Payment;
+use App\Models\PaymentUpload;
+use App\Models\ReturnRequest;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Yajra\DataTables\Facades\DataTables;
-use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class OrderController extends Controller
 {
@@ -26,20 +26,27 @@ class OrderController extends Controller
                 ->addColumn('user', function ($row) {
                     return '<a href="' . route("admin.users.view", $row->user_id) . '">' . $row->user->name . '</a>';
                 })
-                ->addColumn('payment_id', function ($row) {
-                    return $row->payment_id;
+                ->addColumn('payment_status', function ($row) {
+                    return $row->payment_status ? ucfirst($row->payment_status) : 'Pending';
+                    //for completed one need to link payment upload
+                })
+                ->addColumn('order_status', function ($row) {
+                    return $row->order_status ? ucfirst($row->order_status) : 'Pending';
+                })
+                ->addColumn('return_status', function ($row) {
+                    return $row->return_status ? ucfirst($row->return_status) : '-';
                 })
                 ->addColumn('total_order', function ($row) {
-                    return $row->total_order;
+                    return $row->total_order ? '$' . number_format($row->total_order, 2) : '$0.00';
                 })
-                ->addColumn('status', function ($row) {
-                    return $row->status;
+                ->addColumn('created_at', function ($row) {
+                    return $row->created_at ? Carbon::parse($row->created_at)->setTimezone('Asia/Kolkata')->toDateTimeString() : '';
                 })
                 ->addColumn('actions', function ($row) {
                     $data['id'] = $row->id;
                     return View::make('admin.orders.actions', ['data' => $data])->render();
                 })
-                ->rawColumns(['id', 'actions', 'payment_id', 'total_order', 'status','user'])
+                ->rawColumns(['id', 'actions', 'payment_status', 'total_order', 'order_status', 'user', 'created_at'])
                 ->make(true);
         } else {
             return view('admin.orders.index');
@@ -65,34 +72,55 @@ class OrderController extends Controller
     {
         $Order = Order::find($id);
         if ($Order) {
-            $OrderStatus = OrderStatus::where('status', 1)->get();
-            return view('admin.orders.view', ['Order' => $Order, 'OrderStatus' => $OrderStatus]);
+            $OrderStatus  = OrderStatus::where('status', 1)->where('admin_visible', 1)->where('type', 'order')->get();
+            $ReturnStatus = OrderStatus::where('status', 1)->where('admin_visible', 1)->where('type', 'return')->get();
+            return view('admin.orders.view', ['Order' => $Order, 'OrderStatus' => $OrderStatus, 'ReturnStatus' => $ReturnStatus]);
         } else {
             return redirect()->back()->with('error', 'Order Not Found..!');
         }
     }
 
-
-    public function updateStatus(Request $request, $id)
+    public function orderUpdateStatus(Request $request, $id)
     {
         if ($id) {
 
             $request->validate([
-                'status' => 'required|string|max:255'
+                'status' => 'required|string|max:255',
             ]);
 
             $Order = Order::find($id);
 
-            $Order->statuses()->attach($request->status, [
-                'description' => $request->description,
-            ]);
-            $markAsCompleted = $request->input('mark_as_completed');
-            if ($markAsCompleted) {
-                $Order->order_status = 'completed';
-                $Order->save();
+            $orderStatus = OrderStatus::where('id', $request->status)->first();
+
+            if (! $orderStatus) {
+                return redirect()->back()->with('error', 'Invalid status selected.');
             }
+            if ($orderStatus->key == 'order_cancelled_by_admin') {
+                if (($Order->payment_status == 'pending' || $Order->payment_status == 'failed' || $Order->payment_status == 'processing') && $Order->order_status == 'pending') {
+                    $Order->update([
+                        'order_status'   => 'cancelled',
+                        'payment_status' => 'cancelled',
+                    ]);
+                    $Order->statuses()->attach($orderStatus->id, [
+                        'description' => 'Order has been cancelled by the Admin.',
+                    ]);
+                } else if ($Order->payment_status == 'completed' && $Order->order_status == 'processing') {
+
+                    return redirect()->back()->with('error', 'Order is in processing state. You cannot cancel this order.');
+                }
+            } else {
+                $Order->statuses()->attach($request->status, [
+                    'description' => $request->description ? $request->description : '',
+                ]);
+                $markAsCompleted = $request->input('mark_as_completed');
+                if ($markAsCompleted) {
+                    $Order->order_status = 'delivered';
+                    $Order->save();
+                }
+            }
+
             if ($Order) {
-                return redirect()->back()->with('message', 'Status Updated Sucssesfully..');
+                return redirect()->back()->with('success', 'Status Updated Sucssesfully..');
             } else {
                 return redirect()->back()->with('error', 'Somthing Went Wrong..!');
             }
@@ -101,68 +129,138 @@ class OrderController extends Controller
         }
     }
 
-
-    public function refundPayment(Request $request,$id)
+    public function paymentUpdateStatus(Request $request)
     {
-        $order = Order::where('id', $id)->first();
-        if (!$order) {
-            return redirect()->back()->with('error', 'Order not found.');
+        $request->validate([
+            'payment_upload_id' => 'required|integer',
+            'payment_status'    => 'required|in:approved,rejected',
+            'reject_reason'     => 'nullable|string|max:255',
+        ]);
+
+        $payment = PaymentUpload::find($request->payment_upload_id);
+
+        if (! $payment) {
+            return redirect()->back()->with('error', 'Payment request not found.');
         }
+        $payment->request_status = $request->payment_status;
+        $payment->is_verified    = 1;
+        $payment->save();
 
-        $Payment = Payment::where('order_id', $id)->where('payment_from', 'user')->where('status', 'COMPLETED')->first();
-        if (!$Payment) {
-            return redirect()->back()->with('error', 'Payment not found.');
-        }
-        $provider = new PayPalClient;
-        $provider->setApiCredentials(config('paypal'));
-        $provider->getAccessToken();
-
-        try {
-            $transactionId = $Payment->capture_id;
-            $amount = $request->refund ? $request->refund : $order->sub_total;
-            $invoiceId = 'INVOICE_' . $id;
-            $resone = 'Cancelled By Admin';
-
-            $response = $provider->refundCapturedPayment($transactionId, $invoiceId, $amount, $resone);
-            if (isset($response['status']) && $response['status'] === 'COMPLETED') {
-                $order = Order::where('id', $id)->first();
-
-                $order->update([
-                    'status' => 'completed',
-                    'payment_status' => 'refund',
-                    'order_status' => 'refund',
-                ]);
-
-                $statusId = OrderStatus::where('name', 'Refunded')->first()->id;
+        $order = Order::find($payment->order_id);
+        if ($order) {
+            if ($request->payment_status === 'approved') {
+                $order->payment_status = 'completed';
+                $order->order_status   = 'processing';
+                $order->payment_id     = $payment->id;
+                $statusId              = OrderStatus::where('key', 'payment_completed')->first()->id;
                 $order->statuses()->attach($statusId, [
-                    'description' => 'Order has been refunded.',
+                    'description' => 'Payment has been approved.',
                 ]);
 
-
-                $paymentData = [
-                    'order_id' => $order->id,
-                    'status' => $response['status'],
-                    'payment_from' => 'store',
-                    'total_order' => $amount,
-                    'sub_total' => $amount,
-                    'shipping_charge' => 0,
-                    'paypal_fee' => 0,
-                    'net_amount' => $amount,
-                    'payment_id' => $response['id'],
-                    'user_id' => $order->user_id,
-                    'payment_method' => 'PayPal',
-                    'payment_status' => 'completed',
-                    'capture_id' => $transactionId ?? ''
-                ];
-
-                Payment::create($paymentData);
-                return redirect()->back()->with('message', 'Refund successful.');
+                $statusId = OrderStatus::where('key', 'order_placed')->first()->id;
+                $order->statuses()->attach($statusId, [
+                    'description' => 'Order has been placed.',
+                    'created_at'  => Carbon::now()->addSeconds(5),
+                    'updated_at'  => Carbon::now()->addSeconds(5),
+                ]);
             } else {
-                return redirect()->back()->with('error', 'Refund failed.');
+                $order->payment_status = 'failed';
+                $order->order_status   = 'pending';
+
+                $statusId = OrderStatus::where('key', 'payment_failed')->first()->id;
+                $order->statuses()->attach($statusId, [
+                    'description' => $request->reject_reason ?? 'Payment request was rejected.',
+                ]);
+
+                $statusId = OrderStatus::where('key', 'payment_pending')->first()->id;
+                $order->statuses()->attach($statusId, [
+                    'description' => 'Please Process Payment again.',
+                    'created_at'  => Carbon::now()->addSeconds(5),
+                    'updated_at'  => Carbon::now()->addSeconds(5),
+                ]);
             }
-        } catch (\Exception $e) {
-            // return redirect()->back()->with('error', $e->getMessage());
-            return redirect()->back()->with('error', '"Something went wrong!.');
+            $order->save();
+        }
+
+        return redirect()->back()->with('success', 'Payment request updated successfully.');
+    }
+
+    public function returnUpdateStatus(Request $request)
+    {
+        $request->validate([
+            'return_request_id'    => 'required|integer|exists:return_requests,id',
+            'return_status'        => 'required|in:approved,rejected',
+            'return_reject_reason' => 'nullable|string|max:255',
+        ]);
+
+        $returnRequest = ReturnRequest::find($request->return_request_id);
+        if (! $returnRequest) {
+            return redirect()->back()->with('error', 'Return request not found.');
+        }
+        $returnRequest->request_status = $request->return_status;
+        $returnRequest->is_verified    = 1;
+        $returnRequest->save();
+
+        // Optionally update order status/history
+        $order = $returnRequest->order;
+        if ($order) {
+            if ($request->return_status === 'approved') {
+                $order->return_status = 'approved';
+                $statusId             = OrderStatus::where('key', 'order_returned')->first()->id ?? null;
+                if ($statusId) {
+                    $order->statuses()->attach($statusId, [
+                        'description' => 'Return request approved by admin.',
+                    ]);
+                }
+
+                $statusId = OrderStatus::where('key', 'refund_processing')->first()->id ?? null;
+                if ($statusId) {
+                    $order->statuses()->attach($statusId, [
+                        'description' => 'Refund is being processed.',
+                        'created_at'  => Carbon::now()->addSeconds(5),
+                        'updated_at'  => Carbon::now()->addSeconds(5),
+                    ]);
+                }
+            } else {
+                $order->return_status = 'rejected';
+                $statusId             = OrderStatus::where('key', 'return_rejected')->first()->id ?? null;
+                if ($statusId) {
+                    $order->statuses()->attach($statusId, [
+                        'description' => $request->return_reject_reason ?: 'Return request rejected by admin.',
+                    ]);
+                }
+            }
+            $order->save();
+        }
+
+        return back()->with('success', 'Return request status updated successfully.');
+    }
+
+    public function updateRefundStatus(Request $request, $id)
+    {
+        if ($id) {
+            $request->validate([
+                'refund_status'      => 'required',
+                'refund_description' => 'nullable|string|max:1000',
+            ]);
+
+            $Order = Order::find($id);
+
+            // $statusId = OrderStatus::where('name', 'Order Refunded')->first()->id ?? null;
+            $Order->statuses()->attach($request->refund_status, [
+                'description' => $request->refund_description ? $request->refund_description : 'Order has been refunded.',
+            ]);
+
+            $Order->return_status = 'refunded';
+            $Order->save();
+
+            if ($Order) {
+                return redirect()->back()->with('message', 'Status Updated Successfully..');
+            } else {
+                return redirect()->back()->with('error', 'Something Went Wrong..!');
+            }
+        } else {
+            return redirect()->back()->with('error', 'Order Not Found..!');
         }
     }
 }

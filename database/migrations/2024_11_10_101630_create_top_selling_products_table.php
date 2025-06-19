@@ -17,8 +17,6 @@ class CreateTopSellingProductsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('product_id')->nullable();
             $table->timestamps();
-
-            // Foreign key constraint to reference the products table
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->softDeletes();
         });
