@@ -51,75 +51,45 @@
 
         /* Custom timeline styles */
         .timeline {
-            list-style: none;
-            padding-left: 0;
             position: relative;
         }
 
         .timeline-item {
-            display: flex;
-            margin-bottom: 20px;
             position: relative;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 10px;
-            width: 2px;
-            height: 100%;
-            background-color: #f0f0f0;
+            margin-bottom: 2rem;
         }
 
         .timeline-icon {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            margin-right: 15px;
             position: relative;
-            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .timeline-content {
-            flex-grow: 1;
-            background-color: #f8f9fa;
-            padding: 10px 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .timeline-item:last-child .timeline-icon {
-            background-color: #dc3545;
-        }
-
-        .timeline-item .timeline-icon.bg-primary {
-            background-color: #007bff;
-        }
-
-        .timeline-item .timeline-icon.bg-danger {
-            background-color: #dc3545;
-        }
-
-        .timeline-content strong {
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        .timeline-content p {
+        .icon-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 1rem;
-            margin-top: 10px;
         }
 
-        .timeline-content small {
-            font-size: 0.85rem;
-            color: #6c757d;
+        .timeline-line {
+            width: 2px;
+            background-color: #dee2e6;
+            flex-grow: 1;
+            margin-top: 5px;
         }
 
         td {
             white-space: nowrap;
         }
     </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
 @stop
 
 @section('content')
@@ -196,31 +166,33 @@
 
         <!-- Status History Timeline Section -->
         <div class="card shadow-lg mb-4">
-            <div class="card-header bg-warning text-white">
-                <h5 class="mb-0">Order Status History</h5>
+             <div class="card-header bg-warning text-white">
+                <h5 class="mb-0">Order Status Timeline</h5>
             </div>
-            <div class="card-body">
-                <ul class="timeline">
-                    @foreach ($order->statuses as $status)
-                        <li class="timeline-item">
-                            <div class="timeline-icon {{ $loop->last ? 'bg-primary' : 'bg-success' }}"></div>
-                            <div class="timeline-content">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <strong class="text-uppercase">{{ ucfirst($status->name) }}</strong> |
-                                        ({{ $status->description }})
-                                    </div>
-                                    <small class="text-muted">
-                                        {{ $status->pivot->created_at->format('d M Y, h:i A') }}
-                                    </small>
-                                </div>
-                                <p>{{ $status->pivot->description ?? '-' }}</p>
+            <div class="timeline m-3">
+                @foreach ($order->statuses as $status)
+                    <div class="timeline-item d-flex flex-column flex-md-row">
+                        <div class="timeline-icon flex-shrink-0 me-md-4 mb-2 mb-md-0">
+                            <div class="icon-circle {{ $loop->last ? 'bg-success' : 'bg-secondary' }}">
+                                <i class="bi {{ $loop->last ? 'bi-check-circle-fill' : 'bi-circle' }}"></i>
                             </div>
-                        </li>
-                    @endforeach
-                </ul>
+                            <div class="timeline-line d-none d-md-block"></div>
+                        </div>
+                        <div class="card flex-grow-1 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ ucfirst($status->name) }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">
+                                    {{ $status->pivot->created_at->format('d M Y, h:i A') }}
+                                </h6>
+                                <p class="card-text">{!! $status->pivot->description ?? '-' !!}</p>
+                                <small class="text-muted">({{ $status->description }})</small>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
+
 
 
         <!-- Product List Section -->
@@ -334,7 +306,7 @@
                                         </td>
                                         <td>
                                             <span
-                                                class="badge bg-warning text-dark text-capitalize">{{ $payment->request_status }}</span>
+                                                class="badge bg-secondary text-white text-capitalize">{{ $payment->request_status }}</span>
                                         </td>
                                         <td><strong>${{ number_format($payment->total_order, 2) }}</strong></td>
                                         <td>{{ \Carbon\Carbon::parse($payment->created_at)->format('d M Y, h:i A') }}</td>
@@ -388,7 +360,8 @@
                                             <small>
                                                 <strong>Bank:</strong> {{ $return->bank_name }}<br>
                                                 <strong>Branch:</strong> {{ $return->branch_name }}
-                                                ({{ $return->branch_code }})<br>
+                                                ({{ $return->branch_code }})
+                                                <br>
                                                 <strong>A/C No:</strong> {{ $return->bank_account_no }}<br>
                                                 <strong>IFSC:</strong> {{ $return->ifsc_code }}<br>
                                                 <strong>Holder:</strong> {{ $return->bank_account_holder_name }}
@@ -402,7 +375,7 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <span class="badge bg-danger text-white text-capitalize">
+                                            <span class="badge bg-secondary text-white text-capitalize">
                                                 {{ $return->request_status }}
                                             </span>
                                         </td>
