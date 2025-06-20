@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Mail\Order\OrderStatusUpdatedMail;
 use App\Models\Order;
 use App\Models\OrderStatus;
 use App\Models\ReturnRequest;
@@ -9,6 +10,7 @@ use App\Models\ReturnRequestProduct;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class ReturnRequestController extends Controller
 {
@@ -129,6 +131,20 @@ class ReturnRequestController extends Controller
             'description' => 'User requested return. Awaiting admin verification.',
         ]);
 
+        if (env('MAIL_USERNAME')) {
+                if ($order->user && $order->user->email) {
+                    Mail::to($order->user->email)->send(new OrderStatusUpdatedMail($order));
+                }
+                $adminEmail = SiteSetting::getSiteSettings('admin_email');
+                if (isset($adminEmail) && isset($adminEmail->value) && $adminEmail != null && $adminEmail->value != '') {
+                    $adminEmail = $adminEmail->value;
+                } else {
+                    $adminEmail = env('ADMIN_EMAIL', '');
+                }
+                if ($adminEmail) {
+                    Mail::to($adminEmail)->send(new OrderStatusUpdatedMail($order));
+                }
+            }
         return redirect()->back()->with('success', 'Return request submitted. Awaiting admin verification.');
 
     }

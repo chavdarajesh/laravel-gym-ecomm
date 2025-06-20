@@ -2,12 +2,14 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Mail\Order\OrderStatusUpdatedMail;
 use App\Models\Order;
 use App\Models\OrderStatus;
 use App\Models\PaymentUpload;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class StaticPaymentController extends Controller
 {
@@ -122,6 +124,20 @@ class StaticPaymentController extends Controller
         $order->statuses()->attach($statusId, [
             'description' => 'Payment is being processed. Please wait for admin verification.',
         ]);
+        if (env('MAIL_USERNAME')) {
+            if ($order->user && $order->user->email) {
+                Mail::to($order->user->email)->send(new OrderStatusUpdatedMail($order));
+            }
+            $adminEmail = SiteSetting::getSiteSettings('admin_email');
+            if (isset($adminEmail) && isset($adminEmail->value) && $adminEmail != null && $adminEmail->value != '') {
+                $adminEmail = $adminEmail->value;
+            } else {
+                $adminEmail = env('ADMIN_EMAIL', '');
+            }
+            if ($adminEmail) {
+                Mail::to($adminEmail)->send(new OrderStatusUpdatedMail($order));
+            }
+        }
         return redirect()->route('front.orders.completed', $id)->with('success', 'Payment submitted. Awaiting admin verification.');
     }
 }

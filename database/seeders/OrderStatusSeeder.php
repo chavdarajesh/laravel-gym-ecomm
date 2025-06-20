@@ -84,7 +84,7 @@ class OrderStatusSeeder extends Seeder
                 'key' => 'order_cancelled',
                 'type' => 'order',
                 'admin_visible' => 0,
-                'description' => 'The order was cancelled by the customer or due to inactivity.',
+                'description' => 'The order was cancelled by the customer.',
                 'status' => 1,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -184,7 +184,7 @@ class OrderStatusSeeder extends Seeder
                 'key' => 'payment_failed',
                 'type' => 'payment',
                 'admin_visible' => 0,
-                'description' => 'The payment transaction has failed. The order will not proceed until payment is completed.',
+                'description' => 'The payment transaction has failed. please upload the payment details again.',
                 'status' => 1,
                 'created_at' => now(),
                 'updated_at' => now()

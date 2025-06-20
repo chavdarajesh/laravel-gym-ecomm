@@ -61,12 +61,6 @@ order_status → pending | processing | delivered | cancelled
 return_status -> 'none', 'requested', 'approved', 'rejected', 'refunded'
 
 
-baki 
-
-
-send mail
-
-
 
 
 

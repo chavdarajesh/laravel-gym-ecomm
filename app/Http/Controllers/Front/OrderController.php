@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Mail\Order\OrderStatusUpdatedMail;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderAddress;
@@ -11,6 +12,7 @@ use App\Models\SiteSetting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -96,6 +98,20 @@ class OrderController extends Controller
         $order->statuses()->attach($statusId, [
             'description' => 'Order has been Created.',
         ]);
+        if (env('MAIL_USERNAME')) {
+            if ($order->user && $order->user->email) {
+                Mail::to($order->user->email)->send(new OrderStatusUpdatedMail($order));
+            }
+            $adminEmail = SiteSetting::getSiteSettings('admin_email');
+            if (isset($adminEmail) && isset($adminEmail->value) && $adminEmail != null && $adminEmail->value != '') {
+                $adminEmail = $adminEmail->value;
+            } else {
+                $adminEmail = env('ADMIN_EMAIL', '');
+            }
+            if ($adminEmail) {
+                Mail::to($adminEmail)->send(new OrderStatusUpdatedMail($order));
+            }
+        }
 
         $statusId = OrderStatus::where('key', 'payment_pending')->first()->id;
         $order->statuses()->attach($statusId, [
@@ -103,6 +119,7 @@ class OrderController extends Controller
             'created_at'  => Carbon::now()->addSeconds(5),
             'updated_at'  => Carbon::now()->addSeconds(5),
         ]);
+
         return redirect()->route('front.orders.payment-upload.get', ['id' => $order->id]);
     }
 
@@ -150,6 +167,22 @@ class OrderController extends Controller
             $order->statuses()->attach($statusId, [
                 'description' => 'Order has been cancelled by the user.',
             ]);
+
+            if (env('MAIL_USERNAME')) {
+                if ($order->user && $order->user->email) {
+                    Mail::to($order->user->email)->send(new OrderStatusUpdatedMail($order));
+                }
+                $adminEmail = SiteSetting::getSiteSettings('admin_email');
+                if (isset($adminEmail) && isset($adminEmail->value) && $adminEmail != null && $adminEmail->value != '') {
+                    $adminEmail = $adminEmail->value;
+                } else {
+                    $adminEmail = env('ADMIN_EMAIL', '');
+                }
+                if ($adminEmail) {
+                    Mail::to($adminEmail)->send(new OrderStatusUpdatedMail($order));
+                }
+            }
+
             return redirect()->route('front.orders.details', $id)->with('success', 'Order has been cancelled successfully.');
         } else if ($order->payment_status == 'completed' && $order->order_status == 'processing') {
 

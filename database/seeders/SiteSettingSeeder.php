@@ -143,6 +143,15 @@ class SiteSettingSeeder extends Seeder
                 'order'       => 18,
                 'created_at'  => Carbon::now('Asia/Kolkata'),
             ],
+             [
+                'key'         => 'admin_email',
+                'value'       => 'admin@yopmail.com',
+                'title'       => 'Admin Email',
+                'description' => null,
+                'status'      => 19,
+                'order'       => 18,
+                'created_at'  => Carbon::now('Asia/Kolkata'),
+            ],
             [
                 'key'         => 'social_facebook_url',
                 'value'       => 'https://facebook.com',

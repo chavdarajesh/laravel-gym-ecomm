@@ -10,12 +10,12 @@ use App\Http\Controllers\Admin\FlavorController as AdminFlavorController;
 use App\Http\Controllers\Admin\NewsletterController as AdminNewsletterController;
 use App\Http\Controllers\Admin\NewsletterMailController as AdminNewsletterMailController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
-use App\Http\Controllers\Admin\PaymentUploadController as AdminPaymentUploadController;
-use App\Http\Controllers\Admin\ReturnRequestController as AdminReturnRequestController;
 use App\Http\Controllers\Admin\OrderStatusController as AdminOrderStatusController;
+use App\Http\Controllers\Admin\PaymentUploadController as AdminPaymentUploadController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductSliderController as AdminProductSliderController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
+use App\Http\Controllers\Admin\ReturnRequestController as AdminReturnRequestController;
 use App\Http\Controllers\Admin\SiteSettingController as AdminSiteSettingController;
 use App\Http\Controllers\Admin\SizeController as AdminSizeController;
 use App\Http\Controllers\Admin\SubCategoryController as AdminSubCategoryController;
@@ -249,52 +249,47 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['is_
     Route::post('/orders/return-requests/update-status', [AdminOrderController::class, 'returnUpdateStatus'])->name('admin.orders.return-requests.update.status');
     Route::post('/orders/update-refund-status/{id}', [AdminOrderController::class, 'updateRefundStatus'])->name('admin.orders.update.refund.status');
 
-
-     Route::get('/payment_uploads', [AdminPaymentUploadController::class, 'index'])->name('admin.payment_uploads.index');
+    Route::get('/payment_uploads', [AdminPaymentUploadController::class, 'index'])->name('admin.payment_uploads.index');
     Route::get('/payment_uploads/view/{id}', [AdminPaymentUploadController::class, 'view'])->name('admin.payment_uploads.view');
     Route::post('/payment_uploads/delete/{id}', [AdminPaymentUploadController::class, 'delete'])->name('admin.payment_uploads.delete');
 
-
-     Route::get('/return_requests', [AdminReturnRequestController::class, 'index'])->name('admin.return_requests.index');
+    Route::get('/return_requests', [AdminReturnRequestController::class, 'index'])->name('admin.return_requests.index');
     Route::get('/return_requests/view/{id}', [AdminReturnRequestController::class, 'view'])->name('admin.return_requests.view');
     Route::post('/return_requests/delete/{id}', [AdminReturnRequestController::class, 'delete'])->name('admin.return_requests.delete');
-
-
-    // contact us msg Modlue end
 });
 // Admin route end
 
 // User Auth Route start
-Route::get('/user/login', [AdminAuthController::class, 'loginGet'])->name('user.login.get');
-Route::post('/user/login/save', [AdminAuthController::class, 'loginSave'])->name('user.login.save');
+// Route::get('/user/login', [AdminAuthController::class, 'loginGet'])->name('user.login.get');
+// Route::post('/user/login/save', [AdminAuthController::class, 'loginSave'])->name('user.login.save');
 
-Route::get('/user/password/forgot', [AdminAuthController::class, 'passwordForgotGet'])->name('user.password.forgot.get');
-Route::post('user/password/forgot/save', [AdminAuthController::class, 'passwordForgotSave'])->name('user.password.forgot.save');
+// Route::get('/user/password/forgot', [AdminAuthController::class, 'passwordForgotGet'])->name('user.password.forgot.get');
+// Route::post('user/password/forgot/save', [AdminAuthController::class, 'passwordForgotSave'])->name('user.password.forgot.save');
 
-Route::get('/user/password/reset/{token}', [AdminAuthController::class, 'passwordResetGet'])->name('user.password.reset.get');
-Route::post('/user/password/reset/save', [AdminAuthController::class, 'passwordResetSave'])->name('user.password.reset.save');
-// User Auth Route end
+// Route::get('/user/password/reset/{token}', [AdminAuthController::class, 'passwordResetGet'])->name('user.password.reset.get');
+// Route::post('/user/password/reset/save', [AdminAuthController::class, 'passwordResetSave'])->name('user.password.reset.save');
+// // User Auth Route end
 
-// User route start
-Route::group(['namespace' => 'User', 'prefix' => 'user', 'middleware' => ['is_auth', 'is_user_active', 'is_user_verified']], function () {
+// // User route start
+// Route::group(['namespace' => 'User', 'prefix' => 'user', 'middleware' => ['is_auth', 'is_user_active', 'is_user_verified']], function () {
 
-    // dashboard route start
-    Route::get('/', function () {
-        return redirect()->route('user.dashboard');
-    });
-    Route::get('/dashboard', [UserDashboardController::class, 'dashboard'])->name('user.dashboard');
-    Route::post('/logout', [UserAuthController::class, 'logout'])->name('user.logout');
-    // dashboard route end
+//     // dashboard route start
+//     Route::get('/', function () {
+//         return redirect()->route('user.dashboard');
+//     });
+//     Route::get('/dashboard', [UserDashboardController::class, 'dashboard'])->name('user.dashboard');
+//     Route::post('/logout', [UserAuthController::class, 'logout'])->name('user.logout');
+//     // dashboard route end
 
-    // profile setting Modlue start
-    Route::get('/profile/setting/password', [UserProfileController::class, 'profileSettingsPasswordIndex'])->name('user.profile.settings.password.index');
-    Route::post('/profile/setting/password/save', [UserProfileController::class, 'profileSettingsPasswordSave'])->name('user.profile.settings.password.save');
+//     // profile setting Modlue start
+//     Route::get('/profile/setting/password', [UserProfileController::class, 'profileSettingsPasswordIndex'])->name('user.profile.settings.password.index');
+//     Route::post('/profile/setting/password/save', [UserProfileController::class, 'profileSettingsPasswordSave'])->name('user.profile.settings.password.save');
 
-    Route::get('/profile/setting', [UserProfileController::class, 'profileSettingIndex'])->name('user.profile.setting.index');
-    Route::post('/profil/esetting/save', [UserProfileController::class, 'profileSettingSave'])->name('user.profile.setting.save');
-    // profile setting Modlue end
-});
-// User route end
+//     Route::get('/profile/setting', [UserProfileController::class, 'profileSettingIndex'])->name('user.profile.setting.index');
+//     Route::post('/profil/esetting/save', [UserProfileController::class, 'profileSettingSave'])->name('user.profile.setting.save');
+//     // profile setting Modlue end
+// });
+// // User route end
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -398,7 +393,7 @@ Route::group(['namespace' => 'User', 'middleware' => ['is_auth', 'is_user_active
     Route::post('/orders/return-request/{id}', [FrontReturnRequestController::class, 'returnRequestPost'])->name('front.orders.return-request.post');
 
 });
-Route::get('paywithpaypal', [FrontPayPalController::class, 'payWithPaypal'])->name('addmoney.paywithpaypal');
-Route::post('paypal', [FrontPayPalController::class, 'postPaymentWithpaypal'])->name('addmoney.paypal');
-Route::get('paypal', [FrontPayPalController::class, 'getPaymentStatus'])->name('payment.status');
-Route::get('refund/{trns_id}', [FrontPayPalController::class, 'refund'])->name('payment.refund');
+// Route::get('paywithpaypal', [FrontPayPalController::class, 'payWithPaypal'])->name('addmoney.paywithpaypal');
+// Route::post('paypal', [FrontPayPalController::class, 'postPaymentWithpaypal'])->name('addmoney.paypal');
+// Route::get('paypal', [FrontPayPalController::class, 'getPaymentStatus'])->name('payment.status');
+// Route::get('refund/{trns_id}', [FrontPayPalController::class, 'refund'])->name('payment.refund');

@@ -2,12 +2,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\Order\OrderStatusUpdatedMail;
 use App\Models\Order;
 use App\Models\OrderStatus;
 use App\Models\PaymentUpload;
 use App\Models\ReturnRequest;
+use App\Models\SiteSetting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -104,14 +107,44 @@ class OrderController extends Controller
                     $Order->statuses()->attach($orderStatus->id, [
                         'description' => 'Order has been cancelled by the Admin.',
                     ]);
+
+                    if (env('MAIL_USERNAME')) {
+                        if ($Order->user && $Order->user->email) {
+                            Mail::to($Order->user->email)->send(new OrderStatusUpdatedMail($Order));
+                        }
+                        $adminEmail = SiteSetting::getSiteSettings('admin_email');
+                        if (isset($adminEmail) && isset($adminEmail->value) && $adminEmail != null && $adminEmail->value != '') {
+                            $adminEmail = $adminEmail->value;
+                        } else {
+                            $adminEmail = env('ADMIN_EMAIL', '');
+                        }
+                        if ($adminEmail) {
+                            Mail::to($adminEmail)->send(new OrderStatusUpdatedMail($Order));
+                        }
+                    }
                 } else if ($Order->payment_status == 'completed' && $Order->order_status == 'processing') {
 
                     return redirect()->back()->with('error', 'Order is in processing state. You cannot cancel this order.');
                 }
             } else {
                 $Order->statuses()->attach($request->status, [
-                    'description' => $request->description ? $request->description : '',
+                    'description' => $request->description ?? '',
                 ]);
+
+                if (env('MAIL_USERNAME')) {
+                        if ($Order->user && $Order->user->email) {
+                            Mail::to($Order->user->email)->send(new OrderStatusUpdatedMail($Order));
+                        }
+                        $adminEmail = SiteSetting::getSiteSettings('admin_email');
+                        if (isset($adminEmail) && isset($adminEmail->value) && $adminEmail != null && $adminEmail->value != '') {
+                            $adminEmail = $adminEmail->value;
+                        } else {
+                            $adminEmail = env('ADMIN_EMAIL', '');
+                        }
+                        if ($adminEmail) {
+                            Mail::to($adminEmail)->send(new OrderStatusUpdatedMail($Order));
+                        }
+                    }
                 $markAsCompleted = $request->input('mark_as_completed');
                 if ($markAsCompleted) {
                     $Order->order_status = 'delivered';
@@ -156,13 +189,42 @@ class OrderController extends Controller
                 $order->statuses()->attach($statusId, [
                     'description' => 'Payment has been approved.',
                 ]);
-
+                 if (env('MAIL_USERNAME')) {
+                        if ($order->user && $order->user->email) {
+                            Mail::to($order->user->email)->send(new OrderStatusUpdatedMail($order));
+                        }
+                        $adminEmail = SiteSetting::getSiteSettings('admin_email');
+                        if (isset($adminEmail) && isset($adminEmail->value) && $adminEmail != null && $adminEmail->value != '') {
+                            $adminEmail = $adminEmail->value;
+                        } else {
+                            $adminEmail = env('ADMIN_EMAIL', '');
+                        }
+                        if ($adminEmail) {
+                            Mail::to($adminEmail)->send(new OrderStatusUpdatedMail($order));
+                        }
+                    }
                 $statusId = OrderStatus::where('key', 'order_placed')->first()->id;
                 $order->statuses()->attach($statusId, [
                     'description' => 'Order has been placed.',
                     'created_at'  => Carbon::now()->addSeconds(5),
                     'updated_at'  => Carbon::now()->addSeconds(5),
                 ]);
+
+                 if (env('MAIL_USERNAME')) {
+                        if ($order->user && $order->user->email) {
+                            Mail::to($order->user->email)->send(new OrderStatusUpdatedMail($order));
+                        }
+                        $adminEmail = SiteSetting::getSiteSettings('admin_email');
+                        if (isset($adminEmail) && isset($adminEmail->value) && $adminEmail != null && $adminEmail->value != '') {
+                            $adminEmail = $adminEmail->value;
+                        } else {
+                            $adminEmail = env('ADMIN_EMAIL', '');
+                        }
+                        if ($adminEmail) {
+                            Mail::to($adminEmail)->send(new OrderStatusUpdatedMail($order));
+                        }
+                    }
+
             } else {
                 $order->payment_status = 'failed';
                 $order->order_status   = 'pending';
@@ -171,6 +233,21 @@ class OrderController extends Controller
                 $order->statuses()->attach($statusId, [
                     'description' => $request->reject_reason ?? 'Payment request was rejected.',
                 ]);
+                 if (env('MAIL_USERNAME')) {
+                        if ($order->user && $order->user->email) {
+                            Mail::to($order->user->email)->send(new OrderStatusUpdatedMail($order));
+                        }
+                        $adminEmail = SiteSetting::getSiteSettings('admin_email');
+                        if (isset($adminEmail) && isset($adminEmail->value) && $adminEmail != null && $adminEmail->value != '') {
+                            $adminEmail = $adminEmail->value;
+                        } else {
+                            $adminEmail = env('ADMIN_EMAIL', '');
+                        }
+                        if ($adminEmail) {
+                            Mail::to($adminEmail)->send(new OrderStatusUpdatedMail($order));
+                        }
+                    }
+
 
                 $statusId = OrderStatus::where('key', 'payment_pending')->first()->id;
                 $order->statuses()->attach($statusId, [
@@ -211,6 +288,20 @@ class OrderController extends Controller
                     $order->statuses()->attach($statusId, [
                         'description' => 'Return request approved by admin.',
                     ]);
+                if (env('MAIL_USERNAME')) {
+                        if ($order->user && $order->user->email) {
+                            Mail::to($order->user->email)->send(new OrderStatusUpdatedMail($order));
+                        }
+                        $adminEmail = SiteSetting::getSiteSettings('admin_email');
+                        if (isset($adminEmail) && isset($adminEmail->value) && $adminEmail != null && $adminEmail->value != '') {
+                            $adminEmail = $adminEmail->value;
+                        } else {
+                            $adminEmail = env('ADMIN_EMAIL', '');
+                        }
+                        if ($adminEmail) {
+                            Mail::to($adminEmail)->send(new OrderStatusUpdatedMail($order));
+                        }
+                    }
                 }
 
                 $statusId = OrderStatus::where('key', 'refund_processing')->first()->id ?? null;
@@ -220,6 +311,20 @@ class OrderController extends Controller
                         'created_at'  => Carbon::now()->addSeconds(5),
                         'updated_at'  => Carbon::now()->addSeconds(5),
                     ]);
+                if (env('MAIL_USERNAME')) {
+                        if ($order->user && $order->user->email) {
+                            Mail::to($order->user->email)->send(new OrderStatusUpdatedMail($order));
+                        }
+                        $adminEmail = SiteSetting::getSiteSettings('admin_email');
+                        if (isset($adminEmail) && isset($adminEmail->value) && $adminEmail != null && $adminEmail->value != '') {
+                            $adminEmail = $adminEmail->value;
+                        } else {
+                            $adminEmail = env('ADMIN_EMAIL', '');
+                        }
+                        if ($adminEmail) {
+                            Mail::to($adminEmail)->send(new OrderStatusUpdatedMail($order));
+                        }
+                    }
                 }
             } else {
                 $order->return_status = 'rejected';
@@ -228,6 +333,21 @@ class OrderController extends Controller
                     $order->statuses()->attach($statusId, [
                         'description' => $request->return_reject_reason ?: 'Return request rejected by admin.',
                     ]);
+
+                     if (env('MAIL_USERNAME')) {
+                        if ($order->user && $order->user->email) {
+                            Mail::to($order->user->email)->send(new OrderStatusUpdatedMail($order));
+                        }
+                        $adminEmail = SiteSetting::getSiteSettings('admin_email');
+                        if (isset($adminEmail) && isset($adminEmail->value) && $adminEmail != null && $adminEmail->value != '') {
+                            $adminEmail = $adminEmail->value;
+                        } else {
+                            $adminEmail = env('ADMIN_EMAIL', '');
+                        }
+                        if ($adminEmail) {
+                            Mail::to($adminEmail)->send(new OrderStatusUpdatedMail($order));
+                        }
+                    }
                 }
             }
             $order->save();
@@ -251,6 +371,20 @@ class OrderController extends Controller
                 'description' => $request->refund_description ? $request->refund_description : 'Order has been refunded.',
             ]);
 
+            if (env('MAIL_USERNAME')) {
+                        if ($Order->user && $Order->user->email) {
+                            Mail::to($Order->user->email)->send(new OrderStatusUpdatedMail($Order));
+                        }
+                        $adminEmail = SiteSetting::getSiteSettings('admin_email');
+                        if (isset($adminEmail) && isset($adminEmail->value) && $adminEmail != null && $adminEmail->value != '') {
+                            $adminEmail = $adminEmail->value;
+                        } else {
+                            $adminEmail = env('ADMIN_EMAIL', '');
+                        }
+                        if ($adminEmail) {
+                            Mail::to($adminEmail)->send(new OrderStatusUpdatedMail($Order));
+                        }
+                    }
             $Order->return_status = 'refunded';
             $Order->save();
 
