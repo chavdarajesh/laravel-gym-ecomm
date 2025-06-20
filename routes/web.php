@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\FlavorController as AdminFlavorController;
 use App\Http\Controllers\Admin\NewsletterController as AdminNewsletterController;
 use App\Http\Controllers\Admin\NewsletterMailController as AdminNewsletterMailController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\PaymentUploadController as AdminPaymentUploadController;
+use App\Http\Controllers\Admin\ReturnRequestController as AdminReturnRequestController;
 use App\Http\Controllers\Admin\OrderStatusController as AdminOrderStatusController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductSliderController as AdminProductSliderController;
@@ -243,10 +245,19 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['is_
     Route::get('/orders/view/{id}', [AdminOrderController::class, 'view'])->name('admin.orders.view');
     Route::post('/orders/delete/{id}', [AdminOrderController::class, 'delete'])->name('admin.orders.delete');
     Route::post('/orders/updateStatus/{id}', [AdminOrderController::class, 'orderUpdateStatus'])->name('admin.orders.updateStatus');
-    // Route::post('/orders/refundPayment/{id}', [AdminOrderController::class, 'refundPayment'])->name('admin.orders.refund');
     Route::post('/orders/payment/update-status', [AdminOrderController::class, 'paymentUpdateStatus'])->name('admin.orders.payment.update.status');
     Route::post('/orders/return-requests/update-status', [AdminOrderController::class, 'returnUpdateStatus'])->name('admin.orders.return-requests.update.status');
     Route::post('/orders/update-refund-status/{id}', [AdminOrderController::class, 'updateRefundStatus'])->name('admin.orders.update.refund.status');
+
+
+     Route::get('/payment_uploads', [AdminPaymentUploadController::class, 'index'])->name('admin.payment_uploads.index');
+    Route::get('/payment_uploads/view/{id}', [AdminPaymentUploadController::class, 'view'])->name('admin.payment_uploads.view');
+    Route::post('/payment_uploads/delete/{id}', [AdminPaymentUploadController::class, 'delete'])->name('admin.payment_uploads.delete');
+
+
+     Route::get('/return_requests', [AdminReturnRequestController::class, 'index'])->name('admin.return_requests.index');
+    Route::get('/return_requests/view/{id}', [AdminReturnRequestController::class, 'view'])->name('admin.return_requests.view');
+    Route::post('/return_requests/delete/{id}', [AdminReturnRequestController::class, 'delete'])->name('admin.return_requests.delete');
 
 
     // contact us msg Modlue end

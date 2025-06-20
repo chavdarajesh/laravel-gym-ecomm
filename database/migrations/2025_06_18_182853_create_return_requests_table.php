@@ -22,7 +22,7 @@ class CreateReturnRequestsTable extends Migration
             $table->string('return_date_time')->nullable();
             $table->string('bank_name')->nullable();
             $table->string('branch_name')->nullable();
-            $table->string('branch_code')->nullable();
+            $table->string('account_type')->nullable();
             $table->string('ifsc_code')->nullable();
             $table->string('bank_account_no')->nullable();
             $table->string('bank_account_holder_name')->nullable();

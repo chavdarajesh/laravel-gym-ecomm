@@ -360,11 +360,11 @@
                                             <small>
                                                 <strong>Bank:</strong> {{ $return->bank_name }}<br>
                                                 <strong>Branch:</strong> {{ $return->branch_name }}
-                                                ({{ $return->branch_code }})
                                                 <br>
                                                 <strong>A/C No:</strong> {{ $return->bank_account_no }}<br>
                                                 <strong>IFSC:</strong> {{ $return->ifsc_code }}<br>
-                                                <strong>Holder:</strong> {{ $return->bank_account_holder_name }}
+                                                <strong>Holder:</strong> {{ $return->bank_account_holder_name }}<br>
+                                                <strong>Account Type:</strong> {{ ucfirst($return->account_type) }}
                                             </small>
                                         </td>
                                         <td>
@@ -452,7 +452,7 @@
                     branch_name: {
                         required: true
                     },
-                    branch_code: {
+                    account_type: {
                         required: true
                     },
                     ifsc_code: {
@@ -489,8 +489,8 @@
                     branch_name: {
                         required: "Please enter branch name."
                     },
-                    branch_code: {
-                        required: "Please enter branch code."
+                    account_type: {
+                        required: "Please enter account type."
                     },
                     ifsc_code: {
                         required: "Please enter IFSC code."

@@ -186,20 +186,32 @@
                                         <span class="text-muted mb-3 d-block">
                                             Thank you for placing your order!
 
-To complete your payment, please transfer the order amount to the following bank account:
+                                            To complete your payment, please transfer the order amount to the following bank
+                                            account:
                                         </span>
                                         <ul class="list-unstyled mb-0 fs-6">
-                                            <li class="mb-2"><strong>Account Name:</strong>
-                                                {{ $bankDetails['account_name'] ?? 'ABC Pvt Ltd' }}</li>
+                                            <li class="mb-2"><strong>Account Holder Name:</strong>
+                                                {{ $bankDetails['account_name'] ?? 'ABC Pvt Ltd' }}
+                                            </li>
                                             <li class="mb-2"><strong>Account Number:</strong>
-                                                {{ $bankDetails['account_number'] ?? '123456789012' }}</li>
+                                                {{ $bankDetails['account_number'] ?? '123456789012' }}
+                                            </li>
                                             <li class="mb-2"><strong>IFSC Code:</strong>
-                                                {{ $bankDetails['ifsc_code'] ?? 'HDFC0001234' }}</li>
+                                                {{ $bankDetails['ifsc_code'] ?? 'HDFC0001234' }}
+                                            </li>
+                                            <li class="mb-2"><strong>Bank Name:</strong>
+                                                {{ $bankDetails['bank_name'] ?? 'HDFC Bank' }}
+                                            </li>
+                                            <li class="mb-2"><strong>Branch Name:</strong>
+                                                {{ $bankDetails['branch_name'] ?? 'Mumbai Main Branch' }}
+                                            </li>
                                             <li class="mb-2"><strong>Account Type:</strong>
-                                                {{ $bankDetails['account_type'] ?? 'Current' }}</li>
+                                                {{ $bankDetails['account_type'] ?? 'Current' }}
+                                            </li>
                                             {{-- Add any extra details here --}}
                                             <li class="mt-3 text-muted" style="font-size:0.92em;">
-                                                <i class="fas fa-info-circle"></i> Please ensure you transfer to the correct details.
+                                                <i class="fas fa-info-circle"></i> Please ensure you transfer to the correct
+                                                details.
                                             </li>
                                         </ul>
                                     </div>

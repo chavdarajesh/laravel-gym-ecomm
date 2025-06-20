@@ -1,7 +1,7 @@
 @php
-$current_route_name = Route::currentRouteName();
-use App\Models\SiteSetting;
-$headerLogo = SiteSetting::getSiteSettings('header_logo');
+    $current_route_name = Route::currentRouteName();
+    use App\Models\SiteSetting;
+    $headerLogo = SiteSetting::getSiteSettings('header_logo');
 @endphp
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo d-flex justify-content-center align-items-center">
@@ -32,7 +32,8 @@ $headerLogo = SiteSetting::getSiteSettings('header_logo');
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Module</span>
         </li>
-        <li class="menu-item {{ $current_route_name == 'admin.users.index' ||$current_route_name == 'admin.users.create' ||$current_route_name == 'admin.users.edit' ||$current_route_name == 'admin.users.view' ? 'open active': '' }}">
+        <li
+            class="menu-item {{ $current_route_name == 'admin.users.index' || $current_route_name == 'admin.users.create' || $current_route_name == 'admin.users.edit' || $current_route_name == 'admin.users.view' ? 'open active' : '' }}">
             <a href="{{ route('admin.users.index') }}" class="menu-link menu-toggle">
                 <i class='menu-icon tf-icons bx bxs-user-detail'></i>
                 <div data-i18n="Layouts">Users Management</div>
@@ -46,14 +47,15 @@ $headerLogo = SiteSetting::getSiteSettings('header_logo');
                 </li>
             </ul>
         </li>
-        <li class="menu-item {{ $current_route_name == 'admin.orderstatus.index' || $current_route_name == 'admin.orderstatus.create' || $current_route_name == 'admin.orderstatus.edit' || $current_route_name == 'admin.orderstatus.view' || $current_route_name == 'admin.orders.index'  || $current_route_name == 'admin.orders.view'  ? 'open active' : '' }}">
+        <li
+            class="menu-item {{ $current_route_name == 'admin.orderstatus.index' || $current_route_name == 'admin.orderstatus.create' || $current_route_name == 'admin.orderstatus.edit' || $current_route_name == 'admin.orderstatus.view' || $current_route_name == 'admin.orders.index' || $current_route_name == 'admin.orders.view' || $current_route_name == 'admin.payment_uploads.index' || $current_route_name == 'admin.payment_uploads.view' || $current_route_name == 'admin.return_requests.index' || $current_route_name == 'admin.return_requests.view' ? 'open active' : '' }}">
             <a href="{{ route('admin.orderstatus.index') }}" class="menu-link menu-toggle">
                 <i class='menu-icon tf-icons bx bxs-doughnut-chart'></i>
                 <div data-i18n="Layouts">Order Settings</div>
             </a>
             <ul class="menu-sub">
                 <li
-                    class="menu-item  {{  $current_route_name == 'admin.orders.index'  || $current_route_name == 'admin.orders.view' ? 'active' : '' }}">
+                    class="menu-item  {{ $current_route_name == 'admin.orders.index' || $current_route_name == 'admin.orders.view' ? 'active' : '' }}">
                     <a href="{{ route('admin.orders.index') }}" class="menu-link">
                         <div>Order</div>
                     </a>
@@ -64,58 +66,71 @@ $headerLogo = SiteSetting::getSiteSettings('header_logo');
                         <div>Order Status</div>
                     </a>
                 </li>
+                <li
+                    class="menu-item  {{ $current_route_name == 'admin.payment_uploads.index' || $current_route_name == 'admin.payment_uploads.view' ? 'active' : '' }}">
+                    <a href="{{ route('admin.payment_uploads.index') }}" class="menu-link">
+                        <div>Payment Upload</div>
+                    </a>
+                </li>
+                <li
+                    class="menu-item  {{ $current_route_name == 'admin.return_requests.index' || $current_route_name == 'admin.return_requests.view' ? 'active' : '' }}">
+                    <a href="{{ route('admin.return_requests.index') }}" class="menu-link">
+                        <div>Request Status</div>
+                    </a>
+                </li>
             </ul>
         </li>
-        <li class="menu-item {{ $current_route_name == 'admin.subcategorys.index' ||$current_route_name == 'admin.subcategorys.create' ||$current_route_name == 'admin.subcategorys.edit' ||$current_route_name == 'admin.subcategorys.view' || $current_route_name == 'admin.categorys.index' ||$current_route_name == 'admin.categorys.create' ||$current_route_name == 'admin.categorys.edit' ||$current_route_name == 'admin.categorys.view' || $current_route_name == 'admin.brands.index' ||$current_route_name == 'admin.brands.create' ||$current_route_name == 'admin.brands.edit' ||$current_route_name == 'admin.brands.view' || $current_route_name == 'admin.sizes.index' ||$current_route_name == 'admin.sizes.create' ||$current_route_name == 'admin.sizes.edit' ||$current_route_name == 'admin.sizes.view' || $current_route_name == 'admin.flavors.index' ||$current_route_name == 'admin.flavors.create' ||$current_route_name == 'admin.flavors.edit' ||$current_route_name == 'admin.flavors.view' || $current_route_name == 'admin.products.index' ||$current_route_name == 'admin.products.create' ||$current_route_name == 'admin.products.edit' ||$current_route_name == 'admin.products.view' || $current_route_name == 'admin.productsliders.index' || $current_route_name == 'admin.productsliders.create' || $current_route_name == 'admin.productsliders.edit' || $current_route_name == 'admin.productsliders.view' || $current_route_name == 'admin.topsellingproducts.index' || $current_route_name == 'admin.topsellingproducts.create' || $current_route_name == 'admin.topsellingproducts.edit' || $current_route_name == 'admin.topsellingproducts.view' ? 'open active': '' }}">
+        <li
+            class="menu-item {{ $current_route_name == 'admin.subcategorys.index' ||$current_route_name == 'admin.subcategorys.create' ||$current_route_name == 'admin.subcategorys.edit' ||$current_route_name == 'admin.subcategorys.view' ||$current_route_name == 'admin.categorys.index' ||$current_route_name == 'admin.categorys.create' ||$current_route_name == 'admin.categorys.edit' ||$current_route_name == 'admin.categorys.view' ||$current_route_name == 'admin.brands.index' ||$current_route_name == 'admin.brands.create' ||$current_route_name == 'admin.brands.edit' ||$current_route_name == 'admin.brands.view' ||$current_route_name == 'admin.sizes.index' ||$current_route_name == 'admin.sizes.create' ||$current_route_name == 'admin.sizes.edit' ||$current_route_name == 'admin.sizes.view' ||$current_route_name == 'admin.flavors.index' ||$current_route_name == 'admin.flavors.create' ||$current_route_name == 'admin.flavors.edit' ||$current_route_name == 'admin.flavors.view' ||$current_route_name == 'admin.products.index' ||$current_route_name == 'admin.products.create' ||$current_route_name == 'admin.products.edit' ||$current_route_name == 'admin.products.view' ||$current_route_name == 'admin.productsliders.index' ||$current_route_name == 'admin.productsliders.create' ||$current_route_name == 'admin.productsliders.edit' ||$current_route_name == 'admin.productsliders.view' ||$current_route_name == 'admin.topsellingproducts.index' ||$current_route_name == 'admin.topsellingproducts.create' ||$current_route_name == 'admin.topsellingproducts.edit' ||$current_route_name == 'admin.topsellingproducts.view'? 'open active': '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class='menu-icon tf-icons bx bxl-product-hunt'></i>
                 <div data-i18n="Layouts">Product Management</div>
             </a>
             <ul class="menu-sub">
                 <li
-                    class="menu-item  {{ $current_route_name == 'admin.products.index' || $current_route_name == 'admin.products.create' || $current_route_name == 'admin.products.edit' || $current_route_name == 'admin.products.view'  ? 'active' : '' }}">
+                    class="menu-item  {{ $current_route_name == 'admin.products.index' || $current_route_name == 'admin.products.create' || $current_route_name == 'admin.products.edit' || $current_route_name == 'admin.products.view' ? 'active' : '' }}">
                     <a href="{{ route('admin.products.index') }}" class="menu-link">
                         <div>Product</div>
                     </a>
                 </li>
                 <li
-                    class="menu-item  {{ $current_route_name == 'admin.sizes.index' || $current_route_name == 'admin.sizes.create' || $current_route_name == 'admin.sizes.edit' || $current_route_name == 'admin.sizes.view'  ? 'active' : '' }}">
+                    class="menu-item  {{ $current_route_name == 'admin.sizes.index' || $current_route_name == 'admin.sizes.create' || $current_route_name == 'admin.sizes.edit' || $current_route_name == 'admin.sizes.view' ? 'active' : '' }}">
                     <a href="{{ route('admin.sizes.index') }}" class="menu-link">
                         <div>Size</div>
                     </a>
                 </li>
                 <li
-                    class="menu-item  {{ $current_route_name == 'admin.flavors.index' || $current_route_name == 'admin.flavors.create' || $current_route_name == 'admin.flavors.edit' || $current_route_name == 'admin.flavors.view'  ? 'active' : '' }}">
+                    class="menu-item  {{ $current_route_name == 'admin.flavors.index' || $current_route_name == 'admin.flavors.create' || $current_route_name == 'admin.flavors.edit' || $current_route_name == 'admin.flavors.view' ? 'active' : '' }}">
                     <a href="{{ route('admin.flavors.index') }}" class="menu-link">
                         <div>Flavor</div>
                     </a>
                 </li>
                 <li
-                    class="menu-item  {{ $current_route_name == 'admin.brands.index' || $current_route_name == 'admin.brands.create' || $current_route_name == 'admin.brands.edit' || $current_route_name == 'admin.brands.view'  ? 'active' : '' }}">
+                    class="menu-item  {{ $current_route_name == 'admin.brands.index' || $current_route_name == 'admin.brands.create' || $current_route_name == 'admin.brands.edit' || $current_route_name == 'admin.brands.view' ? 'active' : '' }}">
                     <a href="{{ route('admin.brands.index') }}" class="menu-link">
                         <div>Brand</div>
                     </a>
                 </li>
                 <li
-                    class="menu-item  {{ $current_route_name == 'admin.categorys.index' || $current_route_name == 'admin.categorys.create' || $current_route_name == 'admin.categorys.edit' || $current_route_name == 'admin.categorys.view'  ? 'active' : '' }}">
+                    class="menu-item  {{ $current_route_name == 'admin.categorys.index' || $current_route_name == 'admin.categorys.create' || $current_route_name == 'admin.categorys.edit' || $current_route_name == 'admin.categorys.view' ? 'active' : '' }}">
                     <a href="{{ route('admin.categorys.index') }}" class="menu-link">
                         <div>Category</div>
                     </a>
                 </li>
                 <li
-                    class="menu-item  {{ $current_route_name == 'admin.subcategorys.index' || $current_route_name == 'admin.subcategorys.create' || $current_route_name == 'admin.subcategorys.edit' || $current_route_name == 'admin.subcategorys.view'  ? 'active' : '' }}">
+                    class="menu-item  {{ $current_route_name == 'admin.subcategorys.index' || $current_route_name == 'admin.subcategorys.create' || $current_route_name == 'admin.subcategorys.edit' || $current_route_name == 'admin.subcategorys.view' ? 'active' : '' }}">
                     <a href="{{ route('admin.subcategorys.index') }}" class="menu-link">
                         <div>Subcategory</div>
                     </a>
                 </li>
                 <li
-                    class="menu-item  {{ $current_route_name == 'admin.productsliders.index' || $current_route_name == 'admin.productsliders.create' || $current_route_name == 'admin.productsliders.edit' || $current_route_name == 'admin.productsliders.view'  ? 'active' : '' }}">
+                    class="menu-item  {{ $current_route_name == 'admin.productsliders.index' || $current_route_name == 'admin.productsliders.create' || $current_route_name == 'admin.productsliders.edit' || $current_route_name == 'admin.productsliders.view' ? 'active' : '' }}">
                     <a href="{{ route('admin.productsliders.index') }}" class="menu-link">
                         <div>Product Slider</div>
                     </a>
                 </li>
                 <li
-                    class="menu-item  {{ $current_route_name == 'admin.topsellingproducts.index' || $current_route_name == 'admin.topsellingproducts.create' || $current_route_name == 'admin.topsellingproducts.edit' || $current_route_name == 'admin.topsellingproducts.view'  ? 'active' : '' }}">
+                    class="menu-item  {{ $current_route_name == 'admin.topsellingproducts.index' || $current_route_name == 'admin.topsellingproducts.create' || $current_route_name == 'admin.topsellingproducts.edit' || $current_route_name == 'admin.topsellingproducts.view' ? 'active' : '' }}">
                     <a href="{{ route('admin.topsellingproducts.index') }}" class="menu-link">
                         <div>Top Selling Product</div>
                     </a>
@@ -123,13 +138,15 @@ $headerLogo = SiteSetting::getSiteSettings('header_logo');
 
             </ul>
         </li>
-        <li class="menu-item  {{ $current_route_name == 'admin.blogs.index' ||$current_route_name == 'admin.blogs.create' ||$current_route_name == 'admin.blogs.edit' ||$current_route_name == 'admin.blogs.view'  ? 'active' : '' }}">
+        <li
+            class="menu-item  {{ $current_route_name == 'admin.blogs.index' || $current_route_name == 'admin.blogs.create' || $current_route_name == 'admin.blogs.edit' || $current_route_name == 'admin.blogs.view' ? 'active' : '' }}">
             <a href="{{ route('admin.blogs.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-list-ul"></i>
                 <div>Blogs</div>
             </a>
         </li>
-        <li class="menu-item {{ $current_route_name == 'admin.contact.messages.index' || $current_route_name == 'admin.contact.settings.index' || $current_route_name == 'admin.contact.messages.view' ? 'open active' : '' }}">
+        <li
+            class="menu-item {{ $current_route_name == 'admin.contact.messages.index' || $current_route_name == 'admin.contact.settings.index' || $current_route_name == 'admin.contact.messages.view' ? 'open active' : '' }}">
             <a href="{{ route('admin.contact.messages.index') }}" class="menu-link menu-toggle">
                 <i class='menu-icon tf-icons bx bxs-contact'></i>
                 <div data-i18n="Layouts">Contacts Us Settings</div>
@@ -148,7 +165,8 @@ $headerLogo = SiteSetting::getSiteSettings('header_logo');
                 </li>
             </ul>
         </li>
-        <li class="menu-item {{ $current_route_name == 'admin.newsletters.index' || $current_route_name == 'admin.newsletters.create' || $current_route_name == 'admin.newsletters.edit' || $current_route_name == 'admin.newsletters.view' || $current_route_name == 'admin.newslettermails.index' || $current_route_name == 'admin.newslettermails.create' || $current_route_name == 'admin.newslettermails.edit' || $current_route_name == 'admin.newslettermails.view' ? 'open active' : '' }}">
+        <li
+            class="menu-item {{ $current_route_name == 'admin.newsletters.index' || $current_route_name == 'admin.newsletters.create' || $current_route_name == 'admin.newsletters.edit' || $current_route_name == 'admin.newsletters.view' || $current_route_name == 'admin.newslettermails.index' || $current_route_name == 'admin.newslettermails.create' || $current_route_name == 'admin.newslettermails.edit' || $current_route_name == 'admin.newslettermails.view' ? 'open active' : '' }}">
             <a href="{{ route('admin.newsletters.index') }}" class="menu-link menu-toggle">
                 <i class='menu-icon tf-icons bx bxs-envelope'></i>
                 <div data-i18n="Layouts">Newsletter Settings</div>
@@ -174,7 +192,8 @@ $headerLogo = SiteSetting::getSiteSettings('header_logo');
             <span class="menu-header-text">Settings</span>
         </li>
 
-        <li class="menu-item {{ $current_route_name == 'admin.profile.settings.password.index' || $current_route_name == 'admin.profile.setting.index' ? 'open active' : '' }}">
+        <li
+            class="menu-item {{ $current_route_name == 'admin.profile.settings.password.index' || $current_route_name == 'admin.profile.setting.index' ? 'open active' : '' }}">
             <a href="{{ route('admin.profile.settings.password.index') }}" class="menu-link menu-toggle">
                 <i class='menu-icon tf-icons bx bxs-user-account'></i>
                 <div data-i18n="Layouts">Account Settings</div>

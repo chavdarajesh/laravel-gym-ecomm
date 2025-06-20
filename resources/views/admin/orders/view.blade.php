@@ -219,7 +219,8 @@
                                                                 class="badge bg-secondary text-capitalize">{{ $payment->request_status }}</span>
                                                             @if (
                                                                 $payment->request_status == 'pending' &&
-                                                                    ($Order->order_status != 'delivered' && $Order->order_status != 'cancelled'))
+                                                                    ($payment->order->payment_status != 'completed' && $payment->order->payment_status != 'cancelled') &&
+                                                                    ($payment->order->order_status != 'delivered' && $payment->order->order_status != 'cancelled'))
                                                                 <button type="button"
                                                                     class="btn btn-sm btn-outline-primary open-payment-status-modal"
                                                                     data-order-id="{{ $Order->id }}"
@@ -270,8 +271,8 @@
                                                     {{ $return->bank_name }}</li>
                                                 <li class="list-group-item"><strong>Branch Name:</strong>
                                                     {{ $return->branch_name }}</li>
-                                                <li class="list-group-item"><strong>Branch Code:</strong>
-                                                    {{ $return->branch_code }}</li>
+                                                <li class="list-group-item"><strong>Account Type:</strong>
+                                                    {{ ucfirst($return->account_type) }}</li>
                                                 <li class="list-group-item"><strong>IFSC Code:</strong>
                                                     {{ $return->ifsc_code }}</li>
                                                 <li class="list-group-item"><strong>Bank Account No:</strong>
@@ -342,7 +343,14 @@
                                             <div><strong>Total:</strong> ${{ $return->total_order }}</div>
 
                                             <div class="mt-3">
-                                                @if (!$return->is_verified && $return->request_status === 'pending')
+                                                @if (
+                                                    !$return->is_verified &&
+                                                        $return->request_status === 'pending' &&
+                                                        $return->order->payment_status == 'completed' &&
+                                                        $return->order->payment_status != 'cancelled' &&
+                                                        $return->order->order_status == 'delivered' &&
+                                                        $return->order->order_status != 'cancelled' &&
+                                                        $return->order->return_status == 'none')
                                                     <button class="btn btn-primary btn-sm"
                                                         onclick="openReturnStatusModal('{{ $return->id }}')">
                                                         Change Status
@@ -427,7 +435,8 @@
                                 <input class="form-check-input" type="checkbox" value="on" id="mark_as_completed"
                                     name="mark_as_completed">
                                 <label class="form-check-label" for="mark_as_completed">
-                                    Mark as Completed
+                                    Mark as Delivered
+                                    <span class="text-muted">(Check this if you want to mark the order as delivered)</span>
                                 </label>
                             </div>
 
@@ -504,7 +513,7 @@
 
 
         <!-- Modal -->
-        <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+        <div class="modal fade" id="payment-status-modal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <form id="statusForm" method="POST" action="{{ route('admin.orders.payment.update.status') }}">
                     @csrf
@@ -635,8 +644,8 @@
                 $('#modal_payment_id').val(paymentId);
                 $('#payment_status').val(currentStatus);
 
-                $('#statusModal').modal('show');
-                $('#statusModal').on('shown.bs.modal', function() {
+                $('#payment-status-modal').modal('show');
+                $('#payment-status-modal').on('shown.bs.modal', function() {
                     $('#payment_status').trigger('change');
                 });
 
@@ -796,4 +805,35 @@
                 });
             </script>
         @enderror
+
+
+         @error('return_status')
+        <script>
+            $(document).ready(function() {
+                $('#returnStatusModal').modal('show');
+            });
+        </script>
+    @enderror
+    @error('return_reject_reason')
+        <script>
+            $(document).ready(function() {
+                $('#returnStatusModal').modal('show');
+            });
+        </script>
+    @enderror
+
+     @error('payment_status')
+        <script>
+            $(document).ready(function() {
+                $('#payment-status-modal').modal('show');
+            });
+        </script>
+    @enderror
+    @error('reject_reason')
+        <script>
+            $(document).ready(function() {
+                $('#payment-status-modal').modal('show');
+            });
+        </script>
+    @enderror
     @stop

@@ -101,7 +101,7 @@ class OrderController extends Controller
         $order->statuses()->attach($statusId, [
             'description' => 'Payment is pending. Please complete the payment to process the order.',
             'created_at'  => Carbon::now()->addSeconds(5),
-             'updated_at'  => Carbon::now()->addSeconds(5),
+            'updated_at'  => Carbon::now()->addSeconds(5),
         ]);
         return redirect()->route('front.orders.payment-upload.get', ['id' => $order->id]);
     }
@@ -119,8 +119,13 @@ class OrderController extends Controller
         if (! $order) {
             return redirect()->route('front.orders')->with('error', 'Order not found.');
         }
-        $latestStatus   = $order->latestStatus()->first();
-        $returnAddress  = 'Warehouse, 123, Main Road, City, Pin, State, Country';
+        $latestStatus  = $order->latestStatus()->first();
+        $returnAddress = SiteSetting::getSiteSettings('return_address');
+        if (isset($returnAddress) && isset($returnAddress->value) && $returnAddress != null && $returnAddress->value != '') {
+            $returnAddress = $returnAddress->value;
+        } else {
+            $returnAddress = env('return_address', 'No return address set.');
+        }
         $refundPayments = Payment::where('order_id', $id)->where('payment_from', 'store')->where('user_id', auth()->id())->get();
 
         return view('front.orders.details', compact('order', 'latestStatus', 'refundPayments', 'returnAddress'));

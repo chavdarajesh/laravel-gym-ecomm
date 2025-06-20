@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\OrderStatus;
 use App\Models\ReturnRequest;
 use App\Models\ReturnRequestProduct;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,7 +23,7 @@ class ReturnRequestController extends Controller
             'return_date_time'         => 'required|date_format:Y-m-d\TH:i',
             'bank_name'                => 'required|string|max:100',
             'branch_name'              => 'required|string|max:100',
-            'branch_code'              => 'required|string|max:50',
+            'account_type'              => 'required|string|in:savings,current,other',
             'ifsc_code'                => 'required|string|max:20',
             'bank_account_no'          => 'required|string|confirmed',
             'bank_account_holder_name' => 'required|string|max:255',
@@ -50,6 +51,13 @@ class ReturnRequestController extends Controller
             return redirect()->route('front.orders.details', $id)->with('error', 'A return request for this order is already under review.');
         }
 
+        $returnAddress = SiteSetting::getSiteSettings('return_address');
+        if (isset($returnAddress) && isset($returnAddress->value) && $returnAddress != null && $returnAddress->value != '') {
+            $returnAddress = $returnAddress->value;
+        } else {
+            $returnAddress = env('return_address', 'No return address set.');
+        }
+
         $returnRequest                           = new ReturnRequest();
         $returnRequest->order_id                 = $order->id;
         $returnRequest->user_id                  = auth()->id();
@@ -57,7 +65,7 @@ class ReturnRequestController extends Controller
         $returnRequest->return_date_time         = $request->return_date_time;
         $returnRequest->bank_name                = $request->bank_name;
         $returnRequest->branch_name              = $request->branch_name;
-        $returnRequest->branch_code              = $request->branch_code;
+        $returnRequest->account_type              = $request->account_type;
         $returnRequest->ifsc_code                = $request->ifsc_code;
         $returnRequest->bank_account_no          = $request->bank_account_no;
         $returnRequest->bank_account_holder_name = $request->bank_account_holder_name;
@@ -67,7 +75,7 @@ class ReturnRequestController extends Controller
         $returnRequest->shipping_charge          = 0;
         $returnRequest->total_order              = 0;
         $returnRequest->return_reason            = $request->return_reason ?? '';
-        $returnRequest->return_address           = $request->return_address ?? '';
+        $returnRequest->return_address           = $returnAddress ?? '';
         if ($request->hasFile('photo_proof')) {
             $folderPath = public_path('custom-assets/upload/front/images/return-proofs/');
             if (! file_exists($folderPath)) {
