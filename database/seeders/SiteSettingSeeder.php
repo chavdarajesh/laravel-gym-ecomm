@@ -148,7 +148,7 @@ class SiteSettingSeeder extends Seeder
                 'value'       => 'admin@yopmail.com',
                 'title'       => 'Admin Email',
                 'description' => null,
-                'status'      => 19,
+                'status'      => 1,
                 'order'       => 18,
                 'created_at'  => Carbon::now('Asia/Kolkata'),
             ],

@@ -193,7 +193,9 @@
                                         <tbody>
                                             @foreach ($Order->paymentUploads ?? [] as $payment)
                                                 <tr>
-                                                    <td>{{ $payment->reference_id ?? 'N/A' }}</td>
+                                                    <td><a
+                                                    class="link" target="_blank"
+                                                    href="{{ route('admin.payment_uploads.view', $payment->id) }}">{{ $payment->reference_id ?? 'N/A' }}</a></td>
                                                     <td>{{ \Carbon\Carbon::parse($payment->payment_date_time)->format('d M Y h:i A') ?? 'N/A' }}
                                                     </td>
                                                     <td>
@@ -251,7 +253,8 @@
                                         <div class="mb-3">
                                             <div class=" mb-3">
                                                 <strong>Request #{{ $return->id }}</strong> | <a
-                                                    class="btn btn-sm btn-outline-primary" href="#">View Details</a>
+                                                    class="btn btn-sm btn-outline-primary" target="_blank"
+                                                    href="{{ route('admin.return_requests.view', $return->id) }}">View Details</a>
                                                 |
                                                 Status: <span
                                                     class="badge bg-{{ $return->request_status === 'approved' ? 'success' : ($return->request_status === 'rejected' ? 'danger' : 'warning') }}">

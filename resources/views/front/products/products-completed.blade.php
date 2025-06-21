@@ -1,5 +1,5 @@
 @extends('front.layouts.main')
-@section('title', 'Order Completed')
+@section('title', 'Order Created')
 @section('css')
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;700&amp;display=swap">
@@ -283,7 +283,7 @@
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="">
-                            <h2 class="text-white">Order Completed</h2>
+                            <h2 class="text-white">Order Created</h2>
                         </div>
                     </div>
                 </div>

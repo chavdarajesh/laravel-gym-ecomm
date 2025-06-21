@@ -50,10 +50,9 @@ class StaticPaymentController extends Controller
             'account_type'   => SiteSetting::getSiteSettings('account_type')->value ?? env('ACCOUNT_TYPE', ''),
         ];
         if (! $bankDetails['account_name'] || ! $bankDetails['account_number'] || ! $bankDetails['ifsc_code'] || ! $bankDetails['bank_name'] || ! $bankDetails['branch_name'] || ! $bankDetails['account_type']) {
-            return redirect()->back()->with('error', 'Bank details are not set. Please contact support.');
+            return redirect()->route('front.orders.details', $id)->with('error', 'Bank details are not set. Please contact support.');
         }
-
-        return view('front.payment.process-order', compact('order'));
+        return view('front.payment.process-order', compact('order','bankDetails'));
     }
 
     public function paymentUploadPost(Request $request, $id)
