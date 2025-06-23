@@ -106,12 +106,10 @@
                 <div class="row">
                     @php
                         $bankFields = [
-                            'Bank Name' => $return->bank_name,
-                            'Branch Name' => $return->branch_name,
-                            'IFSC Code' => $return->ifsc_code,
-                            'Bank Account No' => $return->bank_account_no,
-                            'Account Holder Name' => $return->bank_account_holder_name,
-                            'Account Type' => $return->account_type,
+                            'Bank Account Name' => $return->bank_account_name,
+                            'BSB Number' => $return->bsb_number,
+                            'Account No' => $return->account_no,
+                            'Account Holder Name' => $return->account_holder_name,
                         ];
                     @endphp
 

@@ -20,12 +20,10 @@ class CreateReturnRequestsTable extends Migration
             $table->string('reference_id')->nullable();
             $table->string('photo_proof')->nullable();
             $table->string('return_date_time')->nullable();
-            $table->string('bank_name')->nullable();
-            $table->string('branch_name')->nullable();
-            $table->string('account_type')->nullable();
-            $table->string('ifsc_code')->nullable();
-            $table->string('bank_account_no')->nullable();
-            $table->string('bank_account_holder_name')->nullable();
+            $table->string('bank_account_name')->nullable();
+            $table->string('bsb_number')->nullable();
+            $table->string('account_no')->nullable();
+            $table->string('account_holder_name')->nullable();
             $table->boolean('is_verified')->default(0)->nullable();
             $table->string('request_status')->default('pending')->nullable();
             $table->string('sub_total')->nullable();

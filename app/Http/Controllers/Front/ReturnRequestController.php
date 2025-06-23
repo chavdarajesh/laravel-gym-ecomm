@@ -18,17 +18,15 @@ class ReturnRequestController extends Controller
     public function returnRequestPost(Request $request, $id)
     {
         $request->validate([
-            'reference_id'             => 'required|string|max:255',
-            'product_ids'              => 'required|array|min:1',
-            'product_ids.*'            => 'exists:products,id',
-            'photo_proof'              => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'return_date_time'         => 'required|date_format:Y-m-d\TH:i',
-            'bank_name'                => 'required|string|max:100',
-            'branch_name'              => 'required|string|max:100',
-            'account_type'              => 'required|string|in:savings,current,other',
-            'ifsc_code'                => 'required|string|max:20',
-            'bank_account_no'          => 'required|string|confirmed',
-            'bank_account_holder_name' => 'required|string|max:255',
+            'reference_id'        => 'required|string|max:255',
+            'product_ids'         => 'required|array|min:1',
+            'product_ids.*'       => 'exists:products,id',
+            'photo_proof'         => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'return_date_time'    => 'required|date_format:Y-m-d\TH:i',
+            'bank_account_name'   => 'required|string|max:100',
+            'bsb_number'          => 'required|string|max:20',
+            'account_no'          => 'required|string|confirmed',
+            'account_holder_name' => 'required|string|max:255',
         ]);
 
         $order = Order::with(['products'])->where('id', $id)->where('user_id', auth()->id())->first();
@@ -57,27 +55,29 @@ class ReturnRequestController extends Controller
         if (isset($returnAddress) && isset($returnAddress->value) && $returnAddress != null && $returnAddress->value != '') {
             $returnAddress = $returnAddress->value;
         } else {
-            $returnAddress = env('return_address', 'No return address set.');
+            $returnAddress = '';
         }
 
-        $returnRequest                           = new ReturnRequest();
-        $returnRequest->order_id                 = $order->id;
-        $returnRequest->user_id                  = auth()->id();
-        $returnRequest->reference_id             = $request->reference_id;
-        $returnRequest->return_date_time         = $request->return_date_time;
-        $returnRequest->bank_name                = $request->bank_name;
-        $returnRequest->branch_name              = $request->branch_name;
-        $returnRequest->account_type              = $request->account_type;
-        $returnRequest->ifsc_code                = $request->ifsc_code;
-        $returnRequest->bank_account_no          = $request->bank_account_no;
-        $returnRequest->bank_account_holder_name = $request->bank_account_holder_name;
-        $returnRequest->is_verified              = 0;
-        $returnRequest->request_status           = 'pending';
-        $returnRequest->sub_total                = 0;
-        $returnRequest->shipping_charge          = 0;
-        $returnRequest->total_order              = 0;
-        $returnRequest->return_reason            = $request->return_reason ?? '';
-        $returnRequest->return_address           = $returnAddress ?? '';
+        if (! $returnAddress) {
+            return redirect()->back()->with('error', 'Return address is not set. Please contact support.');
+        }
+
+        $returnRequest                      = new ReturnRequest();
+        $returnRequest->order_id            = $order->id;
+        $returnRequest->user_id             = auth()->id();
+        $returnRequest->reference_id        = $request->reference_id;
+        $returnRequest->return_date_time    = $request->return_date_time;
+        $returnRequest->bank_account_name   = $request->bank_account_name;
+        $returnRequest->bsb_number          = $request->bsb_number;
+        $returnRequest->account_no          = $request->account_no;
+        $returnRequest->account_holder_name = $request->account_holder_name;
+        $returnRequest->is_verified         = 0;
+        $returnRequest->request_status      = 'pending';
+        $returnRequest->sub_total           = 0;
+        $returnRequest->shipping_charge     = 0;
+        $returnRequest->total_order         = 0;
+        $returnRequest->return_reason       = $request->return_reason ?? '';
+        $returnRequest->return_address      = $returnAddress ?? '';
         if ($request->hasFile('photo_proof')) {
             $folderPath = public_path('custom-assets/upload/front/images/return-proofs/');
             if (! file_exists($folderPath)) {
@@ -132,19 +132,19 @@ class ReturnRequestController extends Controller
         ]);
 
         if (env('MAIL_USERNAME')) {
-                if ($order->user && $order->user->email) {
-                    Mail::to($order->user->email)->send(new OrderStatusUpdatedMail($order));
-                }
-                $adminEmail = SiteSetting::getSiteSettings('admin_email');
-                if (isset($adminEmail) && isset($adminEmail->value) && $adminEmail != null && $adminEmail->value != '') {
-                    $adminEmail = $adminEmail->value;
-                } else {
-                    $adminEmail = env('ADMIN_EMAIL', '');
-                }
-                if ($adminEmail) {
-                    Mail::to($adminEmail)->send(new OrderStatusUpdatedMail($order));
-                }
+            if ($order->user && $order->user->email) {
+                Mail::to($order->user->email)->send(new OrderStatusUpdatedMail($order));
             }
+            $adminEmail = SiteSetting::getSiteSettings('admin_email');
+            if (isset($adminEmail) && isset($adminEmail->value) && $adminEmail != null && $adminEmail->value != '') {
+                $adminEmail = $adminEmail->value;
+            } else {
+                $adminEmail = env('ADMIN_EMAIL', '');
+            }
+            if ($adminEmail) {
+                Mail::to($adminEmail)->send(new OrderStatusUpdatedMail($order));
+            }
+        }
         return redirect()->back()->with('success', 'Return request submitted. Awaiting admin verification.');
 
     }

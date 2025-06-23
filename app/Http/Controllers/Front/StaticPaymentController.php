@@ -42,15 +42,13 @@ class StaticPaymentController extends Controller
             return redirect()->route('front.orders.details', $id)->with('error', 'A payment for this order is already under review.');
         }
         $bankDetails = [
-            'account_name'   => SiteSetting::getSiteSettings('bank_account_holder_name')->value ?? env('BANK_ACCOUNT_HOLDER_NAME', ''),
-            'account_number' => SiteSetting::getSiteSettings('bank_account_no')->value ?? env('BANK_ACCOUNT_NO', ''),
-            'ifsc_code'      => SiteSetting::getSiteSettings('ifsc_code')->value ?? env('IFSC_CODE', ''),
-            'bank_name'      => SiteSetting::getSiteSettings('bank_name')->value ?? env('BANK_NAME', ''),
-            'branch_name'    => SiteSetting::getSiteSettings('branch_name')->value ?? env('BRANCH_NAME', ''),
-            'account_type'   => SiteSetting::getSiteSettings('account_type')->value ?? env('ACCOUNT_TYPE', ''),
+            'account_holder_name'   => SiteSetting::getSiteSettings('account_holder_name')->value ?? '',
+            'account_no' => SiteSetting::getSiteSettings('account_no')->value ?? '',
+            'bsb_number'      => SiteSetting::getSiteSettings('bsb_number')->value ?? '',
+            'bank_account_name'      => SiteSetting::getSiteSettings('bank_account_name')->value ?? '',
         ];
-        if (! $bankDetails['account_name'] || ! $bankDetails['account_number'] || ! $bankDetails['ifsc_code'] || ! $bankDetails['bank_name'] || ! $bankDetails['branch_name'] || ! $bankDetails['account_type']) {
-            return redirect()->route('front.orders.details', $id)->with('error', 'Bank details are not set. Please contact support.');
+        if (! $bankDetails['account_holder_name'] || ! $bankDetails['account_no'] || ! $bankDetails['bsb_number'] || ! $bankDetails['bank_account_name']) {
+            return redirect()->back()->with('error', 'Bank details are not set. Please contact support.');
         }
         return view('front.payment.process-order', compact('order','bankDetails'));
     }

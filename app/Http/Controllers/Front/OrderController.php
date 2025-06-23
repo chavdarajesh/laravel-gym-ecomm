@@ -141,7 +141,7 @@ class OrderController extends Controller
         if (isset($returnAddress) && isset($returnAddress->value) && $returnAddress != null && $returnAddress->value != '') {
             $returnAddress = $returnAddress->value;
         } else {
-            $returnAddress = env('return_address', 'No return address set.');
+            $returnAddress = 'No return address set.';
         }
         $refundPayments = Payment::where('order_id', $id)->where('payment_from', 'store')->where('user_id', auth()->id())->get();
 

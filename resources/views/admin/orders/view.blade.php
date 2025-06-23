@@ -270,18 +270,14 @@
                                                     {{ $return->reference_id }}</li>
                                                 <li class="list-group-item"><strong>Return Date/Time:</strong>
                                                     {{ $return->return_date_time }}</li>
-                                                <li class="list-group-item"><strong>Bank Name:</strong>
-                                                    {{ $return->bank_name }}</li>
-                                                <li class="list-group-item"><strong>Branch Name:</strong>
-                                                    {{ $return->branch_name }}</li>
-                                                <li class="list-group-item"><strong>Account Type:</strong>
-                                                    {{ ucfirst($return->account_type) }}</li>
-                                                <li class="list-group-item"><strong>IFSC Code:</strong>
-                                                    {{ $return->ifsc_code }}</li>
-                                                <li class="list-group-item"><strong>Bank Account No:</strong>
-                                                    {{ $return->bank_account_no }}</li>
+                                                <li class="list-group-item"><strong>Bank Account Name:</strong>
+                                                    {{ $return->bank_account_name }}</li>
+                                                     <li class="list-group-item"><strong>BSB Number:</strong>
+                                                    {{ $return->bsb_number }}</li>
+                                                <li class="list-group-item"><strong>Account No:</strong>
+                                                    {{ $return->account_no }}</li>
                                                 <li class="list-group-item"><strong>Account Holder Name:</strong>
-                                                    {{ $return->bank_account_holder_name }}</li>
+                                                    {{ $return->account_holder_name }}</li>
                                                 <li class="list-group-item"><strong>Return Reason:</strong>
                                                     {{ $return->return_reason }}</li>
                                                 <li class="list-group-item"><strong>Return Address:</strong>
@@ -353,7 +349,7 @@
                                                         $return->order->payment_status != 'cancelled' &&
                                                         $return->order->order_status == 'delivered' &&
                                                         $return->order->order_status != 'cancelled' &&
-                                                        $return->order->return_status == 'none')
+                                                        $return->order->return_status == 'requested')
                                                     <button class="btn btn-primary btn-sm"
                                                         onclick="openReturnStatusModal('{{ $return->id }}')">
                                                         Change Status

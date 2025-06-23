@@ -358,13 +358,10 @@
                                         </td>
                                         <td>
                                             <small>
-                                                <strong>Bank:</strong> {{ $return->bank_name }}<br>
-                                                <strong>Branch:</strong> {{ $return->branch_name }}
-                                                <br>
-                                                <strong>A/C No:</strong> {{ $return->bank_account_no }}<br>
-                                                <strong>IFSC:</strong> {{ $return->ifsc_code }}<br>
-                                                <strong>Holder:</strong> {{ $return->bank_account_holder_name }}<br>
-                                                <strong>Account Type:</strong> {{ ucfirst($return->account_type) }}
+                                                <strong>Bank:</strong> {{ $return->bank_account_name }}<br>
+                                                <strong>A/C No:</strong> {{ $return->account_no }}<br>
+                                                <strong>BSB:</strong> {{ $return->bsb_number }}<br>
+                                                <strong>Holder:</strong> {{ $return->account_holder_name }}<br>
                                             </small>
                                         </td>
                                         <td>
@@ -446,66 +443,60 @@
                     return_date_time: {
                         required: true
                     },
-                    bank_name: {
+                    bank_account_name: {
                         required: true
                     },
-                    branch_name: {
+                    bsb_number: {
                         required: true
                     },
-                    account_type: {
+                    account_no: {
                         required: true
                     },
-                    ifsc_code: {
+                    account_holder_name: {
                         required: true
                     },
-                    bank_account_no: {
-                        required: true
-                    },
-                    bank_account_no_confirmation: {
+                    account_no_confirmation: {
                         required: true,
-                        equalTo: "[name='bank_account_no']"
+                        equalTo: "[name='account_no']"
                     },
-                    bank_account_holder_name: {
-                        required: true
-                    }
                 },
-                messages: {
-                    reference_id: {
-                        required: "Please enter reference ID.",
-                        minlength: "Reference ID must be at least 4 characters."
-                    },
-                    'product_ids[]': {
-                        required: "Please select at least one product."
-                    },
-                    photo_proof: {
-                        required: "Please upload photo proof.",
-                    },
-                    return_date_time: {
-                        required: "Please select return date and time."
-                    },
-                    bank_name: {
-                        required: "Please enter bank name."
-                    },
-                    branch_name: {
-                        required: "Please enter branch name."
-                    },
-                    account_type: {
-                        required: "Please enter account type."
-                    },
-                    ifsc_code: {
-                        required: "Please enter IFSC code."
-                    },
-                    bank_account_no: {
-                        required: "Please enter bank account number."
-                    },
-                    bank_account_no_confirmation: {
-                        required: "Please confirm your account number.",
-                        equalTo: "Account number does not match."
-                    },
-                    bank_account_holder_name: {
-                        required: "Please enter account holder name."
-                    }
-                },
+                // messages: {
+                //     reference_id: {
+                //         required: "Please enter reference ID.",
+                //         minlength: "Reference ID must be at least 4 characters."
+                //     },
+                //     'product_ids[]': {
+                //         required: "Please select at least one product."
+                //     },
+                //     photo_proof: {
+                //         required: "Please upload photo proof.",
+                //     },
+                //     return_date_time: {
+                //         required: "Please select return date and time."
+                //     },
+                //     bank_name: {
+                //         required: "Please enter bank name."
+                //     },
+                //     branch_name: {
+                //         required: "Please enter branch name."
+                //     },
+                //     account_type: {
+                //         required: "Please enter account type."
+                //     },
+                //     ifsc_code: {
+                //         required: "Please enter IFSC code."
+                //     },
+                //     bank_account_no: {
+                //         required: "Please enter bank account number."
+                //     },
+                //     bank_account_no_confirmation: {
+                //         required: "Please confirm your account number.",
+                //         equalTo: "Account number does not match."
+                //     },
+                //     bank_account_holder_name: {
+                //         required: "Please enter account holder name."
+                //     }
+                // },
                 errorPlacement: function(error, element) {
                     error.addClass('invalid-feedback');
                     $('#' + element.attr('name').replace('[]', '') + '_error').html(error);

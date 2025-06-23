@@ -190,23 +190,17 @@
                                             account:
                                         </span>
                                         <ul class="list-unstyled mb-0 fs-6">
+                                            <li class="mb-2"><strong>Bank Account Name:</strong>
+                                                {{ $bankDetails['bank_account_name'] ?? '' }}
+                                            </li>
                                             <li class="mb-2"><strong>Account Holder Name:</strong>
-                                                {{ $bankDetails['account_name'] ?? 'ABC Pvt Ltd' }}
+                                                {{ $bankDetails['account_holder_name'] ?? '' }}
+                                            </li>
+                                            <li class="mb-2"><strong>BSB Number:</strong>
+                                                {{ $bankDetails['bsb_number'] ?? '' }}
                                             </li>
                                             <li class="mb-2"><strong>Account Number:</strong>
-                                                {{ $bankDetails['account_number'] ?? '123456789012' }}
-                                            </li>
-                                            <li class="mb-2"><strong>IFSC Code:</strong>
-                                                {{ $bankDetails['ifsc_code'] ?? 'HDFC0001234' }}
-                                            </li>
-                                            <li class="mb-2"><strong>Bank Name:</strong>
-                                                {{ $bankDetails['bank_name'] ?? 'HDFC Bank' }}
-                                            </li>
-                                            <li class="mb-2"><strong>Branch Name:</strong>
-                                                {{ $bankDetails['branch_name'] ?? 'Mumbai Main Branch' }}
-                                            </li>
-                                            <li class="mb-2"><strong>Account Type:</strong>
-                                                {{ $bankDetails['account_type'] ?? 'Current' }}
+                                                {{ $bankDetails['account_no'] ?? '' }}
                                             </li>
                                             {{-- Add any extra details here --}}
                                             <li class="mt-3 text-muted" style="font-size:0.92em;">
